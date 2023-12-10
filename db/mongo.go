@@ -1,4 +1,4 @@
-package main
+package db
 
 import (
 	"context"
@@ -12,7 +12,7 @@ import (
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func mongoConnect() (*mongo.Client, error) {
+func MongoConnect() (*mongo.Client, error) {
 	err := godotenv.Load(".env")
 	dbUri := os.Getenv("MONGO_URI")
 
