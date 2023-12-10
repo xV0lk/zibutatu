@@ -11,7 +11,7 @@ export default defineConfig({
       name: "[name]",
       fileName: "[name]",
     },
-    outDir: "static",
+    outDir: "assets",
     emptyOutDir: false,
     // plugins: [tailwindcss(), autoprefixer()],
   },
