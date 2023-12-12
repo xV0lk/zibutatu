@@ -1,6 +1,8 @@
 package views
 
-templ HomePage() {
+import "github.com/xV0lk/htmx-go/views/nav"
+
+templ Index() {
 <!DOCTYPE html>
 <html class="h-full bg-gray-900" lang="en">
 <head>
@@ -11,8 +13,10 @@ templ HomePage() {
 	<script src="/static/htmx.js" type="text/javascript"></script>
 </head>
 <body class="h-full">
-	@navBar()
-	@loginForm()
+	<div class="flex flex-col h-full">
+	@views.NavBar()
+	{children...}
+	</div>	
 </body>
 </html>
 }

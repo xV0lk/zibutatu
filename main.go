@@ -1,58 +1,40 @@
 package main
 
 import (
-	"fmt"
 	"log"
 
 	"github.com/labstack/echo/v4"
 	"github.com/labstack/echo/v4/middleware"
+	"github.com/xV0lk/htmx-go/api"
 	"github.com/xV0lk/htmx-go/db"
 	"github.com/xV0lk/htmx-go/views"
 )
 
 func main() {
-	_, err := db.MongoConnect()
+	// _, err := db.MongoConnect()
+	// if err != nil {
+	// 	log.Fatal(err)
+	// 	return
+	// }
+	sqlStore, err := db.NewSQLite()
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	sqlDb, err := db.NewSQLite()
+	defer sqlStore.Close()
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	defer sqlDb.Close()
-	err = sqlDb.Setup()
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-	items, err := sqlDb.FetchTasks()
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
-	fmt.Printf("Fetched items: %v\n", items)
 
-	// err = db.OpenDB()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// 	return
-	// }
-	// defer db.DB.Close()
-	// err = db.DB.Ping()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// 	return
-	// }
-	// err = db.SetupDB()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// 	return
-	// }
+	// handlers
+	var (
+		tasksHandler = api.NewTasksHandler(sqlStore)
+	)
 
 	e := echo.New()
 	e.Debug = true
+	e.HTTPErrorHandler = api.CustomError
 	e.Use(middleware.Logger())
 
 	e.Static("static/", "assets")
@@ -62,5 +44,7 @@ func main() {
 	e.GET("/", func(c echo.Context) error {
 		return home.Render(c.Request().Context(), c.Response().Writer)
 	})
+	e.GET("/tasks", tasksHandler.HandleGetTasks)
+
 	e.Logger.Fatal(e.Start(":1323"))
 }
