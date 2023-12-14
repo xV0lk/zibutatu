@@ -16,7 +16,7 @@ import (
 	"strconv"
 )
 
-func Tasks(tasks types.Tasks) templ.Component {
+func Tasks(tasks types.Tasks, oob bool) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -39,11 +39,15 @@ func Tasks(tasks types.Tasks) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = Counter(tasks).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = Counter(tasks, oob).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = form().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = Form().Render(ctx, templ_7745c5c3_Buffer)
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			templ_7745c5c3_Err = TaskList(tasks, oob).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -67,7 +71,7 @@ func Tasks(tasks types.Tasks) templ.Component {
 	})
 }
 
-func Counter(tasks types.Tasks) templ.Component {
+func Counter(tasks types.Tasks, oob bool) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -80,7 +84,17 @@ func Counter(tasks types.Tasks) templ.Component {
 			templ_7745c5c3_Var3 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex flex-col justify-center items-center pt-10 text-center\"><div class=\"flex justify-between text-xl w-full\"><p class=\"text-white py-5\" id=\"total\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div id=\"counter\" class=\"flex flex-col justify-center items-center pt-10 text-center\"")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		if oob {
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" hx-swap-oob=\"true\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("><div class=\"flex justify-between text-xl w-full\"><p class=\"text-white py-5\" id=\"total\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

@@ -13,3 +13,4 @@ const clickOutside = (e) => {
 
 menuButton.addEventListener('click', toogleMenu)
 document.addEventListener('click', clickOutside)
+

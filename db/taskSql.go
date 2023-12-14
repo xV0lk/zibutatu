@@ -13,6 +13,7 @@ type TaskStore interface {
 	InsertTask(title string) (types.Item, error)
 	UpdateTaskTitle(ID int, title string) (types.Item, error)
 	UpdateTaskCompleted(ID int, completed bool) (types.Item, error)
+	DeleteTask(ctx context.Context, ID int) error
 	OderTasks(ctx context.Context, values []int) error
 	FetchCount() (int, error)
 	FetchCompletedCount() (int, error)

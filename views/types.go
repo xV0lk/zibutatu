@@ -5,3 +5,8 @@ type HttpError struct {
 	Msg         string
 	Description string
 }
+
+type RenderError struct {
+	Err bool
+	Msg string
+}

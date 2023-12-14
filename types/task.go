@@ -11,3 +11,11 @@ type Tasks struct {
 	Count          int
 	CompletedCount int
 }
+
+type TaskBody struct {
+	Title string `form:"title"`
+}
+
+type TaskStatus struct {
+	Completed string `form:"completed"`
+}

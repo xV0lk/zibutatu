@@ -10,7 +10,7 @@ import "context"
 import "io"
 import "bytes"
 
-func form() templ.Component {
+func Form() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -23,7 +23,7 @@ func form() templ.Component {
 			templ_7745c5c3_Var1 = templ.NopComponent
 		}
 		ctx = templ.ClearChildren(ctx)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form><input id=\"title\" name=\"title\" class=\"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-5\"> <button type=\"submit\" class=\"text-white bg-indigo-500 hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none mt-2.5 text-center inline-flex items-center\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<form hx-post=\"/tasks\" hx-swap=\"outerHTML transition:true\"><input id=\"title\" name=\"title\" class=\"bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full p-2.5 mt-5\"> <button type=\"submit\" class=\"text-white bg-indigo-500 hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none mt-2.5 text-center inline-flex items-center\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -32,7 +32,7 @@ func form() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</button></form>")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</button></form><div class=\"h-10 my-5\" hx-swap-oob=\"true\" id=\"task-response\"></div>")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
