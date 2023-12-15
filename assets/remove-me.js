@@ -41,7 +41,7 @@ function animation(elt, type) {
   switch (type) {
     case "slide":
       elt.style.transition = 'all 600ms ease';
-      elt.style.transform = 'translateX(-150px)';
+      elt.style.transform = 'translateX(150px)';
       break;
     case "fade":
       elt.style.transition = 'all 600ms ease';

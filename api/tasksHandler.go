@@ -47,25 +47,31 @@ func (h *TasksHandler) HandleGetTasks(ctx echo.Context) error {
 // It returns an error if there was an issue handling the request.
 func (h *TasksHandler) HandlePostTask(ctx echo.Context) error {
 	var taskBody types.TaskBody
-	tError := views.RenderError{Err: false, Msg: ""}
+	tBody := views.ToastBody{
+		Msg:  "Tarea Agregada exitosamente.",
+		Type: "success",
+	}
 
 	if err := ctx.Bind(&taskBody); err != nil {
-		tError.Err = true
-		tError.Msg = err.Error()
-		return tViews.TaskResponse(tError).Render(ctx.Request().Context(), ctx.Response().Writer)
+		tBody.Msg = err.Error()
+		tBody.Type = "error"
+		views.Toast(tBody, true, ctx, http.StatusBadRequest)
+		return tViews.Form().Render(ctx.Request().Context(), ctx.Response().Writer)
 	}
 
 	if taskBody.Title == "" {
-		tError.Err = true
-		tError.Msg = "Nombre no puede estar vacío"
-		return tViews.TaskResponse(tError).Render(ctx.Request().Context(), ctx.Response().Writer)
+		tBody.Msg = "Nombre no puede estar vacío."
+		tBody.Type = "warning"
+		views.Toast(tBody, true, ctx, http.StatusBadRequest)
+		return tViews.Form().Render(ctx.Request().Context(), ctx.Response().Writer)
 	}
 
 	_, err := h.TaskStore.InsertTask(taskBody.Title)
 	if err != nil {
-		tError.Err = true
-		tError.Msg = err.Error()
-		return tViews.TaskResponse(tError).Render(ctx.Request().Context(), ctx.Response().Writer)
+		tBody.Msg = err.Error()
+		tBody.Type = "error"
+		views.Toast(tBody, true, ctx, http.StatusInternalServerError)
+		return tViews.Form().Render(ctx.Request().Context(), ctx.Response().Writer)
 	}
 
 	// This update the tasks list and the counters
@@ -73,8 +79,9 @@ func (h *TasksHandler) HandlePostTask(ctx echo.Context) error {
 		return ctx.String(http.StatusInternalServerError, err.Error())
 	}
 	// This update only the form and response message
-	ctx.Response().WriteHeader(http.StatusCreated)
-	return tViews.TaskResponse(tError).Render(ctx.Request().Context(), ctx.Response().Writer)
+
+	views.Toast(tBody, true, ctx, http.StatusCreated)
+	return tViews.Form().Render(ctx.Request().Context(), ctx.Response().Writer)
 }
 
 func (h *TasksHandler) HandleDeleteTask(ctx echo.Context) error {
@@ -156,26 +163,41 @@ func (h *TasksHandler) HandleEditTask(ctx echo.Context) error {
 
 func (h *TasksHandler) HandlePutTask(ctx echo.Context) error {
 	var taskBody types.TaskBody
+	tBody := views.ToastBody{
+		Msg:  "Tarea actualizada exitosamente.",
+		Type: "success",
+	}
+
 	tId := ctx.Param("id")
 	id, err := strconv.Atoi(tId)
 
 	if err != nil {
-		return ctx.String(http.StatusBadRequest, "Id no valido")
+		tBody.Msg = "Id no valido."
+		tBody.Type = "error"
+		return views.Toast(tBody, false, ctx, http.StatusBadRequest)
 	}
 
 	if err := ctx.Bind(&taskBody); err != nil {
-		return ctx.String(http.StatusBadRequest, err.Error())
+		tBody.Msg = err.Error()
+		tBody.Type = "error"
+		return views.Toast(tBody, false, ctx, http.StatusBadRequest)
+	}
+
+	if taskBody.Title == "" {
+		tBody.Msg = "Nombre no puede estar vacío."
+		tBody.Type = "warning"
+		return views.Toast(tBody, false, ctx, http.StatusBadRequest)
 	}
 
 	item, err := h.TaskStore.UpdateTaskTitle(id, taskBody.Title)
 	if err != nil {
-		return ctx.String(http.StatusInternalServerError, err.Error())
+		tBody.Msg = err.Error()
+		tBody.Type = "error"
+		return views.Toast(tBody, false, ctx, http.StatusInternalServerError)
 	}
-
 	task := tViews.Task(item, false)
-	task.Render(ctx.Request().Context(), ctx.Response().Writer)
-
-	return nil
+	views.Toast(tBody, true, ctx, http.StatusOK)
+	return task.Render(ctx.Request().Context(), ctx.Response().Writer)
 }
 
 // getCount retrieves the count of tasks and completed tasks from the TaskStore.
