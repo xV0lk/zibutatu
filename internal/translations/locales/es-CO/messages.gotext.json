@@ -1,0 +1,79 @@
+{
+	"language": "es-CO",
+	"messages": [
+			{
+					"id": "Tarea Agregada exitosamente.",
+					"message": "Tarea Agregada exitosamente.",
+					"translation": "Tarea Agregada exitosamente.",
+					"translatorComment": "Copied from source.",
+					"fuzzy": true
+			},
+			{
+					"id": "Nombre no puede estar vacío",
+					"message": "Nombre no puede estar vacío",
+					"translation": "Nombre no puede estar vacío",
+					"translatorComment": "Copied from source.",
+					"fuzzy": true
+			},
+			{
+					"id": "Id no valido",
+					"message": "Id no valido",
+					"translation": "Id no valido",
+					"translatorComment": "Copied from source.",
+					"fuzzy": true
+			},
+			{
+					"id": "Status no valido",
+					"message": "Status no valido",
+					"translation": "Status no valido",
+					"translatorComment": "Copied from source.",
+					"fuzzy": true
+			},
+			{
+					"id": "Tarea actualizada exitosamente.",
+					"message": "Tarea actualizada exitosamente.",
+					"translation": "Tarea actualizada exitosamente.",
+					"translatorComment": "Copied from source.",
+					"fuzzy": true
+			},
+			{
+					"id": "Welcome!",
+					"message": "Welcome!",
+					"translation": "Bienvenido!"
+			},
+			{
+					"id": "Tareas totales: {Count}",
+					"message": "Tareas totales: {Count}",
+					"translation": "Tareas totales: {Count}",
+					"translatorComment": "Copied from source.",
+					"placeholders": [
+							{
+									"id": "Count",
+									"string": "%[1]d",
+									"type": "int",
+									"underlyingType": "int",
+									"argNum": 1,
+									"expr": "tasks.Count"
+							}
+					],
+					"fuzzy": true
+			},
+			{
+					"id": "Tareas completadas: {CompletedCount}",
+					"message": "Tareas completadas: {CompletedCount}",
+					"translation": "Tareas completadas: {CompletedCount}",
+					"translatorComment": "Copied from source.",
+					"placeholders": [
+							{
+									"id": "CompletedCount",
+									"string": "%[1]d",
+									"type": "int",
+									"underlyingType": "int",
+									"argNum": 1,
+									"expr": "tasks.CompletedCount"
+							}
+					],
+					"fuzzy": true
+			}
+	]
+}

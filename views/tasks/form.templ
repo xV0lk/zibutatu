@@ -1,6 +1,8 @@
-package views 
+package views
 
-templ Form(){
+import "github.com/xV0lk/htmx-go/internal/localizer"
+
+templ Form(l localizer.Localizer){
 <form hx-post="/tasks" hx-swap="outerHTML transition:true">
   <input
     id="title"
@@ -11,7 +13,7 @@ templ Form(){
     type="submit"
     class="text-white bg-indigo-500 hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500 font-medium rounded-lg text-sm px-5 py-2.5 focus:outline-none mt-2.5 text-center inline-flex items-center"
   >
-    Agregar Tarea
+    {l.Translate("Agregar Tarea")}
   </button>
 </form>
 }

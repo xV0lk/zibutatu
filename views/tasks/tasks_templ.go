@@ -11,12 +11,12 @@ import "io"
 import "bytes"
 
 import (
+	"github.com/xV0lk/htmx-go/internal/localizer"
 	"github.com/xV0lk/htmx-go/types"
 	"github.com/xV0lk/htmx-go/views"
-	"strconv"
 )
 
-func Tasks(tasks types.Tasks, oob bool) templ.Component {
+func Tasks(tasks types.Tasks, oob bool, l localizer.Localizer) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -39,11 +39,11 @@ func Tasks(tasks types.Tasks, oob bool) templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = Counter(tasks, oob).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = Counter(tasks, oob, l).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			templ_7745c5c3_Err = Form().Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = Form(l).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
@@ -71,7 +71,7 @@ func Tasks(tasks types.Tasks, oob bool) templ.Component {
 	})
 }
 
-func Counter(tasks types.Tasks, oob bool) templ.Component {
+func Counter(tasks types.Tasks, oob bool, l localizer.Localizer) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -98,13 +98,8 @@ func Counter(tasks types.Tasks, oob bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Var4 := `Tareas totales: `
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var4)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var5 string = strconv.Itoa(tasks.Count)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
+		var templ_7745c5c3_Var4 string = l.Translate("Tareas totales: %d", tasks.Count)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
@@ -112,13 +107,8 @@ func Counter(tasks types.Tasks, oob bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		templ_7745c5c3_Var6 := `Tareas completadas: `
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ_7745c5c3_Var6)
-		if templ_7745c5c3_Err != nil {
-			return templ_7745c5c3_Err
-		}
-		var templ_7745c5c3_Var7 string = strconv.Itoa(tasks.CompletedCount)
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
+		var templ_7745c5c3_Var5 string = l.Translate("Tareas completadas: %d", tasks.CompletedCount)
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

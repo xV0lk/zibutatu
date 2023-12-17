@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/labstack/echo/v4"
+	"github.com/labstack/echo/v4/middleware"
 	"github.com/xV0lk/htmx-go/api"
 	"github.com/xV0lk/htmx-go/db"
 	"github.com/xV0lk/htmx-go/views"
@@ -32,9 +33,10 @@ func main() {
 	)
 
 	e := echo.New()
+	e.Use(api.I18n)
 	e.Debug = true
 	e.HTTPErrorHandler = api.CustomError
-	// e.Use(middleware.Logger())
+	e.Use(middleware.LoggerWithConfig(api.LConfig))
 
 	e.Static("static/", "assets")
 	e.File("assets/favicon.png", "assets/favicon.png")

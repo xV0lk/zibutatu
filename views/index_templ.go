@@ -34,7 +34,7 @@ func Index() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</title><link href=\"/static/index.css\" rel=\"stylesheet\"><link href=\"/static/transitions.css\" rel=\"stylesheet\"><link href=\"/static/validation.css\" rel=\"stylesheet\"><link rel=\"icon\" type=\"image/png\" href=\"/favicon.png\"><script src=\"/static/htmx.js\" type=\"text/javascript\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</title><link href=\"/static/index.css\" rel=\"stylesheet\"><link href=\"/static/transitions.css\" rel=\"stylesheet\"><link href=\"/static/validation.css\" rel=\"stylesheet\"><link rel=\"icon\" type=\"image/png\" href=\"/assets/favicon.png\"><script src=\"/static/htmx.js\" type=\"text/javascript\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

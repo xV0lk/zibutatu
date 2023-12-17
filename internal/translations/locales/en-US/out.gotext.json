@@ -1,0 +1,70 @@
+{
+    "language": "en-US",
+    "messages": [
+        {
+            "id": "Tarea Agregada exitosamente.",
+            "message": "Tarea Agregada exitosamente.",
+            "translation": "Task added successfully."
+        },
+        {
+            "id": "Nombre no puede estar vacío",
+            "message": "Nombre no puede estar vacío",
+            "translation": "Name cannot be empty"
+        },
+        {
+            "id": "Id no valido",
+            "message": "Id no valido",
+            "translation": "Invalid Id"
+        },
+        {
+            "id": "Status no valido",
+            "message": "Status no valido",
+            "translation": "Invalid Status"
+        },
+        {
+            "id": "Tarea actualizada exitosamente.",
+            "message": "Tarea actualizada exitosamente.",
+            "translation": "Task updated successfully."
+        },
+        {
+            "id": "Welcome!",
+            "message": "Welcome!",
+            "translation": "Welcome!"
+        },
+        {
+            "id": "Agregar Tarea",
+            "message": "Agregar Tarea",
+            "translation": "Add task"
+        },
+        {
+            "id": "Tareas totales: {Count}",
+            "message": "Tareas totales: {Count}",
+            "translation": "Total tasks: {Count}",
+            "placeholders": [
+                {
+                    "id": "Count",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "tasks.Count"
+                }
+            ]
+        },
+        {
+            "id": "Tareas completadas: {CompletedCount}",
+            "message": "Tareas completadas: {CompletedCount}",
+            "translation": "Completed tasks: {CompletedCount}",
+            "placeholders": [
+                {
+                    "id": "CompletedCount",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "tasks.CompletedCount"
+                }
+            ]
+        }
+    ]
+}

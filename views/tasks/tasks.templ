@@ -2,24 +2,24 @@ package views
 
 import (
   "github.com/xV0lk/htmx-go/types"
-  "strconv"
   "github.com/xV0lk/htmx-go/views"
+	"github.com/xV0lk/htmx-go/internal/localizer"
 )
 
-templ Tasks(tasks types.Tasks, oob bool) {
+templ Tasks(tasks types.Tasks, oob bool, l localizer.Localizer) {
   @views.Index(){
     <div class="flex justify-center items-center">
     	// TODO: add responsive media queries for the with of the container
       <div class="w-5/6 md:w-3/4 lg:w-1/2 xl:w-3/5 2xl:w-2/5">
-        @Counter(tasks, oob)
-        @Form()
+        @Counter(tasks, oob, l)
+        @Form(l)
         @TaskList(tasks, oob)
       </div>
     </div>
   }
 }
 
-templ Counter(tasks types.Tasks, oob bool) {
+templ Counter(tasks types.Tasks, oob bool, l localizer.Localizer) {
 <div 
   id="counter" 
   class="flex flex-col justify-center items-center pt-10 text-center"
@@ -31,8 +31,8 @@ templ Counter(tasks types.Tasks, oob bool) {
     <p 
       class="text-white py-5" 
       id="total" 
-    >Tareas totales: {strconv.Itoa(tasks.Count)}</p>
-    <p class="text-white py-5" id="completed">Tareas completadas: {strconv.Itoa(tasks.CompletedCount)}</p>
+    >{l.Translate("Tareas totales: %d", tasks.Count)}</p>
+    <p class="text-white py-5" id="completed">{l.Translate("Tareas completadas: %d", tasks.CompletedCount)}</p>
   </div>
 </div>
 }
