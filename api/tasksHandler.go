@@ -6,6 +6,8 @@ import (
 
 	"github.com/labstack/echo/v4"
 	"github.com/xV0lk/htmx-go/db"
+	"github.com/xV0lk/htmx-go/internal/localizer"
+	_ "github.com/xV0lk/htmx-go/internal/translations"
 	"github.com/xV0lk/htmx-go/types"
 	"github.com/xV0lk/htmx-go/views"
 	tViews "github.com/xV0lk/htmx-go/views/tasks"
@@ -32,11 +34,18 @@ func NewTasksHandler(store db.TaskStore) *TasksHandler {
 //
 // Returns an error if there was a problem fetching the tasks or rendering the response.
 func (h *TasksHandler) HandleGetTasks(ctx echo.Context) error {
+	// Initialize the localizer
+	err, l := ParseCtx[localizer.Localizer]("translate", ctx)
+	if err != nil {
+		ctx.Logger().Error(err)
+		return err
+	}
+
 	tData, err := h.getCount()
 	if err != nil {
 		return err
 	}
-	counter := tViews.Tasks(tData, false)
+	counter := tViews.Tasks(tData, false, l)
 	return counter.Render(ctx.Request().Context(), ctx.Response().Writer)
 }
 
@@ -46,32 +55,43 @@ func (h *TasksHandler) HandleGetTasks(ctx echo.Context) error {
 // Adds a task to the database and displays a response message.
 // It returns an error if there was an issue handling the request.
 func (h *TasksHandler) HandlePostTask(ctx echo.Context) error {
+	// Initialize the localizer
+	err, l := ParseCtx[localizer.Localizer]("translate", ctx)
+	if err != nil {
+		ctx.Logger().Error(err)
+		return err
+	}
+
+	// Initialize the toast options
 	var taskBody types.TaskBody
 	tBody := views.ToastBody{
-		Msg:  "Tarea Agregada exitosamente.",
+		Msg:  l.Translate("Tarea Agregada exitosamente."),
 		Type: "success",
 	}
 
+	// Bind the request body
 	if err := ctx.Bind(&taskBody); err != nil {
 		tBody.Msg = err.Error()
 		tBody.Type = "error"
 		views.Toast(tBody, true, ctx, http.StatusBadRequest)
-		return tViews.Form().Render(ctx.Request().Context(), ctx.Response().Writer)
+		return tViews.Form(l).Render(ctx.Request().Context(), ctx.Response().Writer)
 	}
 
+	// Validate the request
 	if taskBody.Title == "" {
-		tBody.Msg = "Nombre no puede estar vacío."
+		tBody.Msg = l.Translate("Nombre no puede estar vacío")
 		tBody.Type = "warning"
 		views.Toast(tBody, true, ctx, http.StatusBadRequest)
-		return tViews.Form().Render(ctx.Request().Context(), ctx.Response().Writer)
+		return tViews.Form(l).Render(ctx.Request().Context(), ctx.Response().Writer)
 	}
 
-	_, err := h.TaskStore.InsertTask(taskBody.Title)
+	// Insert the task to the store
+	_, err = h.TaskStore.InsertTask(taskBody.Title)
 	if err != nil {
 		tBody.Msg = err.Error()
 		tBody.Type = "error"
 		views.Toast(tBody, true, ctx, http.StatusInternalServerError)
-		return tViews.Form().Render(ctx.Request().Context(), ctx.Response().Writer)
+		return tViews.Form(l).Render(ctx.Request().Context(), ctx.Response().Writer)
 	}
 
 	// This update the tasks list and the counters
@@ -81,19 +101,30 @@ func (h *TasksHandler) HandlePostTask(ctx echo.Context) error {
 	// This update only the form and response message
 
 	views.Toast(tBody, true, ctx, http.StatusCreated)
-	return tViews.Form().Render(ctx.Request().Context(), ctx.Response().Writer)
+	return tViews.Form(l).Render(ctx.Request().Context(), ctx.Response().Writer)
 }
 
 func (h *TasksHandler) HandleDeleteTask(ctx echo.Context) error {
+	// Initialize the localizer
+	err, l := ParseCtx[localizer.Localizer]("translate", ctx)
+	if err != nil {
+		ctx.Logger().Error(err)
+		return err
+	}
+
+	// Get id from url
 	tId := ctx.Param("id")
 	id, err := strconv.Atoi(tId)
 	if err != nil {
-		return ctx.String(http.StatusBadRequest, "Id no valido")
+		return ctx.String(http.StatusBadRequest, l.Translate("Id no valido"))
 	}
+
+	// Delete task
 	if err = h.TaskStore.DeleteTask(ctx.Request().Context(), id); err != nil {
 		return ctx.String(http.StatusInternalServerError, err.Error())
 	}
 
+	// This update the tasks list
 	if err = updateTasksView(h, ctx); err != nil {
 		return ctx.String(http.StatusInternalServerError, err.Error())
 	}
@@ -113,11 +144,18 @@ func (h *TasksHandler) HandleToogleTask(ctx echo.Context) error {
 		completed  bool
 	)
 
+	// Initialize the localizer
+	err, l := ParseCtx[localizer.Localizer]("translate", ctx)
+	if err != nil {
+		ctx.Logger().Error(err)
+		return err
+	}
+
+	// Get id from url
 	tId := ctx.Param("id")
 	id, err := strconv.Atoi(tId)
-
 	if err != nil {
-		return ctx.String(http.StatusBadRequest, "Id no valido")
+		return ctx.String(http.StatusBadRequest, l.Translate("Id no valido"))
 	}
 
 	ctx.Bind(&taskStatus)
@@ -128,7 +166,7 @@ func (h *TasksHandler) HandleToogleTask(ctx echo.Context) error {
 	case "on":
 		completed = true
 	default:
-		return ctx.String(http.StatusBadRequest, "Status no valido")
+		return ctx.String(http.StatusBadRequest, l.Translate("Status no valido"))
 	}
 
 	_, err = h.TaskStore.UpdateTaskCompleted(id, completed)
@@ -143,11 +181,19 @@ func (h *TasksHandler) HandleToogleTask(ctx echo.Context) error {
 }
 
 func (h *TasksHandler) HandleEditTask(ctx echo.Context) error {
+	// Initialize the localizer
+	err, l := ParseCtx[localizer.Localizer]("translate", ctx)
+	if err != nil {
+		ctx.Logger().Error(err)
+		return err
+	}
+
+	// Get id from url
 	tId := ctx.Param("id")
 	id, err := strconv.Atoi(tId)
 
 	if err != nil {
-		return ctx.String(http.StatusBadRequest, "Id no valido")
+		return ctx.String(http.StatusBadRequest, l.Translate("Id no valido"))
 	}
 
 	item, err := h.TaskStore.FetchTask(id)
@@ -162,9 +208,16 @@ func (h *TasksHandler) HandleEditTask(ctx echo.Context) error {
 }
 
 func (h *TasksHandler) HandlePutTask(ctx echo.Context) error {
+	// Initialize the localizer
+	err, l := ParseCtx[localizer.Localizer]("translate", ctx)
+	if err != nil {
+		ctx.Logger().Error(err)
+		return err
+	}
+
 	var taskBody types.TaskBody
 	tBody := views.ToastBody{
-		Msg:  "Tarea actualizada exitosamente.",
+		Msg:  l.Translate("Tarea actualizada exitosamente."),
 		Type: "success",
 	}
 
@@ -172,7 +225,7 @@ func (h *TasksHandler) HandlePutTask(ctx echo.Context) error {
 	id, err := strconv.Atoi(tId)
 
 	if err != nil {
-		tBody.Msg = "Id no valido."
+		tBody.Msg = l.Translate("Id no valido")
 		tBody.Type = "error"
 		return views.Toast(tBody, false, ctx, http.StatusBadRequest)
 	}
@@ -184,7 +237,7 @@ func (h *TasksHandler) HandlePutTask(ctx echo.Context) error {
 	}
 
 	if taskBody.Title == "" {
-		tBody.Msg = "Nombre no puede estar vacío."
+		tBody.Msg = l.Translate("Nombre no puede estar vacío")
 		tBody.Type = "warning"
 		return views.Toast(tBody, false, ctx, http.StatusBadRequest)
 	}
@@ -231,12 +284,18 @@ func (h *TasksHandler) getCount() (data types.Tasks, err error) {
 // It retrieves the count data using the getCount method of the TasksHandler.
 // Then, it updates the counter and tasks component data by rendering them using the Counter and TaskList views respectively.
 func updateTasksView(h *TasksHandler, c echo.Context) error {
+	// Initialize the localizer
+	err, l := ParseCtx[localizer.Localizer]("translate", c)
+	if err != nil {
+		return err
+	}
+
 	data, err := h.getCount()
 	if err != nil {
 		return err
 	}
 	// This updates the counter and tasks component data because of the hx-swap-oob attribute
-	counter := tViews.Counter(data, true)
+	counter := tViews.Counter(data, true, l)
 	counter.Render(c.Request().Context(), c.Response().Writer)
 	tasks := tViews.TaskList(data, true)
 	tasks.Render(c.Request().Context(), c.Response().Writer)
