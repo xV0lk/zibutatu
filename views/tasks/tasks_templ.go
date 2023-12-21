@@ -11,12 +11,12 @@ import "io"
 import "bytes"
 
 import (
-	"github.com/xV0lk/htmx-go/internal/localizer"
+	"github.com/xV0lk/htmx-go/internal/middleware"
 	"github.com/xV0lk/htmx-go/types"
 	"github.com/xV0lk/htmx-go/views"
 )
 
-func Tasks(tasks types.Tasks, oob bool, l localizer.Localizer) templ.Component {
+func Tasks(tasks types.Tasks, oob bool, l *middleware.Localizer) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -71,7 +71,7 @@ func Tasks(tasks types.Tasks, oob bool, l localizer.Localizer) templ.Component {
 	})
 }
 
-func Counter(tasks types.Tasks, oob bool, l localizer.Localizer) templ.Component {
+func Counter(tasks types.Tasks, oob bool, l *middleware.Localizer) templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {

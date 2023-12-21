@@ -1,6 +1,9 @@
 package views
 
-import "github.com/labstack/echo/v4"
+import (
+	"context"
+	"net/http"
+)
 
 type HttpError struct {
 	Code        int
@@ -18,14 +21,14 @@ type ToastBody struct {
 	Type string
 }
 
-func Toast(body ToastBody, oob bool, c echo.Context, status int) error {
+func Toast(body ToastBody, oob bool, c context.Context, w http.ResponseWriter, status int) error {
 	if oob {
-		ToastEl(body, oob).Render(c.Request().Context(), c.Response().Writer)
-		c.Response().Writer.WriteHeader(status)
+		ToastEl(body, oob).Render(c, w)
+		w.WriteHeader(status)
 		return nil
 	} else {
-		c.Response().Writer.WriteHeader(status)
-		return ToastEl(body, oob).Render(c.Request().Context(), c.Response().Writer)
+		w.WriteHeader(status)
+		return ToastEl(body, oob).Render(c, w)
 	}
 
 }

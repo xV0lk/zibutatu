@@ -13,9 +13,9 @@ type Tasks struct {
 }
 
 type TaskBody struct {
-	Title string `form:"title"`
+	Title string `schema:"title,required"`
 }
 
 type TaskStatus struct {
-	Completed string `form:"completed"`
+	Completed string `schema:"completed"`
 }

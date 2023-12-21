@@ -2,6 +2,13 @@
     "language": "es-CO",
     "messages": [
         {
+            "id": "Contraseña",
+            "message": "Contraseña",
+            "translation": "Contraseña",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
             "id": "Tarea Agregada exitosamente.",
             "message": "Tarea Agregada exitosamente.",
             "translation": "Tarea Agregada exitosamente.",
@@ -40,6 +47,20 @@
             "id": "Welcome!",
             "message": "Welcome!",
             "translation": "Bienvenido!"
+        },
+        {
+            "id": "Iniciar Sesión",
+            "message": "Iniciar Sesión",
+            "translation": "Iniciar Sesión",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Email",
+            "message": "Email",
+            "translation": "Email",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
         },
         {
             "id": "Agregar Tarea",

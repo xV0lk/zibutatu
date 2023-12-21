@@ -1,7 +1,9 @@
 package views
 
-templ HomePage(){
+import "github.com/xV0lk/htmx-go/internal/middleware"
+
+templ HomePage(l *middleware.Localizer){
 	@Index(){
-		@login()
+		@login(l)
 	}
 }

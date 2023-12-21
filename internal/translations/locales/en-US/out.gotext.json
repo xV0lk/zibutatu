@@ -2,6 +2,11 @@
     "language": "en-US",
     "messages": [
         {
+            "id": "Contraseña",
+            "message": "Contraseña",
+            "translation": "Password"
+        },
+        {
             "id": "Tarea Agregada exitosamente.",
             "message": "Tarea Agregada exitosamente.",
             "translation": "Task added successfully."
@@ -30,6 +35,16 @@
             "id": "Welcome!",
             "message": "Welcome!",
             "translation": "Welcome!"
+        },
+        {
+            "id": "Iniciar Sesión",
+            "message": "Iniciar Sesión",
+            "translation": "Log in"
+        },
+        {
+            "id": "Email",
+            "message": "Email",
+            "translation": "Email"
         },
         {
             "id": "Agregar Tarea",

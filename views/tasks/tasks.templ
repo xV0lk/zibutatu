@@ -3,10 +3,10 @@ package views
 import (
   "github.com/xV0lk/htmx-go/types"
   "github.com/xV0lk/htmx-go/views"
-	"github.com/xV0lk/htmx-go/internal/localizer"
+	"github.com/xV0lk/htmx-go/internal/middleware"
 )
 
-templ Tasks(tasks types.Tasks, oob bool, l localizer.Localizer) {
+templ Tasks(tasks types.Tasks, oob bool, l *middleware.Localizer) {
   @views.Index(){
     <div class="flex justify-center items-center">
     	// TODO: add responsive media queries for the with of the container
@@ -19,7 +19,7 @@ templ Tasks(tasks types.Tasks, oob bool, l localizer.Localizer) {
   }
 }
 
-templ Counter(tasks types.Tasks, oob bool, l localizer.Localizer) {
+templ Counter(tasks types.Tasks, oob bool, l *middleware.Localizer) {
 <div 
   id="counter" 
   class="flex flex-col justify-center items-center pt-10 text-center"

@@ -1,4 +1,4 @@
-package localizer
+package middleware
 
 import (
 	// Import the internal/translations so that it's init() function
@@ -6,6 +6,10 @@ import (
 	// default message catalog is updated to use our translations
 	// *before* we initialize the message.Printer instances below.
 
+	"net/http"
+	"strings"
+
+	"github.com/xV0lk/htmx-go/internal/ctx"
 	_ "github.com/xV0lk/htmx-go/internal/translations"
 
 	"golang.org/x/text/language"
@@ -41,14 +45,13 @@ var locales = []Localizer{
 // The Get() function accepts a locale Tag and returns the corresponding
 // Localizer for that locale. If the locale ID is not supported then
 // this returns `false` as the second return value.
-func Get(t language.Tag) (Localizer, bool) {
+func Get(t language.Tag) (*Localizer, bool) {
 	for _, locale := range locales {
 		if t == locale.Tag {
-			return locale, true
+			return &locale, true
 		}
 	}
-
-	return Localizer{}, false
+	return &Localizer{}, false
 }
 
 // Translate translates a given message reference using the Localizer.
@@ -58,4 +61,29 @@ func Get(t language.Tag) (Localizer, bool) {
 func (l Localizer) Translate(key message.Reference, args ...interface{}) string {
 	s := l.printer.Sprintf(key, args...)
 	return s
+}
+
+var matcher = language.NewMatcher([]language.Tag{
+	language.MustParse("es-CO"),
+	language.Spanish,
+	language.LatinAmericanSpanish,
+	language.English,
+	language.MustParse("en-US"),
+})
+
+// GetLanguage is a middleware function that retrieves the language from the "Accept-Language" header of the incoming HTTP request.
+//
+// It updates the request context with the localized language.
+func I18n(next http.Handler) http.Handler {
+	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.Contains(r.URL.Path, "/static/") {
+			next.ServeHTTP(w, r)
+			return
+		}
+		acceptLanguage := r.Header.Get("Accept-Language")
+		ul, _ := language.MatchStrings(matcher, acceptLanguage)
+		l, _ := Get(ul)
+		nCtx := ctx.With[Localizer](r.Context(), l)
+		next.ServeHTTP(w, r.WithContext(nCtx))
+	})
 }

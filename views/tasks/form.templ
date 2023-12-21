@@ -1,8 +1,8 @@
 package views
 
-import "github.com/xV0lk/htmx-go/internal/localizer"
+import "github.com/xV0lk/htmx-go/internal/middleware"
 
-templ Form(l localizer.Localizer){
+templ Form(l *middleware.Localizer){
 <form hx-post="/tasks" hx-swap="outerHTML transition:true">
   <input
     id="title"
