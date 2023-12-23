@@ -17,13 +17,13 @@ import (
 )
 
 type TasksHandler struct {
-	TaskStore db.TaskStore
+	TaskStore *db.PsqlStore
 }
 
 // NewTasksHandler creates a new TasksHandler instance.
 //
 // It takes a TaskStore as a parameter and returns a pointer to a TasksHandler.
-func NewTasksHandler(store db.TaskStore) *TasksHandler {
+func NewTasksHandler(store *db.PsqlStore) *TasksHandler {
 	return &TasksHandler{
 		TaskStore: store,
 	}
@@ -157,6 +157,7 @@ func (h *TasksHandler) HandleToogleTask(w http.ResponseWriter, r *http.Request) 
 	c := r.Context()
 	l := ctx.Value[middleware.Localizer](c)
 	decoder := ctx.Value[schema.Decoder](c)
+
 	if err := r.ParseForm(); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return

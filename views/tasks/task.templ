@@ -20,7 +20,7 @@ templ TaskList(tasks types.Tasks, oob bool ) {
   </div>
 }
 
-templ Task(item types.Item, editing bool) {
+templ Task(item *types.Item, editing bool) {
 <div
   id={fmt.Sprintf("task-%d", item.ID)}
   class={"flex items-center justify-between rounded-lg px-4 my-3 py-2.5 transition", 

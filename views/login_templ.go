@@ -10,9 +10,11 @@ import "context"
 import "io"
 import "bytes"
 
-import "github.com/xV0lk/htmx-go/internal/middleware"
+import (
+	mw "github.com/xV0lk/htmx-go/internal/middleware"
+)
 
-func login(l *middleware.Localizer) templ.Component {
+func login() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -29,7 +31,7 @@ func login(l *middleware.Localizer) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 string = l.Translate("Iniciar Sesión")
+		var templ_7745c5c3_Var2 string = mw.Translate(ctx, "Iniciar Sesión")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -38,7 +40,7 @@ func login(l *middleware.Localizer) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 string = l.Translate("Email")
+		var templ_7745c5c3_Var3 string = mw.Translate(ctx, "Email")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -47,7 +49,7 @@ func login(l *middleware.Localizer) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var4 string = l.Translate("Contraseña")
+		var templ_7745c5c3_Var4 string = mw.Translate(ctx, "Contraseña")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -56,7 +58,7 @@ func login(l *middleware.Localizer) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var5 string = l.Translate("Iniciar Sesión")
+		var templ_7745c5c3_Var5 string = mw.Translate(ctx, "Iniciar Sesión")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

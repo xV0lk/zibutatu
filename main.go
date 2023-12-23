@@ -1,6 +1,7 @@
 package main
 
 import (
+	"fmt"
 	"log"
 	"net/http"
 	"os"
@@ -19,21 +20,19 @@ func main() {
 	// 	log.Fatal(err)
 	// 	return
 	// }
-	sqlStore, err := db.NewSQLite()
+	psqlStore, err := db.NewPsql()
 	if err != nil {
 		log.Fatal(err)
 		return
 	}
-	defer sqlStore.Close()
-	if err != nil {
-		log.Fatal(err)
-		return
-	}
+	defer psqlStore.Close()
+	fmt.Println("Connected to postgres")
+	db.SetUpTables(psqlStore)
 
 	// handlers
 	var (
-		tasksHandler = api.NewTasksHandler(sqlStore)
-		authHandler  = api.NewAuthHandler(sqlStore)
+		tasksHandler = api.NewTasksHandler(psqlStore)
+		authHandler  = api.NewAuthHandler(psqlStore)
 	)
 
 	r := chi.NewRouter()
@@ -51,6 +50,9 @@ func main() {
 		r.Put("/{id}", tasksHandler.HandlePutTask)
 	})
 
+	r.Get("/login", authHandler.HandleNewUser)
+	r.Get("/users", authHandler.HandleGetUser)
+
 	// Serve static files
 	workDir, _ := os.Getwd()
 	filesDir := http.Dir(filepath.Join(workDir, "assets"))
@@ -59,28 +61,3 @@ func main() {
 	http.ListenAndServe(":1323", r)
 	println("Server running on port 1323")
 }
-
-// e := echo.New()
-// e.Use(api.I18n)
-// e.Debug = true
-// e.HTTPErrorHandler = api.CustomError
-// e.Use(middleware.LoggerWithConfig(api.LConfig))
-
-// e.Static("static/", "assets")
-// e.File("assets/favicon.png", "assets/favicon.png")
-// e.File("assets/machine.png", "assets/machine.png")
-// e.File("assets/machine-lg.png", "assets/machine-lg.png")
-
-// e.GET("/", authHandler.HandleHome)
-// e.GET("/tasks", tasksHandler.HandleGetTasks)
-// e.POST("/tasks", tasksHandler.HandlePostTask)
-// e.PUT("/tasks/:id/toggle", tasksHandler.HandleToogleTask)
-// e.DELETE("/tasks/:id", tasksHandler.HandleDeleteTask)
-// e.GET("/tasks/:id/edit", tasksHandler.HandleEditTask)
-// e.PUT("/tasks/:id", tasksHandler.HandlePutTask)
-
-// e.GET("/auth/:provider", authHandler.HandleAuth)
-// e.GET("/auth/:provider/callback", authHandler.HandleLogin)
-// e.GET("/logout/:provider", authHandler.HandleLogout)
-
-// e.Logger.Fatal(e.Start(":1323"))

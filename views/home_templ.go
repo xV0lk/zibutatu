@@ -10,9 +10,7 @@ import "context"
 import "io"
 import "bytes"
 
-import "github.com/xV0lk/htmx-go/internal/middleware"
-
-func HomePage(l *middleware.Localizer) templ.Component {
+func HomePage() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templ_7745c5c3_W.(*bytes.Buffer)
 		if !templ_7745c5c3_IsBuffer {
@@ -31,7 +29,7 @@ func HomePage(l *middleware.Localizer) templ.Component {
 				templ_7745c5c3_Buffer = templ.GetBuffer()
 				defer templ.ReleaseBuffer(templ_7745c5c3_Buffer)
 			}
-			templ_7745c5c3_Err = login(l).Render(ctx, templ_7745c5c3_Buffer)
+			templ_7745c5c3_Err = login().Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

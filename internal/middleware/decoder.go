@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"net/http"
+	"strings"
 
 	"github.com/gorilla/schema"
 	"github.com/xV0lk/htmx-go/internal/ctx"
@@ -12,6 +13,10 @@ import (
 // This allows downstream handlers to access the decoder and decode request parameters.
 func Decoder(next http.Handler) http.Handler {
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
+		if strings.Contains(r.URL.Path, "/static/") {
+			next.ServeHTTP(w, r)
+			return
+		}
 		var decoder = schema.NewDecoder()
 		nCtx := ctx.With[schema.Decoder](r.Context(), decoder)
 		next.ServeHTTP(w, r.WithContext(nCtx))

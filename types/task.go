@@ -7,7 +7,7 @@ type Item struct {
 }
 
 type Tasks struct {
-	Items          []Item
+	Items          []*Item
 	Count          int
 	CompletedCount int
 }

@@ -1,0 +1,41 @@
+version: '3.9'
+
+services:
+  db:
+    image: postgres
+    restart: always
+    environment:
+      POSTGRES_USER: tattoo
+      POSTGRES_PASSWORD: z1bu7@7u
+      POSTGRES_DB: zibutatu
+    ports:
+      - 1233:5432
+    volumes:
+      - db_data:/var/lib/postgresql/data
+
+  adminer:
+    image: adminer
+    restart: always
+    environment:
+      ADMINER_DESIGN: dracula
+    ports:
+      - 3333:8080
+
+#   go-server:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile
+#     ports:
+#       - 8080:8080
+#     depends_on:
+#       - postgres
+
+#   vite:
+#     build:
+#       context: .
+#       dockerfile: Dockerfile.vite
+#     ports:
+#       - 3000:3000
+
+volumes:
+  db_data:

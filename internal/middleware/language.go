@@ -6,6 +6,8 @@ import (
 	// default message catalog is updated to use our translations
 	// *before* we initialize the message.Printer instances below.
 
+	"context"
+	"fmt"
 	"net/http"
 	"strings"
 
@@ -86,4 +88,12 @@ func I18n(next http.Handler) http.Handler {
 		nCtx := ctx.With[Localizer](r.Context(), l)
 		next.ServeHTTP(w, r.WithContext(nCtx))
 	})
+}
+
+func Translate(c context.Context, key message.Reference, args ...interface{}) string {
+	l := ctx.Value[Localizer](c)
+	if l == nil {
+		return fmt.Sprint(key)
+	}
+	return l.Translate(key, args...)
 }
