@@ -1,6 +1,7 @@
 package main
 
 import (
+	"flag"
 	"fmt"
 	"log"
 	"net/http"
@@ -29,13 +30,18 @@ func main() {
 	fmt.Println("Connected to postgres")
 	db.SetUpTables(psqlStore)
 
-	// handlers
 	var (
-		tasksHandler = api.NewTasksHandler(psqlStore)
-		authHandler  = api.NewAuthHandler(psqlStore)
+		// Stores
+		authStore = db.NewPsAuthStore(psqlStore)
+		taskStore = db.NewPsTaskStore(psqlStore)
+		// handlers
+		tasksHandler = api.NewTasksHandler(taskStore)
+		authHandler  = api.NewAuthHandler(authStore)
+		// Connection
+		port = flag.String("port", ":1323", "port to run the server on")
+		r    = chi.NewRouter()
 	)
 
-	r := chi.NewRouter()
 	r.Use(chiMiddleware.Logger)
 	r.Use(middleware.I18n)
 	r.Use(middleware.Decoder)
@@ -58,6 +64,6 @@ func main() {
 	filesDir := http.Dir(filepath.Join(workDir, "assets"))
 	api.FileServer(r, "/static", filesDir)
 
-	http.ListenAndServe(":1323", r)
+	http.ListenAndServe(*port, r)
 	println("Server running on port 1323")
 }

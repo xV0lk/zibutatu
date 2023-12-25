@@ -13,10 +13,10 @@ import (
 )
 
 type AuthHandler struct {
-	UserStore *db.PsqlStore
+	UserStore db.AuthStore
 }
 
-func NewAuthHandler(store *db.PsqlStore) *AuthHandler {
+func NewAuthHandler(store db.AuthStore) *AuthHandler {
 	return &AuthHandler{
 		UserStore: store,
 	}

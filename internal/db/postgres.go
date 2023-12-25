@@ -43,40 +43,28 @@ CREATE TABLE IF NOT EXISTS tasks (
 );
 `
 
-type PsqlStore struct {
-	db *pgxpool.Pool
-}
-
-func NewPsql() (*PsqlStore, error) {
+func NewPsql() (*pgxpool.Pool, error) {
 	godotenv.Load(".env")
 	dbpool, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to create connection pool: %v\n", err)
 		return nil, err
 	}
-	return &PsqlStore{db: dbpool}, nil
+	return dbpool, nil
 }
 
-func (pg *PsqlStore) Ping(ctx context.Context) error {
-	return pg.Ping(ctx)
-}
-
-func (pg *PsqlStore) Close() {
-	pg.Close()
-}
-
-func SetUpTables(pg *PsqlStore) error {
-	_, err := pg.db.Exec(context.Background(), createUsersTable)
+func SetUpTables(db *pgxpool.Pool) error {
+	_, err := db.Exec(context.Background(), createUsersTable)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return err
 	}
-	_, err = pg.db.Exec(context.Background(), createStudiosTable)
+	_, err = db.Exec(context.Background(), createStudiosTable)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return err
 	}
-	_, err = pg.db.Exec(context.Background(), createTasksTable)
+	_, err = db.Exec(context.Background(), createTasksTable)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return err

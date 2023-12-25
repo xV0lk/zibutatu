@@ -5,15 +5,36 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/xV0lk/htmx-go/types"
 )
 
-type UserStore interface {
-	Login(*types.User, context.Context) error
-	FetchUser(int, context.Context) (*types.User, error)
+type Closer interface {
+	Close()
 }
 
-func (s *PsqlStore) Login(user *types.User, ctx context.Context) error {
+type AuthStore interface {
+	Login(*types.User, context.Context) error
+	FetchUser(int, context.Context) (*types.User, error)
+
+	Closer
+}
+
+type PsAuthStore struct {
+	db *pgxpool.Pool
+}
+
+func NewPsAuthStore(db *pgxpool.Pool) *PsAuthStore {
+	return &PsAuthStore{
+		db,
+	}
+}
+
+func (s *PsAuthStore) Close() {
+	s.db.Close()
+}
+
+func (s *PsAuthStore) Login(user *types.User, ctx context.Context) error {
 	query := `INSERT INTO users 
 	(first_name, last_name, email, studio_id, is_admin, created_at, updated_at, language, password) 
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
@@ -28,7 +49,7 @@ func (s *PsqlStore) Login(user *types.User, ctx context.Context) error {
 	return nil
 }
 
-func (s *PsqlStore) FetchUser(id int, ctx context.Context) (*types.User, error) {
+func (s *PsAuthStore) FetchUser(id int, ctx context.Context) (*types.User, error) {
 	query := "SELECT id, first_name, last_name, email, studio_id, is_admin, created_at, updated_at, language FROM users WHERE id = $1;"
 
 	user := &types.User{}

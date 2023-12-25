@@ -2,6 +2,7 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 
@@ -17,13 +18,13 @@ import (
 )
 
 type TasksHandler struct {
-	TaskStore *db.PsqlStore
+	TaskStore db.TaskStore
 }
 
 // NewTasksHandler creates a new TasksHandler instance.
 //
 // It takes a TaskStore as a parameter and returns a pointer to a TasksHandler.
-func NewTasksHandler(store *db.PsqlStore) *TasksHandler {
+func NewTasksHandler(store db.TaskStore) *TasksHandler {
 	return &TasksHandler{
 		TaskStore: store,
 	}
@@ -227,7 +228,11 @@ func (h *TasksHandler) HandleEditTask(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
+	println("id: ", id)
+
 	item, err := h.TaskStore.FetchTask(id)
+	println("id: ", id)
+	fmt.Printf("-------------------------\nitem: %+v\n", item)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -283,6 +288,8 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		return
 	}
+
+	println("taskBody.Title: ", taskBody.Title)
 
 	item, err := h.TaskStore.UpdateTaskTitle(id, taskBody.Title)
 	if err != nil {

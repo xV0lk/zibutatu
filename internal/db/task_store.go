@@ -5,26 +5,43 @@ import (
 	"fmt"
 
 	"github.com/jackc/pgx/v5"
+	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/xV0lk/htmx-go/types"
 )
 
 type TaskStore interface {
 	FetchTasks() ([]*types.Item, error)
 	FetchTask(ID int) (*types.Item, error)
-	InsertTask(title string) (types.Item, error)
+	InsertTask(title string) (*types.Item, error)
 	UpdateTaskTitle(ID int, title string) (*types.Item, error)
-	UpdateTaskCompleted(ID int, completed bool) (types.Item, error)
-	// DeleteTask(ctx context.Context, ID int) error
-	// OderTasks(ctx context.Context, values []int) error
+	UpdateTaskCompleted(ID int, completed bool) (*types.Item, error)
+	DeleteTask(ctx context.Context, ID int) error
+	OderTasks(ctx context.Context, values []int) error
 	FetchCount() (int, error)
 	FetchCompletedCount() (int, error)
+
+	Closer
+}
+
+type PsTaskStore struct {
+	db *pgxpool.Pool
+}
+
+func NewPsTaskStore(db *pgxpool.Pool) *PsTaskStore {
+	return &PsTaskStore{
+		db,
+	}
+}
+
+func (s *PsTaskStore) Close() {
+	s.db.Close()
 }
 
 // FetchTasks fetches tasks from the SQLStore.
 //
 // It does not take any parameters.
 // It returns a slice of types.Item and an error.
-func (s *PsqlStore) FetchTasks() ([]*types.Item, error) {
+func (s *PsTaskStore) FetchTasks() ([]*types.Item, error) {
 	query := "SELECT id, title, completed FROM tasks ORDER BY position;"
 	rows, err := s.db.Query(context.Background(), query)
 	if err != nil {
@@ -44,54 +61,56 @@ func (s *PsqlStore) FetchTasks() ([]*types.Item, error) {
 //
 // ID: the ID of the task to fetch.
 // returns: the fetched task as a types.Item and any error encountered.
-func (s *PsqlStore) FetchTask(ID int) (*types.Item, error) {
-	var item *types.Item
+func (s *PsTaskStore) FetchTask(ID int) (*types.Item, error) {
+	item := types.Item{}
 	query := "SELECT id, title, completed FROM tasks WHERE id = $1;"
 	row := s.db.QueryRow(context.Background(), query, ID)
+	fmt.Printf("-------------------------\nitem 1: %+v\n", item)
 	err := row.Scan(&item.ID, &item.Title, &item.Completed)
+	fmt.Printf("-------------------------\nitem 2: %+v\n", item)
 	if err != nil {
 		fmt.Println("Error: ", err)
-		return item, err
+		return &item, err
 	}
-	return item, nil
+	return &item, nil
 }
 
 // UpdateTaskTitle updates the title of a task in the SQLStore.
 //
 // It takes an ID (int) and a title (string) as parameters and returns an Item and an error.
-func (s *PsqlStore) UpdateTaskTitle(ID int, title string) (*types.Item, error) {
-	var item *types.Item
+func (s *PsTaskStore) UpdateTaskTitle(ID int, title string) (*types.Item, error) {
+	item := types.Item{}
 	query := "UPDATE tasks SET title = $1 WHERE id = $2 RETURNING id, title, completed;"
 	row := s.db.QueryRow(context.Background(), query, title, ID)
 	err := row.Scan(&item.ID, &item.Title, &item.Completed)
 	if err != nil {
 		fmt.Println("Error: ", err)
-		return item, err
+		return &item, err
 	}
-	return item, nil
+	return &item, nil
 }
 
 // UpdateTaskCompleted updates the completion status of a task in the SQLStore.
 //
 // It takes an ID of the task to be updated and a boolean indicating the new completion status.
 // It returns a types.Item struct representing the updated task and an error if any occurred.
-func (s *PsqlStore) UpdateTaskCompleted(ID int, completed bool) (types.Item, error) {
+func (s *PsTaskStore) UpdateTaskCompleted(ID int, completed bool) (*types.Item, error) {
 	item := types.Item{}
 	query := "UPDATE tasks SET completed = $1 WHERE id = $2 RETURNING id, title, completed;"
 	row := s.db.QueryRow(context.Background(), query, completed, ID)
 	err := row.Scan(&item.ID, &item.Title, &item.Completed)
 	if err != nil {
 		fmt.Println("Error in update: ", err)
-		return item, err
+		return &item, err
 	}
-	return item, nil
+	return &item, nil
 }
 
 // FetchCount fetches the count of tasks from the SQLStore.
 //
 // It does not take any parameters.
 // It returns an integer and an error.
-func (s *PsqlStore) FetchCount() (int, error) {
+func (s *PsTaskStore) FetchCount() (int, error) {
 	var count int
 	row := s.db.QueryRow(context.Background(), "SELECT COUNT(*) FROM tasks;")
 	err := row.Scan(&count)
@@ -102,7 +121,7 @@ func (s *PsqlStore) FetchCount() (int, error) {
 	return count, nil
 }
 
-func (s *PsqlStore) FetchCompletedCount() (int, error) {
+func (s *PsTaskStore) FetchCompletedCount() (int, error) {
 	var count int
 	row := s.db.QueryRow(context.Background(), "SELECT COUNT(*) FROM tasks WHERE completed = true;")
 	err := row.Scan(&count)
@@ -116,21 +135,21 @@ func (s *PsqlStore) FetchCompletedCount() (int, error) {
 // InsertTask inserts a task into the SQLStore.
 //
 // It takes a title string as a parameter and returns a types.Item and an error.
-func (s *PsqlStore) InsertTask(title string) (types.Item, error) {
+func (s *PsTaskStore) InsertTask(title string) (*types.Item, error) {
 	item := types.Item{}
 	count, err := s.FetchCount()
 	if err != nil {
 		fmt.Println("Error: ", err)
-		return item, err
+		return &item, err
 	}
 	query := "INSERT INTO tasks (title, position) VALUES ($1, $2) RETURNING id, title, completed;"
 	row := s.db.QueryRow(context.Background(), query, title, count)
 	err = row.Scan(&item.ID, &item.Title, &item.Completed)
 	if err != nil {
 		fmt.Println("Error: ", err)
-		return item, err
+		return &item, err
 	}
-	return item, nil
+	return &item, nil
 }
 
 // DeleteTask deletes a task from the SQLStore.
@@ -140,7 +159,7 @@ func (s *PsqlStore) InsertTask(title string) (types.Item, error) {
 // - ID: the ID of the task to be deleted.
 //
 // The function returns an error if there is any.
-func (s *PsqlStore) DeleteTask(ctx context.Context, ID int) error {
+func (s *PsTaskStore) DeleteTask(ctx context.Context, ID int) error {
 	_, err := s.db.Exec(context.Background(), "DELETE FROM tasks WHERE id = $1;", ID)
 	if err != nil {
 		fmt.Println("Error: ", err)
@@ -186,7 +205,7 @@ func (s *PsqlStore) DeleteTask(ctx context.Context, ID int) error {
 //
 // It takes in a context.Context and a slice of integers as the values parameter.
 // The function returns an error.
-func (s *PsqlStore) OderTasks(ctx context.Context, values []int) error {
+func (s *PsTaskStore) OderTasks(ctx context.Context, values []int) error {
 	tx, err := s.db.Begin(ctx)
 	if err != nil {
 		return err
