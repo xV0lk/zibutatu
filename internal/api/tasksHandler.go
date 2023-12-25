@@ -2,16 +2,13 @@ package api
 
 import (
 	"context"
-	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/gorilla/schema"
-	"github.com/xV0lk/htmx-go/internal/ctx"
 	"github.com/xV0lk/htmx-go/internal/db"
-	"github.com/xV0lk/htmx-go/internal/middleware"
-	_ "github.com/xV0lk/htmx-go/internal/translations"
+	mw "github.com/xV0lk/htmx-go/internal/middleware"
 	"github.com/xV0lk/htmx-go/types"
 	"github.com/xV0lk/htmx-go/views"
 	tViews "github.com/xV0lk/htmx-go/views/tasks"
@@ -19,14 +16,16 @@ import (
 
 type TasksHandler struct {
 	TaskStore db.TaskStore
+	decoder   *schema.Decoder
 }
 
 // NewTasksHandler creates a new TasksHandler instance.
 //
 // It takes a TaskStore as a parameter and returns a pointer to a TasksHandler.
-func NewTasksHandler(store db.TaskStore) *TasksHandler {
+func NewTasksHandler(store db.TaskStore, decoder *schema.Decoder) *TasksHandler {
 	return &TasksHandler{
 		TaskStore: store,
+		decoder:   decoder,
 	}
 }
 
@@ -38,14 +37,12 @@ func NewTasksHandler(store db.TaskStore) *TasksHandler {
 //
 // Returns an error if there was a problem fetching the tasks or rendering the response.
 func (h *TasksHandler) HandleGetTasks(w http.ResponseWriter, r *http.Request) {
-	l := ctx.Value[middleware.Localizer](r.Context())
-
 	tData, err := h.getCount()
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
 	}
-	counter := tViews.Tasks(tData, false, l)
+	counter := tViews.Tasks(tData, false)
 	counter.Render(r.Context(), w)
 	return
 }
@@ -57,8 +54,6 @@ func (h *TasksHandler) HandleGetTasks(w http.ResponseWriter, r *http.Request) {
 // It returns an error if there was an issue handling the request.
 func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
-	l := ctx.Value[middleware.Localizer](c)
-	decoder := ctx.Value[schema.Decoder](c)
 	if err := r.ParseForm(); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -69,25 +64,25 @@ func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 
 	// Initialize the toast options
 	tBody := views.ToastBody{
-		Msg:  l.Translate("Tarea Agregada exitosamente."),
+		Msg:  mw.Translate(c, "Tarea Agregada exitosamente."),
 		Type: "success",
 	}
 
 	// Bind the request body
-	if err := decoder.Decode(&taskBody, r.Form); err != nil {
+	if err := h.decoder.Decode(&taskBody, r.Form); err != nil {
 		tBody.Msg = err.Error()
 		tBody.Type = "error"
 		views.Toast(tBody, true, c, w, http.StatusBadRequest)
-		tViews.Form(l).Render(c, w)
+		tViews.Form().Render(c, w)
 		return
 	}
 
 	// Validate the request
 	if taskBody.Title == "" {
-		tBody.Msg = l.Translate("Nombre no puede estar vacío")
+		tBody.Msg = mw.Translate(c, "Nombre no puede estar vacío")
 		tBody.Type = "warning"
 		views.Toast(tBody, true, c, w, http.StatusBadRequest)
-		tViews.Form(l).Render(c, w)
+		tViews.Form().Render(c, w)
 		return
 	}
 
@@ -97,7 +92,7 @@ func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 		tBody.Msg = err.Error()
 		tBody.Type = "error"
 		views.Toast(tBody, true, c, w, http.StatusInternalServerError)
-		tViews.Form(l).Render(c, w)
+		tViews.Form().Render(c, w)
 		return
 	}
 
@@ -109,7 +104,7 @@ func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 	// This update only the form and response message
 
 	views.Toast(tBody, true, c, w, http.StatusCreated)
-	tViews.Form(l).Render(c, w)
+	tViews.Form().Render(c, w)
 	return
 }
 
@@ -120,14 +115,13 @@ func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 // If there is an error during the deletion or update, it returns an error.
 func (h *TasksHandler) HandleDeleteTask(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
-	l := ctx.Value[middleware.Localizer](c)
 
 	// Get id from url
 	tId := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(tId)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(l.Translate("Id no valido")))
+		w.Write([]byte(mw.Translate(c, "Id no valido")))
 		return
 	}
 
@@ -156,8 +150,6 @@ func (h *TasksHandler) HandleDeleteTask(w http.ResponseWriter, r *http.Request) 
 // - An error.
 func (h *TasksHandler) HandleToogleTask(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
-	l := ctx.Value[middleware.Localizer](c)
-	decoder := ctx.Value[schema.Decoder](c)
 
 	if err := r.ParseForm(); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
@@ -174,12 +166,12 @@ func (h *TasksHandler) HandleToogleTask(w http.ResponseWriter, r *http.Request) 
 	id, err := strconv.Atoi(tId)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(l.Translate("Id no valido")))
+		w.Write([]byte(mw.Translate(c, "Id no valido")))
 		return
 	}
 
 	// Bind the request body
-	if err := decoder.Decode(&taskStatus, r.Form); err != nil {
+	if err := h.decoder.Decode(&taskStatus, r.Form); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		w.Write([]byte(err.Error()))
 		return
@@ -192,7 +184,7 @@ func (h *TasksHandler) HandleToogleTask(w http.ResponseWriter, r *http.Request) 
 		completed = true
 	default:
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(l.Translate("Status no valido")))
+		w.Write([]byte(mw.Translate(c, "Status no valido")))
 		return
 	}
 
@@ -216,23 +208,17 @@ func (h *TasksHandler) HandleToogleTask(w http.ResponseWriter, r *http.Request) 
 // and renders the task view with the provided context and response writer.
 // If any error occurs during the process, it returns the corresponding HTTP status code and error message.
 func (h *TasksHandler) HandleEditTask(w http.ResponseWriter, r *http.Request) {
-	l := ctx.Value[middleware.Localizer](r.Context())
-
 	// Get id from url
 	tId := chi.URLParam(r, "id")
 	id, err := strconv.Atoi(tId)
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(l.Translate("Id no valido")))
+		w.Write([]byte(mw.Translate(r.Context(), "Id no valido")))
 		return
 	}
 
-	println("id: ", id)
-
 	item, err := h.TaskStore.FetchTask(id)
-	println("id: ", id)
-	fmt.Printf("-------------------------\nitem: %+v\n", item)
 
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
@@ -251,8 +237,6 @@ func (h *TasksHandler) HandleEditTask(w http.ResponseWriter, r *http.Request) {
 // If there are any errors, it returns an error toast message.
 func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
-	l := ctx.Value[middleware.Localizer](c)
-	decoder := ctx.Value[schema.Decoder](c)
 	if err := r.ParseForm(); err != nil {
 		w.WriteHeader(http.StatusBadRequest)
 		return
@@ -260,7 +244,7 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 
 	var taskBody types.TaskBody
 	tBody := views.ToastBody{
-		Msg:  l.Translate("Tarea actualizada exitosamente."),
+		Msg:  mw.Translate(c, "Tarea actualizada exitosamente."),
 		Type: "success",
 	}
 
@@ -268,14 +252,14 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(tId)
 
 	if err != nil {
-		tBody.Msg = l.Translate("Id no valido")
+		tBody.Msg = mw.Translate(c, "Id no valido")
 		tBody.Type = "error"
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		return
 	}
 
 	// Bind the request body
-	if err := decoder.Decode(&taskBody, r.Form); err != nil {
+	if err := h.decoder.Decode(&taskBody, r.Form); err != nil {
 		tBody.Msg = err.Error()
 		tBody.Type = "error"
 		views.Toast(tBody, true, c, w, http.StatusBadRequest)
@@ -283,13 +267,11 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	if taskBody.Title == "" {
-		tBody.Msg = l.Translate("Nombre no puede estar vacío")
+		tBody.Msg = mw.Translate(c, "Nombre no puede estar vacío")
 		tBody.Type = "warning"
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		return
 	}
-
-	println("taskBody.Title: ", taskBody.Title)
 
 	item, err := h.TaskStore.UpdateTaskTitle(id, taskBody.Title)
 	if err != nil {
@@ -335,14 +317,12 @@ func (h *TasksHandler) getCount() (data types.Tasks, err error) {
 // It retrieves the count data using the getCount method of the TasksHandler.
 // Then, it updates the counter and tasks component data by rendering them using the Counter and TaskList views respectively.
 func updateTasksView(h *TasksHandler, c context.Context, w http.ResponseWriter) error {
-	l := ctx.Value[middleware.Localizer](c)
-
 	data, err := h.getCount()
 	if err != nil {
 		return err
 	}
 	// This updates the counter and tasks component data because of the hx-swap-oob attribute
-	counter := tViews.Counter(data, true, l)
+	counter := tViews.Counter(data, true)
 	counter.Render(c, w)
 	tasks := tViews.TaskList(data, true)
 	tasks.Render(c, w)

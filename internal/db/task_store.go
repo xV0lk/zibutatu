@@ -65,9 +65,7 @@ func (s *PsTaskStore) FetchTask(ID int) (*types.Item, error) {
 	item := types.Item{}
 	query := "SELECT id, title, completed FROM tasks WHERE id = $1;"
 	row := s.db.QueryRow(context.Background(), query, ID)
-	fmt.Printf("-------------------------\nitem 1: %+v\n", item)
 	err := row.Scan(&item.ID, &item.Title, &item.Completed)
-	fmt.Printf("-------------------------\nitem 2: %+v\n", item)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return &item, err

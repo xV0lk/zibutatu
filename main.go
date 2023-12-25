@@ -10,6 +10,7 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
+	"github.com/gorilla/schema"
 	"github.com/xV0lk/htmx-go/internal/api"
 	"github.com/xV0lk/htmx-go/internal/db"
 	"github.com/xV0lk/htmx-go/internal/middleware"
@@ -32,11 +33,12 @@ func main() {
 
 	var (
 		// Stores
+		decoder   = schema.NewDecoder()
 		authStore = db.NewPsAuthStore(psqlStore)
 		taskStore = db.NewPsTaskStore(psqlStore)
 		// handlers
-		tasksHandler = api.NewTasksHandler(taskStore)
-		authHandler  = api.NewAuthHandler(authStore)
+		tasksHandler = api.NewTasksHandler(taskStore, decoder)
+		authHandler  = api.NewAuthHandler(authStore, decoder)
 		// Connection
 		port = flag.String("port", ":1323", "port to run the server on")
 		r    = chi.NewRouter()
@@ -44,7 +46,6 @@ func main() {
 
 	r.Use(chiMiddleware.Logger)
 	r.Use(middleware.I18n)
-	r.Use(middleware.Decoder)
 
 	r.Get("/", authHandler.HandleHome)
 	r.Route("/tasks", func(r chi.Router) {
@@ -64,6 +65,6 @@ func main() {
 	filesDir := http.Dir(filepath.Join(workDir, "assets"))
 	api.FileServer(r, "/static", filesDir)
 
+	fmt.Printf("Server running on port %s", *port)
 	http.ListenAndServe(*port, r)
-	println("Server running on port 1323")
 }

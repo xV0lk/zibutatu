@@ -42,11 +42,11 @@ templ Task(item *types.Item, editing bool) {
       hx-target-error="#toast-notification"
       hx-swap="outerHTML transition:true"
       >
-        <input name="title" value={item.Title}
-        class={"border border-gray-300 text-gray-900 rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1.5",
-                templ.KV("bg-emerald-200", item.Completed),
-                templ.KV("bg-indigo-50", !item.Completed),
-              }/>
+        <input
+          name="title"
+          value={item.Title}
+          class="border border-gray-300 text-gray-900 rounded-lg bg-indigo-50 focus:ring-blue-500 focus:border-blue-500 block w-full px-2.5 py-1.5"
+        />
         <button class="text-blue-500 hover:text-blue-700">
           <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
             stroke="currentColor" class="w-6 h-6">

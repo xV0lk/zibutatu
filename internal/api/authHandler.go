@@ -6,6 +6,7 @@ import (
 	"time"
 
 	"github.com/go-chi/render"
+	"github.com/gorilla/schema"
 	"github.com/jackc/pgx/v5"
 	"github.com/xV0lk/htmx-go/internal/db"
 	"github.com/xV0lk/htmx-go/types"
@@ -14,11 +15,13 @@ import (
 
 type AuthHandler struct {
 	UserStore db.AuthStore
+	decoder   *schema.Decoder
 }
 
-func NewAuthHandler(store db.AuthStore) *AuthHandler {
+func NewAuthHandler(store db.AuthStore, decoder *schema.Decoder) *AuthHandler {
 	return &AuthHandler{
 		UserStore: store,
+		decoder:   decoder,
 	}
 }
 
