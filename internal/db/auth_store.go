@@ -2,7 +2,6 @@ package db
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
@@ -14,8 +13,9 @@ type Closer interface {
 }
 
 type AuthStore interface {
-	Login(*types.User, context.Context) error
+	AddUser(*types.User, context.Context) error
 	FetchUser(int, context.Context) (*types.User, error)
+	GetUserAuth(string, context.Context) (*types.UserPass, error)
 
 	Closer
 }
@@ -34,7 +34,7 @@ func (s *PsAuthStore) Close() {
 	s.db.Close()
 }
 
-func (s *PsAuthStore) Login(user *types.User, ctx context.Context) error {
+func (s *PsAuthStore) AddUser(user *types.User, ctx context.Context) error {
 	query := `INSERT INTO users 
 	(first_name, last_name, email, studio_id, is_admin, created_at, updated_at, language, password) 
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
@@ -42,7 +42,6 @@ func (s *PsAuthStore) Login(user *types.User, ctx context.Context) error {
 	_, err := s.db.Exec(ctx, query, user.FirstName, user.LastName, user.Email, user.StudioID, user.IsAdmin, user.CreatedAt, user.UpdatedAt, user.Language, user.Password)
 
 	if err != nil {
-		fmt.Println("Error: ", err)
 		return err
 	}
 
@@ -56,12 +55,26 @@ func (s *PsAuthStore) FetchUser(id int, ctx context.Context) (*types.User, error
 
 	rows, err := s.db.Query(ctx, query, id)
 	if err != nil {
-		fmt.Println("Error: ", err)
 		return user, err
 	}
 	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[types.User])
 	if err != nil {
-		fmt.Println("Error: ", err)
+		return user, err
+	}
+
+	return user, nil
+}
+func (s *PsAuthStore) GetUserAuth(email string, ctx context.Context) (*types.UserPass, error) {
+	query := "SELECT id, first_name, last_name, email, studio_id, is_admin, created_at, updated_at, language, password FROM users WHERE email = $1;"
+
+	user := &types.UserPass{}
+
+	rows, err := s.db.Query(ctx, query, email)
+	if err != nil {
+		return user, err
+	}
+	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[types.UserPass])
+	if err != nil {
 		return user, err
 	}
 

@@ -39,44 +39,62 @@ func init() {
 }
 
 var messageKeyToIndex = map[string]int{
-	"Agregar Tarea":                   9,
-	"Contraseña":                      0,
-	"Email":                           8,
-	"Id no valido":                    3,
-	"Iniciar Sesión":                  7,
-	"Nombre no puede estar vacío":     2,
-	"Status no valido":                4,
-	"Tarea Agregada exitosamente.":    1,
-	"Tarea actualizada exitosamente.": 5,
-	"Tareas completadas: %d":          11,
-	"Tareas totales: %d":              10,
-	"Welcome!\n":                      6,
+	"Agregar Tarea": 9,
+	"Contraseña":    8,
+	"Email":         7,
+	"First name must be at least %d characters long": 12,
+	"Id no valido":          2,
+	"Iniciar Sesión":        6,
+	"Invalid email address": 14,
+	"Last name must be at least %d characters long":        13,
+	"Nombre no puede estar vacío":                          1,
+	"Status no valido":                                     3,
+	"Tarea Agregada exitosamente.":                         0,
+	"Tarea actualizada exitosamente.":                      4,
+	"Tareas completadas: %d":                               11,
+	"Tareas totales: %d":                                   10,
+	"Welcome!\n":                                           5,
+	"password must be at least %d characters long":         15,
+	"password must contain at least one lowercase letter":  16,
+	"password must contain at least one number":            18,
+	"password must contain at least one special character": 19,
+	"password must contain at least one uppercase letter":  17,
 }
 
-var en_USIndex = []uint32{ // 13 elements
-	0x00000000, 0x00000009, 0x00000022, 0x00000037,
-	0x00000042, 0x00000051, 0x0000006c, 0x0000007a,
-	0x00000081, 0x00000087, 0x00000090, 0x000000a3,
+var en_USIndex = []uint32{ // 21 elements
+	0x00000000, 0x00000019, 0x0000002e, 0x00000039,
+	0x00000048, 0x00000063, 0x00000071, 0x00000078,
+	0x0000007e, 0x00000087, 0x00000090, 0x000000a3,
+	0x000000ba, 0x000000ba, 0x000000ba, 0x000000ba,
+	0x000000ba, 0x000000ba, 0x000000ba, 0x000000ba,
 	0x000000ba,
-} // Size: 76 bytes
+} // Size: 108 bytes
 
 const en_USData string = "" + // Size: 186 bytes
-	"\x02Password\x02Task added successfully.\x02Name cannot be empty\x02Inva" +
-	"lid Id\x02Invalid Status\x02Task updated successfully.\x04\x00\x01\x0a" +
-	"\x09\x02Welcome!\x02Log in\x02Email\x02Add task\x02Total tasks: %[1]d" +
-	"\x02Completed tasks: %[1]d"
+	"\x02Task added successfully.\x02Name cannot be empty\x02Invalid Id\x02In" +
+	"valid Status\x02Task updated successfully.\x04\x00\x01\x0a\x09\x02Welcom" +
+	"e!\x02Log in\x02Email\x02Password\x02Add task\x02Total tasks: %[1]d\x02C" +
+	"ompleted tasks: %[1]d"
 
-var es_COIndex = []uint32{ // 13 elements
-	0x00000000, 0x0000000c, 0x00000029, 0x00000046,
-	0x00000053, 0x00000064, 0x00000084, 0x00000095,
-	0x000000a5, 0x000000ab, 0x000000b9, 0x000000cf,
-	0x000000e9,
-} // Size: 76 bytes
+var es_COIndex = []uint32{ // 21 elements
+	0x00000000, 0x0000001d, 0x0000003a, 0x00000047,
+	0x00000058, 0x00000078, 0x00000089, 0x00000099,
+	0x0000009f, 0x000000ab, 0x000000b9, 0x000000cf,
+	0x000000e9, 0x0000011b, 0x0000014c, 0x00000162,
+	0x00000192, 0x000001c6, 0x000001fa, 0x00000224,
+	0x00000259,
+} // Size: 108 bytes
 
-const es_COData string = "" + // Size: 233 bytes
-	"\x02Contraseña\x02Tarea Agregada exitosamente.\x02Nombre no puede estar " +
-	"vacío\x02Id no valido\x02Status no valido\x02Tarea actualizada exitosame" +
-	"nte.\x04\x00\x01\x0a\x0c\x02Bienvenido!\x02Iniciar Sesión\x02Email\x02Ag" +
-	"regar Tarea\x02Tareas totales: %[1]d\x02Tareas completadas: %[1]d"
+const es_COData string = "" + // Size: 601 bytes
+	"\x02Tarea Agregada exitosamente.\x02Nombre no puede estar vacío\x02Id no" +
+	" valido\x02Status no valido\x02Tarea actualizada exitosamente.\x04\x00" +
+	"\x01\x0a\x0c\x02Bienvenido!\x02Iniciar Sesión\x02Email\x02Contraseña\x02" +
+	"Agregar Tarea\x02Tareas totales: %[1]d\x02Tareas completadas: %[1]d\x02F" +
+	"irst name must be at least %[1]d characters long\x02Last name must be at" +
+	" least %[1]d characters long\x02Invalid email address\x02password must b" +
+	"e at least %[1]d characters long\x02password must contain at least one l" +
+	"owercase letter\x02password must contain at least one uppercase letter" +
+	"\x02password must contain at least one number\x02password must contain a" +
+	"t least one special character"
 
-	// Total table size 571 bytes (0KiB); checksum: 88B5687D
+	// Total table size 1003 bytes (0KiB); checksum: AA033C5A

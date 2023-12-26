@@ -2,11 +2,6 @@
     "language": "en-US",
     "messages": [
         {
-            "id": "Contraseña",
-            "message": "Contraseña",
-            "translation": "Password"
-        },
-        {
             "id": "Tarea Agregada exitosamente.",
             "message": "Tarea Agregada exitosamente.",
             "translation": "Task added successfully."
@@ -37,6 +32,76 @@
             "translation": "Welcome!"
         },
         {
+            "id": "First name must be at least {MinFNameLen} characters long",
+            "message": "First name must be at least {MinFNameLen} characters long",
+            "translation": "",
+            "placeholders": [
+                {
+                    "id": "MinFNameLen",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "minFNameLen"
+                }
+            ]
+        },
+        {
+            "id": "Last name must be at least {MinLNameLen} characters long",
+            "message": "Last name must be at least {MinLNameLen} characters long",
+            "translation": "",
+            "placeholders": [
+                {
+                    "id": "MinLNameLen",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "minLNameLen"
+                }
+            ]
+        },
+        {
+            "id": "Invalid email address",
+            "message": "Invalid email address",
+            "translation": ""
+        },
+        {
+            "id": "password must be at least {MinPassLen} characters long",
+            "message": "password must be at least {MinPassLen} characters long",
+            "translation": "",
+            "placeholders": [
+                {
+                    "id": "MinPassLen",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "minPassLen"
+                }
+            ]
+        },
+        {
+            "id": "password must contain at least one lowercase letter",
+            "message": "password must contain at least one lowercase letter",
+            "translation": ""
+        },
+        {
+            "id": "password must contain at least one uppercase letter",
+            "message": "password must contain at least one uppercase letter",
+            "translation": ""
+        },
+        {
+            "id": "password must contain at least one number",
+            "message": "password must contain at least one number",
+            "translation": ""
+        },
+        {
+            "id": "password must contain at least one special character",
+            "message": "password must contain at least one special character",
+            "translation": ""
+        },
+        {
             "id": "Iniciar Sesión",
             "message": "Iniciar Sesión",
             "translation": "Log in"
@@ -45,6 +110,11 @@
             "id": "Email",
             "message": "Email",
             "translation": "Email"
+        },
+        {
+            "id": "Contraseña",
+            "message": "Contraseña",
+            "translation": "Password"
         },
         {
             "id": "Agregar Tarea",

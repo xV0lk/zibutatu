@@ -1,14 +1,16 @@
 package api
 
 import (
+	"encoding/json"
 	"fmt"
 	"net/http"
-	"time"
+	"strings"
 
 	"github.com/go-chi/render"
 	"github.com/gorilla/schema"
 	"github.com/jackc/pgx/v5"
 	"github.com/xV0lk/htmx-go/internal/db"
+	mw "github.com/xV0lk/htmx-go/internal/middleware"
 	"github.com/xV0lk/htmx-go/types"
 	"github.com/xV0lk/htmx-go/views"
 )
@@ -32,7 +34,33 @@ func (h *AuthHandler) HandleHome(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
+	var loginF types.AuthParams
 
+	if err := r.ParseForm(); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	if err := h.decoder.Decode(&loginF, r.Form); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	user, err := h.UserStore.GetUserAuth(loginF.Email, r.Context())
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	if !types.IsValidPassword(user.Password, loginF.Password) {
+		http.Error(w, "Invalid password", http.StatusBadRequest)
+		return
+	}
+
+	user.Password = ""
+
+	fmt.Printf("-------------------------\nuser: %+v\n", user)
+
+	render.JSON(w, r, user)
 	return
 }
 
@@ -47,19 +75,33 @@ func (h *AuthHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AuthHandler) HandleNewUser(w http.ResponseWriter, r *http.Request) {
-	user := &types.User{
-		FirstName: "Jorge",
-		LastName:  "Rojas",
-		Email:     "jorge.otto.415@gmail.com",
-		IsAdmin:   false,
-		CreatedAt: time.Now(),
-		UpdatedAt: time.Now(),
-		Language:  "es-CO",
-		Password:  "Test",
+	var newUser types.NewUser
+
+	err := json.NewDecoder(r.Body).Decode(&newUser)
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
 	}
 
-	err := h.UserStore.Login(user, r.Context())
+	if errors := newUser.Validate(r.Context()); len(errors) != 0 {
+		render.Status(r, http.StatusBadRequest)
+		render.JSON(w, r, errors)
+		return
+	}
+
+	user, err := types.NewUserFromParams(&newUser)
 	if err != nil {
+		render.Status(r, http.StatusBadRequest)
+		render.JSON(w, r, err)
+		return
+	}
+
+	err = h.UserStore.AddUser(user, r.Context())
+	if err != nil {
+		if strings.Contains(err.Error(), "duplicate key value violates unique constraint") {
+			http.Error(w, mw.Translate(r.Context(), "Email ya se encuentra registrado"), http.StatusBadRequest)
+			return
+		}
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
 	}

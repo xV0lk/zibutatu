@@ -2,13 +2,6 @@
     "language": "es-CO",
     "messages": [
         {
-            "id": "Contraseña",
-            "message": "Contraseña",
-            "translation": "Contraseña",
-            "translatorComment": "Copied from source.",
-            "fuzzy": true
-        },
-        {
             "id": "Tarea Agregada exitosamente.",
             "message": "Tarea Agregada exitosamente.",
             "translation": "Tarea Agregada exitosamente.",
@@ -49,6 +42,92 @@
             "translation": "Bienvenido!"
         },
         {
+            "id": "First name must be at least {MinFNameLen} characters long",
+            "message": "First name must be at least {MinFNameLen} characters long",
+            "translation": "First name must be at least {MinFNameLen} characters long",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "MinFNameLen",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "minFNameLen"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Last name must be at least {MinLNameLen} characters long",
+            "message": "Last name must be at least {MinLNameLen} characters long",
+            "translation": "Last name must be at least {MinLNameLen} characters long",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "MinLNameLen",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "minLNameLen"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "Invalid email address",
+            "message": "Invalid email address",
+            "translation": "Invalid email address",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "password must be at least {MinPassLen} characters long",
+            "message": "password must be at least {MinPassLen} characters long",
+            "translation": "password must be at least {MinPassLen} characters long",
+            "translatorComment": "Copied from source.",
+            "placeholders": [
+                {
+                    "id": "MinPassLen",
+                    "string": "%[1]d",
+                    "type": "int",
+                    "underlyingType": "int",
+                    "argNum": 1,
+                    "expr": "minPassLen"
+                }
+            ],
+            "fuzzy": true
+        },
+        {
+            "id": "password must contain at least one lowercase letter",
+            "message": "password must contain at least one lowercase letter",
+            "translation": "password must contain at least one lowercase letter",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "password must contain at least one uppercase letter",
+            "message": "password must contain at least one uppercase letter",
+            "translation": "password must contain at least one uppercase letter",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "password must contain at least one number",
+            "message": "password must contain at least one number",
+            "translation": "password must contain at least one number",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "password must contain at least one special character",
+            "message": "password must contain at least one special character",
+            "translation": "password must contain at least one special character",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
             "id": "Iniciar Sesión",
             "message": "Iniciar Sesión",
             "translation": "Iniciar Sesión",
@@ -59,6 +138,13 @@
             "id": "Email",
             "message": "Email",
             "translation": "Email",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Contraseña",
+            "message": "Contraseña",
+            "translation": "Contraseña",
             "translatorComment": "Copied from source.",
             "fuzzy": true
         },

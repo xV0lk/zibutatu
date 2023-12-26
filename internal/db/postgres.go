@@ -30,7 +30,7 @@ CREATE TABLE IF NOT EXISTS studios (
 	name VARCHAR(100) NOT NULL,
 	address TEXT NOT NULL,
 	email TEXT NOT NULL,
-	comission INT NOT NULL
+	cut INT NOT NULL
 );
 `
 

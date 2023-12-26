@@ -53,7 +53,8 @@ func Get(t language.Tag) (*Localizer, bool) {
 			return &locale, true
 		}
 	}
-	return &Localizer{}, false
+	defLang, _ := Get(esCo)
+	return defLang, false
 }
 
 // Translate translates a given message reference using the Localizer.

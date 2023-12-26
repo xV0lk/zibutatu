@@ -57,14 +57,15 @@ func main() {
 		r.Put("/{id}", tasksHandler.HandlePutTask)
 	})
 
-	r.Get("/login", authHandler.HandleNewUser)
+	r.Post("/users", authHandler.HandleNewUser)
 	r.Get("/users", authHandler.HandleGetUser)
+	r.Post("/login", authHandler.HandleLogin)
 
 	// Serve static files
 	workDir, _ := os.Getwd()
 	filesDir := http.Dir(filepath.Join(workDir, "assets"))
-	api.FileServer(r, "/static", filesDir)
+	api.FileServer(r, "/static/", filesDir)
 
-	fmt.Printf("Server running on port %s", *port)
+	fmt.Printf("Server running on port %s\n", *port)
 	http.ListenAndServe(*port, r)
 }
