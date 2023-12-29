@@ -13,6 +13,7 @@ import (
 	mw "github.com/xV0lk/htmx-go/internal/middleware"
 	"github.com/xV0lk/htmx-go/types"
 	"github.com/xV0lk/htmx-go/views"
+	home "github.com/xV0lk/htmx-go/views/home"
 )
 
 type AuthHandler struct {
@@ -28,39 +29,97 @@ func NewAuthHandler(store db.AuthStore, decoder *schema.Decoder) *AuthHandler {
 }
 
 func (h *AuthHandler) HandleHome(w http.ResponseWriter, r *http.Request) {
-	views.HomePage().Render(r.Context(), w)
+	// var appList []*types.Appointment
+	// appPaola := &types.Appointment{
+	// 	ID:     1,
+	// 	Client: "Paola Taborda",
+	// 	Phone:  "312 425 4321",
+	// 	Email:  "paola.taborda@example.com",
+	// 	Artist: "Juanita",
+	// 	Day:    27,
+	// 	Month:  "Diciembre",
+	// }
+
+	// appJorge := &types.Appointment{
+	// 	ID:     2,
+	// 	Client: "Jorge Rojas",
+	// 	Phone:  "317 376 8552",
+	// 	Email:  "jorge.rojas@example.com",
+	// 	Artist: "Juanita",
+	// 	Day:    15,
+	// 	Month:  "Enero",
+	// }
+
+	// appDiego := &types.Appointment{
+	// 	ID:     3,
+	// 	Client: "Diego Taborda",
+	// 	Phone:  "321 234 5298",
+	// 	Email:  "diego.taborda@example.com",
+	// 	Artist: "Juanita",
+	// 	Day:    10,
+	// 	Month:  "Febrero",
+	// }
+	// appMaria := &types.Appointment{
+	// 	ID:     4,
+	// 	Client: "María López",
+	// 	Phone:  "318 765 4321",
+	// 	Email:  "maria.lopez@example.com",
+	// 	Artist: "Juanita",
+	// 	Day:    20,
+	// 	Month:  "Marzo",
+	// }
+
+	// appPedro := &types.Appointment{
+	// 	ID:     5,
+	// 	Client: "Pedro Ramírez",
+	// 	Phone:  "315 987 6543",
+	// 	Email:  "pedro.ramirez@example.com",
+	// 	Artist: "Juanita",
+	// 	Day:    5,
+	// 	Month:  "Abril",
+	// }
+
+	// appLuisa := &types.Appointment{
+	// 	ID:     6,
+	// 	Client: "Luisa Fernández",
+	// 	Phone:  "314 876 5432",
+	// 	Email:  "luisa.fernandez@example.com",
+	// 	Artist: "Juanita",
+	// 	Day:    12
+	// 	Month:  "Mayo",
+	// }
+
+	// appList = append(appList, appPaola, appJorge, appDiego, appMaria, appPedro, appLuisa)
+
+	// // TODO: check if the user is logged in
+	// home.HomeUser(appList).Render(r.Context(), w)
+	home.HomeLogin().Render(r.Context(), w)
 	return
 
 }
 
 func (h *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
+	c := r.Context()
 	var loginF types.AuthParams
 
-	if err := r.ParseForm(); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
-	}
-	if err := h.decoder.Decode(&loginF, r.Form); err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+	tBody := views.ToastBody{
+		Msg:  mw.Translate(c, "Ocurrió un error"),
+		Type: "error",
 	}
 
-	user, err := h.UserStore.GetUserAuth(loginF.Email, r.Context())
+	loginF.Email = r.FormValue("email")
+	loginF.Password = r.FormValue("password")
+
+	_, err := h.UserStore.AuthenticateUser(&loginF, c)
 	if err != nil {
-		http.Error(w, err.Error(), http.StatusInternalServerError)
+		tBody.Msg = err.Error()
+		views.Toast(tBody, false, c, w, http.StatusBadRequest)
+		fmt.Println("Error: ", err)
 		return
 	}
 
-	if !types.IsValidPassword(user.Password, loginF.Password) {
-		http.Error(w, "Invalid password", http.StatusBadRequest)
-		return
-	}
-
-	user.Password = ""
-
-	fmt.Printf("-------------------------\nuser: %+v\n", user)
-
-	render.JSON(w, r, user)
+	// TODO: add the user to the session
+	home.HomeLogin().Render(c, w)
 	return
 }
 

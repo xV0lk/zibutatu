@@ -45,6 +45,7 @@ func main() {
 	)
 
 	r.Use(chiMiddleware.Logger)
+	r.Use(middleware.Csrf)
 	r.Use(middleware.I18n)
 
 	r.Get("/", authHandler.HandleHome)

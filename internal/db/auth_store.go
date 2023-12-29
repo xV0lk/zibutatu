@@ -2,9 +2,12 @@ package db
 
 import (
 	"context"
+	"fmt"
+	"strings"
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	mw "github.com/xV0lk/htmx-go/internal/middleware"
 	"github.com/xV0lk/htmx-go/types"
 )
 
@@ -15,7 +18,7 @@ type Closer interface {
 type AuthStore interface {
 	AddUser(*types.User, context.Context) error
 	FetchUser(int, context.Context) (*types.User, error)
-	GetUserAuth(string, context.Context) (*types.UserPass, error)
+	AuthenticateUser(*types.AuthParams, context.Context) (*types.User, error)
 
 	Closer
 }
@@ -64,19 +67,29 @@ func (s *PsAuthStore) FetchUser(id int, ctx context.Context) (*types.User, error
 
 	return user, nil
 }
-func (s *PsAuthStore) GetUserAuth(email string, ctx context.Context) (*types.UserPass, error) {
+func (s *PsAuthStore) AuthenticateUser(auth *types.AuthParams, ctx context.Context) (*types.User, error) {
+	em := strings.ToLower(auth.Email)
+
 	query := "SELECT id, first_name, last_name, email, studio_id, is_admin, created_at, updated_at, language, password FROM users WHERE email = $1;"
 
-	user := &types.UserPass{}
+	user := &types.User{}
 
-	rows, err := s.db.Query(ctx, query, email)
+	rows, err := s.db.Query(ctx, query, em)
 	if err != nil {
-		return user, err
+		return user, fmt.Errorf(mw.Translate(ctx, "Ocurrió un error"))
 	}
-	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[types.UserPass])
+
+	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[types.User])
 	if err != nil {
-		return user, err
+		fmt.Printf("-------------------------\nerr 1: %s\n", err)
+		return user, fmt.Errorf(mw.Translate(ctx, "Usuario no encontrado"))
 	}
+
+	if !types.IsValidPassword(user.Password, auth.Password) {
+		return user, fmt.Errorf(mw.Translate(ctx, "Contraseña incorrecta"))
+	}
+	// Clear password so we don't return it to the client
+	user.Password = ""
 
 	return user, nil
 }

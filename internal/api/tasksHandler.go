@@ -54,13 +54,8 @@ func (h *TasksHandler) HandleGetTasks(w http.ResponseWriter, r *http.Request) {
 // It returns an error if there was an issue handling the request.
 func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
-	if err := r.ParseForm(); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
+
 	var taskBody types.TaskBody
-	// bind the request form data fv to the taskBody struct without using echo ctx
-	// try to bind it like echo ctx.Bind but using go standard library remember the data is coming as form data not json
 
 	// Initialize the toast options
 	tBody := views.ToastBody{
@@ -69,13 +64,7 @@ func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Bind the request body
-	if err := h.decoder.Decode(&taskBody, r.Form); err != nil {
-		tBody.Msg = err.Error()
-		tBody.Type = "error"
-		views.Toast(tBody, true, c, w, http.StatusBadRequest)
-		tViews.Form().Render(c, w)
-		return
-	}
+	taskBody.Title = r.FormValue("title")
 
 	// Validate the request
 	if taskBody.Title == "" {
@@ -151,11 +140,6 @@ func (h *TasksHandler) HandleDeleteTask(w http.ResponseWriter, r *http.Request) 
 func (h *TasksHandler) HandleToogleTask(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
 
-	if err := r.ParseForm(); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
-
 	var (
 		taskStatus types.TaskStatus
 		completed  bool
@@ -171,11 +155,7 @@ func (h *TasksHandler) HandleToogleTask(w http.ResponseWriter, r *http.Request) 
 	}
 
 	// Bind the request body
-	if err := h.decoder.Decode(&taskStatus, r.Form); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(err.Error()))
-		return
-	}
+	taskStatus.Completed = r.FormValue("completed")
 
 	switch taskStatus.Completed {
 	case "":
@@ -237,10 +217,6 @@ func (h *TasksHandler) HandleEditTask(w http.ResponseWriter, r *http.Request) {
 // If there are any errors, it returns an error toast message.
 func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
-	if err := r.ParseForm(); err != nil {
-		w.WriteHeader(http.StatusBadRequest)
-		return
-	}
 
 	var taskBody types.TaskBody
 	tBody := views.ToastBody{
@@ -259,12 +235,7 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Bind the request body
-	if err := h.decoder.Decode(&taskBody, r.Form); err != nil {
-		tBody.Msg = err.Error()
-		tBody.Type = "error"
-		views.Toast(tBody, true, c, w, http.StatusBadRequest)
-		return
-	}
+	taskBody.Title = r.FormValue("title")
 
 	if taskBody.Title == "" {
 		tBody.Msg = mw.Translate(c, "Nombre no puede estar vacío")

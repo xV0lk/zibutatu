@@ -4,6 +4,7 @@ import (
   "fmt"
 
   "github.com/xV0lk/htmx-go/types"
+	"github.com/xV0lk/htmx-go/views"
 )
 
 templ TaskList(tasks types.Tasks, oob bool ) {
@@ -42,6 +43,7 @@ templ Task(item *types.Item, editing bool) {
       hx-target-error="#toast-notification"
       hx-swap="outerHTML transition:true"
       >
+        @views.Csrf()
         <input
           name="title"
           value={item.Title}
@@ -62,6 +64,7 @@ templ Task(item *types.Item, editing bool) {
   <div class="flex items-center space-x-2.5">
     <button 
       hx-delete={fmt.Sprintf("/tasks/%d", item.ID)}
+      hx-headers={fmt.Sprintf("{\"X-CSRF-Token\": \"%s\"}", ctx.Value("gorilla.csrf.Token").(string))}
       hx-target={fmt.Sprintf("#task-%d", item.ID)}
       hx-swap="outerHTML transition:true"
       type="button"
@@ -92,6 +95,7 @@ templ Task(item *types.Item, editing bool) {
       class="w-5 h-5 text-blue-700 bg-white border-gray-300 rounded focus:ring-blue-600"
       name="completed"
       hx-put={fmt.Sprintf("/tasks/%d/toggle", item.ID)}
+      hx-include="#csrf"
       if item.Completed {
         checked
       }

@@ -1,0 +1,17 @@
+package views
+
+import ("github.com/xV0lk/htmx-go/types")
+
+templ AppointmentsList(appList []*types.Appointment) {
+<div
+	id="home"
+	hx-swap-oob="true"
+	class="flex flex-col justify-center py-12 lg:mt-20"
+>
+	<ul role="list" class="divide-y divide-gray-100 overflow-hidden bg-white shadow-sm ring-1 ring-gray-900/5 sm:rounded-xl w-full">
+		for _, item := range appList {
+			@AppointmenItem(item)
+		}
+	</ul>
+</div>
+}
