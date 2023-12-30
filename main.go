@@ -33,12 +33,14 @@ func main() {
 
 	var (
 		// Stores
-		decoder   = schema.NewDecoder()
-		authStore = db.NewPsAuthStore(psqlStore)
-		taskStore = db.NewPsTaskStore(psqlStore)
+		decoder      = schema.NewDecoder()
+		authStore    = db.NewPsAuthStore(psqlStore)
+		taskStore    = db.NewPsTaskStore(psqlStore)
+		sessionStore = db.NewPsSessionStore(psqlStore)
+		userStore    = db.NewUserStore(authStore, sessionStore)
 		// handlers
 		tasksHandler = api.NewTasksHandler(taskStore, decoder)
-		authHandler  = api.NewAuthHandler(authStore, decoder)
+		authHandler  = api.NewAuthHandler(userStore, decoder)
 		// Connection
 		port = flag.String("port", ":1323", "port to run the server on")
 		r    = chi.NewRouter()
@@ -48,7 +50,12 @@ func main() {
 	r.Use(middleware.Csrf)
 	r.Use(middleware.I18n)
 
-	r.Get("/", authHandler.HandleHome)
+	r.Get("/", authHandler.HandleRoot)
+	r.Route("/login", func(r chi.Router) {
+		r.Get("/", authHandler.HandleLogin)
+		r.Post("/", authHandler.HandleAuthenticate)
+	})
+	r.Get("/home", authHandler.HandleHome)
 	r.Route("/tasks", func(r chi.Router) {
 		r.Get("/", tasksHandler.HandleGetTasks)
 		r.Post("/", tasksHandler.HandlePostTask)
@@ -58,9 +65,12 @@ func main() {
 		r.Put("/{id}", tasksHandler.HandlePutTask)
 	})
 
-	r.Post("/users", authHandler.HandleNewUser)
-	r.Get("/users", authHandler.HandleGetUser)
-	r.Post("/login", authHandler.HandleLogin)
+	// This is a json route and is not intended to be used by the browser
+	// TODO: Add in the front so it can be used by the browser to work with csrf
+	r.Route("/admin-internal", func(r chi.Router) {
+		r.Get("/", authHandler.HandleGetUser)
+		r.Post("/", authHandler.HandleNewUser)
+	})
 
 	// Serve static files
 	workDir, _ := os.Getwd()

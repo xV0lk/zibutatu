@@ -43,6 +43,14 @@ CREATE TABLE IF NOT EXISTS tasks (
 );
 `
 
+const createSessionsTable = `
+CREATE TABLE IF NOT EXISTS sessions (
+	id SERIAL PRIMARY KEY,
+	user_id INT UNIQUE NOT NULL,
+	token_hash TEXT UNIQUE NOT NULL
+);
+`
+
 func NewPsql() (*pgxpool.Pool, error) {
 	godotenv.Load(".env")
 	dbpool, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))
@@ -65,6 +73,11 @@ func SetUpTables(db *pgxpool.Pool) error {
 		return err
 	}
 	_, err = db.Exec(context.Background(), createTasksTable)
+	if err != nil {
+		fmt.Println("Error: ", err)
+		return err
+	}
+	_, err = db.Exec(context.Background(), createSessionsTable)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return err

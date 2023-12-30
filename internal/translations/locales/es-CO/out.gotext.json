@@ -2,6 +2,20 @@
     "language": "es-CO",
     "messages": [
         {
+            "id": "Ocurrió un error",
+            "message": "Ocurrió un error",
+            "translation": "Ocurrió un error",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Email ya se encuentra registrado",
+            "message": "Email ya se encuentra registrado",
+            "translation": "Email ya se encuentra registrado",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
             "id": "Tarea Agregada exitosamente.",
             "message": "Tarea Agregada exitosamente.",
             "translation": "Tarea Agregada exitosamente.",
@@ -40,6 +54,20 @@
             "id": "Welcome!",
             "message": "Welcome!",
             "translation": "Bienvenido!"
+        },
+        {
+            "id": "Usuario no encontrado",
+            "message": "Usuario no encontrado",
+            "translation": "Usuario no encontrado",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Contraseña incorrecta",
+            "message": "Contraseña incorrecta",
+            "translation": "Contraseña incorrecta",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
         },
         {
             "id": "First name must be at least {MinFNameLen} characters long",
@@ -128,13 +156,6 @@
             "fuzzy": true
         },
         {
-            "id": "Iniciar Sesión",
-            "message": "Iniciar Sesión",
-            "translation": "Iniciar Sesión",
-            "translatorComment": "Copied from source.",
-            "fuzzy": true
-        },
-        {
             "id": "Email",
             "message": "Email",
             "translation": "Email",
@@ -142,9 +163,23 @@
             "fuzzy": true
         },
         {
+            "id": "Iniciar Sesión",
+            "message": "Iniciar Sesión",
+            "translation": "Iniciar Sesión",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
             "id": "Contraseña",
             "message": "Contraseña",
             "translation": "Contraseña",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Ver",
+            "message": "Ver",
+            "translation": "Ver",
             "translatorComment": "Copied from source.",
             "fuzzy": true
         },

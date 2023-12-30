@@ -11,6 +11,18 @@ import (
 	"github.com/xV0lk/htmx-go/types"
 )
 
+type UserStore struct {
+	Auth    AuthStore
+	Session SessionStore
+}
+
+func NewUserStore(auth AuthStore, session SessionStore) *UserStore {
+	return &UserStore{
+		auth,
+		session,
+	}
+}
+
 type Closer interface {
 	Close()
 }

@@ -17,88 +17,44 @@ import (
 )
 
 type AuthHandler struct {
-	UserStore db.AuthStore
+	UserStore *db.UserStore
 	decoder   *schema.Decoder
 }
 
-func NewAuthHandler(store db.AuthStore, decoder *schema.Decoder) *AuthHandler {
+func NewAuthHandler(store *db.UserStore, decoder *schema.Decoder) *AuthHandler {
 	return &AuthHandler{
 		UserStore: store,
 		decoder:   decoder,
 	}
 }
 
-func (h *AuthHandler) HandleHome(w http.ResponseWriter, r *http.Request) {
-	// var appList []*types.Appointment
-	// appPaola := &types.Appointment{
-	// 	ID:     1,
-	// 	Client: "Paola Taborda",
-	// 	Phone:  "312 425 4321",
-	// 	Email:  "paola.taborda@example.com",
-	// 	Artist: "Juanita",
-	// 	Day:    27,
-	// 	Month:  "Diciembre",
-	// }
+func (h *AuthHandler) HandleRoot(w http.ResponseWriter, r *http.Request) {
+	sCookie, err := r.Cookie(SessionCookie)
+	if err != nil {
+		fmt.Println("No session error, redirecting to login: ", err)
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+	user, err := h.UserStore.Session.User(sCookie.Value)
+	if err != nil {
+		fmt.Println("No session error, redirecting to login: ", err)
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+	fmt.Printf("-------------------------\nroot user: %+v\n", user)
 
-	// appJorge := &types.Appointment{
-	// 	ID:     2,
-	// 	Client: "Jorge Rojas",
-	// 	Phone:  "317 376 8552",
-	// 	Email:  "jorge.rojas@example.com",
-	// 	Artist: "Juanita",
-	// 	Day:    15,
-	// 	Month:  "Enero",
-	// }
-
-	// appDiego := &types.Appointment{
-	// 	ID:     3,
-	// 	Client: "Diego Taborda",
-	// 	Phone:  "321 234 5298",
-	// 	Email:  "diego.taborda@example.com",
-	// 	Artist: "Juanita",
-	// 	Day:    10,
-	// 	Month:  "Febrero",
-	// }
-	// appMaria := &types.Appointment{
-	// 	ID:     4,
-	// 	Client: "María López",
-	// 	Phone:  "318 765 4321",
-	// 	Email:  "maria.lopez@example.com",
-	// 	Artist: "Juanita",
-	// 	Day:    20,
-	// 	Month:  "Marzo",
-	// }
-
-	// appPedro := &types.Appointment{
-	// 	ID:     5,
-	// 	Client: "Pedro Ramírez",
-	// 	Phone:  "315 987 6543",
-	// 	Email:  "pedro.ramirez@example.com",
-	// 	Artist: "Juanita",
-	// 	Day:    5,
-	// 	Month:  "Abril",
-	// }
-
-	// appLuisa := &types.Appointment{
-	// 	ID:     6,
-	// 	Client: "Luisa Fernández",
-	// 	Phone:  "314 876 5432",
-	// 	Email:  "luisa.fernandez@example.com",
-	// 	Artist: "Juanita",
-	// 	Day:    12
-	// 	Month:  "Mayo",
-	// }
-
-	// appList = append(appList, appPaola, appJorge, appDiego, appMaria, appPedro, appLuisa)
-
-	// // TODO: check if the user is logged in
+	// // TODO: check if the user is logged in and redirect to the corresponding page
 	// home.HomeUser(appList).Render(r.Context(), w)
-	home.HomeLogin().Render(r.Context(), w)
+	http.Redirect(w, r, "/home", http.StatusFound)
 	return
-
 }
 
 func (h *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
+	home.HomeLogin().Render(r.Context(), w)
+	return
+}
+
+func (h *AuthHandler) HandleAuthenticate(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
 	var loginF types.AuthParams
 
@@ -110,26 +66,34 @@ func (h *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
 	loginF.Email = r.FormValue("email")
 	loginF.Password = r.FormValue("password")
 
-	_, err := h.UserStore.AuthenticateUser(&loginF, c)
+	user, err := h.UserStore.Auth.AuthenticateUser(&loginF, c)
 	if err != nil {
 		tBody.Msg = err.Error()
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
-		fmt.Println("Error: ", err)
+		fmt.Println("Login Error: ", err)
 		return
 	}
 
-	// TODO: add the user to the session
-	home.HomeLogin().Render(c, w)
-	return
-}
+	session, err := h.UserStore.Session.Create(user.ID)
+	if err != nil {
+		views.Toast(tBody, false, c, w, http.StatusBadRequest)
+		fmt.Println("Session Error: ", err)
+		return
+	}
 
-func (h *AuthHandler) HandleAuth(w http.ResponseWriter, r *http.Request) {
-
-	return
+	setCookie(w, SessionCookie, *session.Token)
+	http.Redirect(w, r, "/", http.StatusFound)
 }
 
 func (h *AuthHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
 
+	return
+}
+
+func (h *AuthHandler) HandleHome(w http.ResponseWriter, r *http.Request) {
+	println("Home")
+	views.Index().Render(r.Context(), w)
+	// home.HomeUser().Render(r.Context(), w)
 	return
 }
 
@@ -155,7 +119,7 @@ func (h *AuthHandler) HandleNewUser(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 
-	err = h.UserStore.AddUser(user, r.Context())
+	err = h.UserStore.Auth.AddUser(user, r.Context())
 	if err != nil {
 		if strings.Contains(err.Error(), "duplicate key value violates unique constraint") {
 			http.Error(w, mw.Translate(r.Context(), "Email ya se encuentra registrado"), http.StatusBadRequest)
@@ -170,7 +134,7 @@ func (h *AuthHandler) HandleNewUser(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AuthHandler) HandleGetUser(w http.ResponseWriter, r *http.Request) {
-	user, err := h.UserStore.FetchUser(1, r.Context())
+	user, err := h.UserStore.Auth.FetchUser(4, r.Context())
 	if err == pgx.ErrNoRows {
 		return
 	}

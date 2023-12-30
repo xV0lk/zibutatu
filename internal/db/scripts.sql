@@ -1,0 +1,33 @@
+CREATE TABLE IF NOT EXISTS users ( 
+	id SERIAL PRIMARY KEY,
+	first_name VARCHAR(50),
+	last_name VARCHAR(50),
+	email TEXT UNIQUE NOT NULL,
+	studio_id INT NULL,
+	is_admin BOOL DEFAULT false,
+	created_at TIMESTAMP DEFAULT NOW(),
+	updated_at TIMESTAMP DEFAULT NOW(),
+	language CHAR(5) DEFAULT 'es-CO' NOT NULL,
+	password TEXT NOT NULL
+	);
+
+CREATE TABLE IF NOT EXISTS studios (
+	id SERIAL PRIMARY KEY,
+	name VARCHAR(100) NOT NULL,
+	address TEXT NOT NULL,
+	email TEXT NOT NULL,
+	cut INT NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS tasks (
+	id SERIAL PRIMARY KEY,
+	title TEXT,
+	completed BOOLEAN DEFAULT false,
+	position INTEGER
+);
+
+CREATE TABLE IF NOT EXISTS sessions (
+	id SERIAL PRIMARY KEY,
+	user_id INT UNIQUE NOT NULL,
+	token_hash TEXT UNIQUE NOT NULL
+);

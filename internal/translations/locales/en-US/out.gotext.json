@@ -2,6 +2,16 @@
     "language": "en-US",
     "messages": [
         {
+            "id": "Ocurrió un error",
+            "message": "Ocurrió un error",
+            "translation": ""
+        },
+        {
+            "id": "Email ya se encuentra registrado",
+            "message": "Email ya se encuentra registrado",
+            "translation": ""
+        },
+        {
             "id": "Tarea Agregada exitosamente.",
             "message": "Tarea Agregada exitosamente.",
             "translation": "Task added successfully."
@@ -30,6 +40,16 @@
             "id": "Welcome!",
             "message": "Welcome!",
             "translation": "Welcome!"
+        },
+        {
+            "id": "Usuario no encontrado",
+            "message": "Usuario no encontrado",
+            "translation": ""
+        },
+        {
+            "id": "Contraseña incorrecta",
+            "message": "Contraseña incorrecta",
+            "translation": ""
         },
         {
             "id": "First name must be at least {MinFNameLen} characters long",
@@ -102,19 +122,24 @@
             "translation": ""
         },
         {
-            "id": "Iniciar Sesión",
-            "message": "Iniciar Sesión",
-            "translation": "Log in"
-        },
-        {
             "id": "Email",
             "message": "Email",
             "translation": "Email"
         },
         {
+            "id": "Iniciar Sesión",
+            "message": "Iniciar Sesión",
+            "translation": "Log in"
+        },
+        {
             "id": "Contraseña",
             "message": "Contraseña",
             "translation": "Password"
+        },
+        {
+            "id": "Ver",
+            "message": "Ver",
+            "translation": ""
         },
         {
             "id": "Agregar Tarea",
