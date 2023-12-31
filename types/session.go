@@ -4,6 +4,7 @@ import (
 	"crypto/rand"
 	"encoding/base64"
 	"fmt"
+	"time"
 )
 
 const (
@@ -11,10 +12,11 @@ const (
 )
 
 type Session struct {
-	ID        int    `db:"id,omitempty"`
-	UserID    int    `db:"user_id,unique"`
-	TokenHash string `db:"token_hash,unique"`
-	// not to be stores in the database
+	ID        int       `db:"id,omitempty"`
+	UserID    int       `db:"user_id,unique"`
+	TokenHash string    `db:"token_hash,unique"`
+	CreatedAt time.Time `db:"created_at"`
+	// not to be stored in the database
 	Token string
 }
 
