@@ -104,8 +104,8 @@ func (h *AuthHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
 
 func (h *AuthHandler) HandleHome(w http.ResponseWriter, r *http.Request) {
 	println("Home")
-	home.HomeLogin().Render(r.Context(), w)
-	// views.Index().Render(r.Context(), w)
+	// home.HomeLogin().Render(r.Context(), w)
+	views.Index().Render(r.Context(), w)
 	// home.HomeUser().Render(r.Context(), w)
 }
 

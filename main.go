@@ -49,6 +49,7 @@ func main() {
 	r.Use(chiMiddleware.Logger)
 	r.Use(middleware.Csrf)
 	r.Use(middleware.I18n)
+	r.Use(middleware.SessionCtx)
 
 	r.Get("/", authHandler.HandleRoot)
 	r.Route("/login", func(r chi.Router) {

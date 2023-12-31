@@ -6,11 +6,36 @@ import (
   )
 
 templ UserMenu() {
-<div class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 focus:outline-none hidden" role="menu" aria-orientation="vertical" aria-labelledby="user-menu-button" tabindex="-1" id="userMenu">
-  <a href="#" hx-delete="/login" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
-    hx-headers={fmt.Sprintf("{\"X-CSRF-Token\": \"%s\"}", ctx.Value("gorilla.csrf.Token").(string))}
-    id="user-menu-item-2">
-      {mw.Translate(ctx, "Salir")}
-  </a>
+<div 
+  class="absolute right-0 z-10 mt-2 w-48 origin-top-right rounded-md bg-white py-1 shadow-lg ring-1 ring-black ring-opacity-5 divide-y divide-gray-200 focus:outline-none hidden"
+  role="menu"
+  aria-orientation="vertical"
+  aria-labelledby="user-menu-button"
+  tabindex="-1" id="userMenu"
+>
+  <div class="py-1" role="none">
+    <p class="block px-4 py-2 text-sm text-gray-500" role="none" tabindex="-1" id="lang">
+        {mw.Translate(ctx, "Cambiar idioma")}
+    </p>
+    <a href="#" hx-post="/lang/es" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+      hx-headers={fmt.Sprintf("{\"X-CSRF-Token\": \"%s\"}", ctx.Value("gorilla.csrf.Token").(string))}
+      id="logout">
+        {mw.Translate(ctx, "Español")}
+    </a>
+    <a href="#" hx-post="/lang/en" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+      hx-headers={fmt.Sprintf("{\"X-CSRF-Token\": \"%s\"}", ctx.Value("gorilla.csrf.Token").(string))}
+      id="logout">
+        {mw.Translate(ctx, "Ingles")}
+    </a>
+  </div>
+  if ctx.Value("session").(bool) {
+    <div class="py-1" role="none">
+      <a href="#" hx-delete="/login" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
+        hx-headers={fmt.Sprintf("{\"X-CSRF-Token\": \"%s\"}", ctx.Value("gorilla.csrf.Token").(string))}
+        id="logout">
+          {mw.Translate(ctx, "Salir")}
+      </a>
+    </div>
+  }
 </div>
 }
