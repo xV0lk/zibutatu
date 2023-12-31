@@ -1,8 +1,9 @@
 package views
 
-import "github.com/xV0lk/htmx-go/views"
-
-import mw "github.com/xV0lk/htmx-go/internal/middleware"
+import (
+  "github.com/xV0lk/htmx-go/views"
+  mw "github.com/xV0lk/htmx-go/internal/middleware"
+)
 
 templ Form(){
 <form hx-post="/tasks" hx-swap="outerHTML transition:true">

@@ -54,6 +54,7 @@ func main() {
 	r.Route("/login", func(r chi.Router) {
 		r.Get("/", authHandler.HandleLogin)
 		r.Post("/", authHandler.HandleAuthenticate)
+		r.Delete("/", authHandler.HandleLogout)
 	})
 	r.Get("/home", authHandler.HandleHome)
 	r.Route("/tasks", func(r chi.Router) {

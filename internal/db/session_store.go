@@ -3,9 +3,9 @@ package db
 import (
 	"context"
 	"crypto/sha256"
-	"database/sql"
 	"encoding/base64"
 
+	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/xV0lk/htmx-go/types"
 )
@@ -13,6 +13,7 @@ import (
 type SessionStore interface {
 	Create(userID int) (*types.Session, error)
 	User(token string) (*types.User, error)
+	Delete(token string) error
 	Closer
 }
 
@@ -38,10 +39,10 @@ func (s *PsSessionStore) Create(userID int) (*types.Session, error) {
 	session := &types.Session{
 		UserID:    userID,
 		Token:     token,
-		TokenHash: hash(token),
+		TokenHash: s.hash(token),
 	}
 	err = s.update(session)
-	if err == sql.ErrNoRows {
+	if err == pgx.ErrNoRows {
 		err = s.insert(session)
 	}
 	if err != nil {
@@ -51,8 +52,40 @@ func (s *PsSessionStore) Create(userID int) (*types.Session, error) {
 }
 
 func (s *PsSessionStore) User(token string) (*types.User, error) {
+	th := s.hash(token)
+	var user types.User
 
-	return nil, nil
+	query := "SELECT user_id FROM sessions WHERE token_hash = $1;"
+	row := s.db.QueryRow(context.Background(), query, th)
+	err := row.Scan(&user.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	query = "SELECT id, first_name, last_name, email, studio_id, is_admin, created_at, updated_at, language, password FROM users WHERE id = $1;"
+	rows, err := s.db.Query(context.Background(), query, user.ID)
+
+	if err != nil {
+		return nil, err
+	}
+
+	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[types.User])
+	if err != nil {
+		return nil, err
+	}
+	user.Password = ""
+	return &user, nil
+}
+
+func (s *PsSessionStore) Delete(token string) error {
+	th := s.hash(token)
+	query := "DELETE FROM sessions WHERE token_hash = $1;"
+	_, err := s.db.Exec(context.Background(), query, th)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *PsSessionStore) insert(session *types.Session) error {
@@ -76,7 +109,7 @@ func (s *PsSessionStore) update(session *types.Session) error {
 	return nil
 }
 
-func hash(token string) string {
+func (s *PsSessionStore) hash(token string) string {
 	h := sha256.Sum256([]byte(token))
 	return base64.URLEncoding.EncodeToString(h[:])
 }

@@ -85,7 +85,20 @@ func (h *AuthHandler) HandleAuthenticate(w http.ResponseWriter, r *http.Request)
 }
 
 func (h *AuthHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
-
+	sCookie, err := r.Cookie(SessionCookie)
+	if err != nil {
+		fmt.Println("No session error: ", err)
+		w.Header().Add("HX-Redirect", "/login")
+		return
+	}
+	err = h.UserStore.Session.Delete(sCookie.Value)
+	if err != nil {
+		fmt.Println("Error deleting session from DB: ", err)
+		w.Header().Add("HX-Redirect", "/login")
+		return
+	}
+	deleteCookie(w, SessionCookie)
+	w.Header().Add("HX-Redirect", "/login")
 	return
 }
 

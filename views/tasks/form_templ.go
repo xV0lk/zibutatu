@@ -10,9 +10,10 @@ import "context"
 import "io"
 import "bytes"
 
-import "github.com/xV0lk/htmx-go/views"
-
-import mw "github.com/xV0lk/htmx-go/internal/middleware"
+import (
+	mw "github.com/xV0lk/htmx-go/internal/middleware"
+	"github.com/xV0lk/htmx-go/views"
+)
 
 func Form() templ.Component {
 	return templ.ComponentFunc(func(ctx context.Context, templ_7745c5c3_W io.Writer) (templ_7745c5c3_Err error) {
