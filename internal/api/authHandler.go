@@ -29,6 +29,7 @@ func NewAuthHandler(store *db.UserStore, decoder *schema.Decoder) *AuthHandler {
 }
 
 func (h *AuthHandler) HandleRoot(w http.ResponseWriter, r *http.Request) {
+	// Create root template
 	sCookie, err := r.Cookie(SessionCookie)
 	if err != nil {
 		fmt.Println("No session error, redirecting to login: ", err)
@@ -43,8 +44,6 @@ func (h *AuthHandler) HandleRoot(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Printf("-------------------------\nroot user: %+v\n", user)
 
-	// // TODO: check if the user is logged in and redirect to the corresponding page
-	// home.HomeUser(appList).Render(r.Context(), w)
 	http.Redirect(w, r, "/home", http.StatusFound)
 	return
 }
@@ -81,8 +80,8 @@ func (h *AuthHandler) HandleAuthenticate(w http.ResponseWriter, r *http.Request)
 		return
 	}
 
-	setCookie(w, SessionCookie, *session.Token)
-	http.Redirect(w, r, "/", http.StatusFound)
+	setCookie(w, SessionCookie, session.Token)
+	w.Header().Add("HX-Redirect", "/home")
 }
 
 func (h *AuthHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
@@ -92,9 +91,9 @@ func (h *AuthHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
 
 func (h *AuthHandler) HandleHome(w http.ResponseWriter, r *http.Request) {
 	println("Home")
-	views.Index().Render(r.Context(), w)
+	home.HomeLogin().Render(r.Context(), w)
+	// views.Index().Render(r.Context(), w)
 	// home.HomeUser().Render(r.Context(), w)
-	return
 }
 
 func (h *AuthHandler) HandleNewUser(w http.ResponseWriter, r *http.Request) {
