@@ -36,13 +36,12 @@ func (h *AuthHandler) HandleRoot(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
-	user, err := h.UserStore.Session.User(sCookie.Value)
+	_, err = h.UserStore.Session.User(sCookie.Value)
 	if err != nil {
 		fmt.Println("No session error, redirecting to login: ", err)
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
-	fmt.Printf("-------------------------\nroot user: %+v\n", user)
 
 	http.Redirect(w, r, "/home", http.StatusFound)
 	return
@@ -103,7 +102,6 @@ func (h *AuthHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
 }
 
 func (h *AuthHandler) HandleHome(w http.ResponseWriter, r *http.Request) {
-	println("Home")
 	// home.HomeLogin().Render(r.Context(), w)
 	views.Index().Render(r.Context(), w)
 	// home.HomeUser().Render(r.Context(), w)

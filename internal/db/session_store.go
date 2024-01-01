@@ -41,10 +41,7 @@ func (s *PsSessionStore) Create(userID int) (*types.Session, error) {
 		Token:     token,
 		TokenHash: s.hash(token),
 	}
-	err = s.update(session)
-	if err == pgx.ErrNoRows {
-		err = s.insert(session)
-	}
+	err = s.insert(session)
 	if err != nil {
 		return session, err
 	}
@@ -55,16 +52,21 @@ func (s *PsSessionStore) User(token string) (*types.User, error) {
 	th := s.hash(token)
 	var user types.User
 
-	query := "SELECT user_id FROM sessions WHERE token_hash = $1;"
-	row := s.db.QueryRow(context.Background(), query, th)
-	err := row.Scan(&user.ID)
-
-	if err != nil {
-		return nil, err
-	}
-
-	query = "SELECT id, first_name, last_name, email, studio_id, is_admin, created_at, updated_at, language, password FROM users WHERE id = $1;"
-	rows, err := s.db.Query(context.Background(), query, user.ID)
+	query := `SELECT
+				users.id,
+				users.first_name,
+				users.last_name,
+				users.email,
+				users.studio_id,
+				users.is_admin,
+				users.created_at,
+				users.updated_at,
+				users.language,
+				users.password
+			FROM sessions
+				JOIN users ON sessions.user_id = users.id
+			WHERE token_hash = $1;`
+	rows, err := s.db.Query(context.Background(), query, th)
 
 	if err != nil {
 		return nil, err
@@ -89,18 +91,12 @@ func (s *PsSessionStore) Delete(token string) error {
 }
 
 func (s *PsSessionStore) insert(session *types.Session) error {
-	query := `INSERT INTO sessions (user_id, token_hash) VALUES ($1, $2) RETURNING id`
-	row := s.db.QueryRow(context.Background(), query, session.UserID, session.TokenHash)
-	err := row.Scan(&session.ID)
-	if err != nil {
-		return err
-	}
-	return nil
-}
-
-// update
-func (s *PsSessionStore) update(session *types.Session) error {
-	query := `UPDATE sessions set token_hash = $2 WHERE user_id = $1 RETURNING id`
+	query := ` INSERT INTO
+				sessions (user_id, token_hash)
+				VALUES ($1, $2) ON CONFLICT (user_id) DO
+				UPDATE
+				SET token_hash = $2
+				RETURNING id;`
 	row := s.db.QueryRow(context.Background(), query, session.UserID, session.TokenHash)
 	err := row.Scan(&session.ID)
 	if err != nil {
