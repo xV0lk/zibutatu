@@ -1,6 +1,7 @@
 package main
 
 import (
+	"embed"
 	"flag"
 	"fmt"
 	"log"
@@ -16,6 +17,9 @@ import (
 	"github.com/xV0lk/htmx-go/internal/middleware"
 )
 
+//go:embed migrations/*.sql
+var embedMigrations embed.FS
+
 func main() {
 	// _, err := db.MongoConnect()
 	// if err != nil {
@@ -29,7 +33,9 @@ func main() {
 	}
 	defer psqlStore.Close()
 	fmt.Println("Connected to postgres")
-	db.SetUpTables(psqlStore)
+	if err := db.Migrate(psqlStore, embedMigrations); err != nil {
+		log.Fatal(err)
+	}
 
 	var (
 		// Stores
