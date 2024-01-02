@@ -3,11 +3,11 @@ package types
 import (
 	"context"
 	"errors"
+	"fmt"
 	"regexp"
 	"strings"
 	"time"
 
-	mw "github.com/xV0lk/htmx-go/internal/middleware"
 	"golang.org/x/crypto/bcrypt"
 )
 
@@ -48,10 +48,10 @@ type AuthParams struct {
 func (params NewUser) Validate(ctx context.Context) map[string]string {
 	errors := map[string]string{}
 	if len(params.FirstName) < minFNameLen {
-		errors["firstName"] = mw.Translate(ctx, "First name must be at least %d characters long", minFNameLen)
+		errors["firstName"] = fmt.Sprintf("First name must be at least %d characters long", minFNameLen)
 	}
 	if len(params.LastName) < minLNameLen {
-		errors["lastName"] = mw.Translate(ctx, "Last name must be at least %d characters long", minLNameLen)
+		errors["lastName"] = fmt.Sprintf("Last name must be at least %d characters long", minLNameLen)
 	}
 	if err := ValidatePassword(ctx, params.Password); len(err) > 0 {
 		errors["password"] = strings.Join(err, ", ")
@@ -65,7 +65,7 @@ func (params NewUser) Validate(ctx context.Context) map[string]string {
 
 func ValidateEmail(ctx context.Context, email string) error {
 	if !regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`).MatchString(email) {
-		return errors.New(mw.Translate(ctx, "Invalid email address"))
+		return errors.New("Invalid email address")
 	}
 	return nil
 }
@@ -73,19 +73,19 @@ func ValidateEmail(ctx context.Context, email string) error {
 func ValidatePassword(ctx context.Context, password string) []string {
 	errors := []string{}
 	if len(password) < minPassLen {
-		errors = append(errors, mw.Translate(ctx, "password must be at least %d characters long", minPassLen))
+		errors = append(errors, fmt.Sprintf("password must be at least %d characters long", minPassLen))
 	}
 	if !regexp.MustCompile(`[a-z]`).MatchString(password) {
-		errors = append(errors, mw.Translate(ctx, "password must contain at least one lowercase letter"))
+		errors = append(errors, "password must contain at least one lowercase letter")
 	}
 	if !regexp.MustCompile(`[A-Z]`).MatchString(password) {
-		errors = append(errors, mw.Translate(ctx, "password must contain at least one uppercase letter"))
+		errors = append(errors, "password must contain at least one uppercase letter")
 	}
 	if !regexp.MustCompile(`[0-9]`).MatchString(password) {
-		errors = append(errors, mw.Translate(ctx, "password must contain at least one number"))
+		errors = append(errors, "password must contain at least one number")
 	}
 	if !regexp.MustCompile(`[^a-zA-Z0-9]`).MatchString(password) {
-		errors = append(errors, mw.Translate(ctx, "password must contain at least one special character"))
+		errors = append(errors, "password must contain at least one special character")
 	}
 	return errors
 }

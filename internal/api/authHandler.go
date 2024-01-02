@@ -9,6 +9,7 @@ import (
 	"github.com/go-chi/render"
 	"github.com/gorilla/schema"
 	"github.com/jackc/pgx/v5"
+	"github.com/xV0lk/htmx-go/internal/ctx"
 	"github.com/xV0lk/htmx-go/internal/db"
 	mw "github.com/xV0lk/htmx-go/internal/middleware"
 	"github.com/xV0lk/htmx-go/types"
@@ -30,18 +31,13 @@ func NewAuthHandler(store *db.UserStore, decoder *schema.Decoder) *AuthHandler {
 
 func (h *AuthHandler) HandleRoot(w http.ResponseWriter, r *http.Request) {
 	// Create root template
-	sCookie, err := r.Cookie(SessionCookie)
-	if err != nil {
-		fmt.Println("No session error, redirecting to login: ", err)
+	user := ctx.Value[types.User](r.Context())
+	if user == nil {
+		fmt.Println("No session error, redirecting to login: ")
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
-	_, err = h.UserStore.Session.User(sCookie.Value)
-	if err != nil {
-		fmt.Println("No session error, redirecting to login: ", err)
-		http.Redirect(w, r, "/login", http.StatusFound)
-		return
-	}
+	fmt.Printf("-------------------------\nuser: %+v\n", user)
 
 	http.Redirect(w, r, "/home", http.StatusFound)
 	return
@@ -66,10 +62,15 @@ func (h *AuthHandler) HandleAuthenticate(w http.ResponseWriter, r *http.Request)
 
 	user, err := h.UserStore.Auth.AuthenticateUser(&loginF, c)
 	if err != nil {
-		tBody.Msg = err.Error()
+		tBody.Msg = mw.Translate(c, "Usuario no encontrado")
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
-		fmt.Println("Login Error: ", err)
+		fmt.Println("Login Error 1: ", err)
 		return
+	}
+	if !types.IsValidPassword(user.Password, loginF.Password) {
+		tBody.Msg = mw.Translate(c, "Contraseña incorrecta")
+		views.Toast(tBody, false, c, w, http.StatusBadRequest)
+		fmt.Println("Login Error 2: ", err)
 	}
 
 	session, err := h.UserStore.Session.Create(user.ID)

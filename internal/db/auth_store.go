@@ -7,7 +7,6 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	mw "github.com/xV0lk/htmx-go/internal/middleware"
 	"github.com/xV0lk/htmx-go/types"
 )
 
@@ -88,20 +87,14 @@ func (s *PsAuthStore) AuthenticateUser(auth *types.AuthParams, ctx context.Conte
 
 	rows, err := s.db.Query(ctx, query, em)
 	if err != nil {
-		return user, fmt.Errorf(mw.Translate(ctx, "Ocurrió un error"))
+		return user, fmt.Errorf("Ocurrió un error")
 	}
 
 	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[types.User])
 	if err != nil {
 		fmt.Printf("-------------------------\nerr 1: %s\n", err)
-		return user, fmt.Errorf(mw.Translate(ctx, "Usuario no encontrado"))
+		return user, err
 	}
-
-	if !types.IsValidPassword(user.Password, auth.Password) {
-		return user, fmt.Errorf(mw.Translate(ctx, "Contraseña incorrecta"))
-	}
-	// Clear password so we don't return it to the client
-	user.Password = ""
 
 	return user, nil
 }

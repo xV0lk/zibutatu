@@ -10,8 +10,11 @@ import "context"
 import "io"
 import "bytes"
 
+import "github.com/xV0lk/htmx-go/types"
+
 import (
 	"fmt"
+	iCtx "github.com/xV0lk/htmx-go/internal/ctx"
 	mw "github.com/xV0lk/htmx-go/internal/middleware"
 )
 
@@ -75,7 +78,7 @@ func UserMenu() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if ctx.Value("session").(bool) {
+		if iCtx.Value[types.User](ctx) != nil {
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"py-1\" role=\"none\"><a href=\"#\" hx-delete=\"/login\" class=\"block px-4 py-2 text-sm text-gray-700\" role=\"menuitem\" tabindex=\"-1\" hx-headers=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

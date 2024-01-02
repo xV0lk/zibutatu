@@ -51,14 +51,13 @@ func main() {
 		port = flag.String("port", ":1323", "port to run the server on")
 		r    = chi.NewRouter()
 	)
-
 	r.Use(chiMiddleware.Logger)
 	r.Use(middleware.I18n)
+	r.Use(middleware.User(userStore))
 
 	// main group of routes that use csrf and sessions
 	r.Group(func(r chi.Router) {
 		r.Use(middleware.Csrf)
-		r.Use(middleware.SessionCtx)
 		r.Get("/", authHandler.HandleRoot)
 		r.Route("/login", func(r chi.Router) {
 			r.Get("/", authHandler.HandleLogin)
