@@ -15,6 +15,7 @@ import (
 	"github.com/xV0lk/htmx-go/internal/api"
 	"github.com/xV0lk/htmx-go/internal/db"
 	"github.com/xV0lk/htmx-go/internal/middleware"
+	"github.com/xV0lk/htmx-go/types"
 )
 
 //go:embed migrations/*.sql
@@ -36,6 +37,14 @@ func main() {
 	if err := db.Migrate(psqlStore, embedMigrations); err != nil {
 		log.Fatal(err)
 	}
+
+	_, err = types.NewDefaultEmailService()
+	if err != nil {
+		fmt.Printf("-------------------------\nerr creating mail service: %s\n", err)
+		log.Fatal(err)
+		return
+	}
+	fmt.Println("Connected to mail Service")
 
 	var (
 		// Stores
