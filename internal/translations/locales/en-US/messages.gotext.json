@@ -2,9 +2,24 @@
 	"language": "en-US",
 	"messages": [
 			{
-					"id": "Contraseña",
-					"message": "Contraseña",
-					"translation": "Password"
+					"id": "Ocurrió un error",
+					"message": "Ocurrió un error",
+					"translation": "An error occurred"
+			},
+			{
+					"id": "Usuario no encontrado",
+					"message": "Usuario no encontrado",
+					"translation": "User not found"
+			},
+			{
+					"id": "Contraseña incorrecta",
+					"message": "Contraseña incorrecta",
+					"translation": "Wrong password"
+			},
+			{
+					"id": "Email ya se encuentra registrado",
+					"message": "Email ya se encuentra registrado",
+					"translation": "Email already registered"
 			},
 			{
 					"id": "Tarea Agregada exitosamente.",
@@ -37,14 +52,44 @@
 					"translation": "Welcome!"
 			},
 			{
-				"id": "Iniciar Sesión",
-				"message": "Iniciar Sesión",
-				"translation": "Log in"
+					"id": "Email",
+					"message": "Email",
+					"translation": "Email"
 			},
 			{
-				"id": "Email",
-				"message": "Email",
-				"translation": "Email"
+					"id": "Iniciar Sesión",
+					"message": "Iniciar Sesión",
+					"translation": "Log in"
+			},
+			{
+					"id": "Contraseña",
+					"message": "Contraseña",
+					"translation": "Password"
+			},
+			{
+					"id": "Ver",
+					"message": "Ver",
+					"translation": "View"
+			},
+			{
+					"id": "Cambiar idioma",
+					"message": "Cambiar idioma",
+					"translation": "Change language"
+			},
+			{
+					"id": "Español",
+					"message": "Español",
+					"translation": "Spanish"
+			},
+			{
+					"id": "Ingles",
+					"message": "Ingles",
+					"translation": "English"
+			},
+			{
+					"id": "Salir",
+					"message": "Salir",
+					"translation": "Exit"
 			},
 			{
 					"id": "Agregar Tarea",

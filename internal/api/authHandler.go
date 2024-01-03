@@ -37,7 +37,6 @@ func (h *AuthHandler) HandleRoot(w http.ResponseWriter, r *http.Request) {
 		http.Redirect(w, r, "/login", http.StatusFound)
 		return
 	}
-	fmt.Printf("-------------------------\nuser: %+v\n", user)
 
 	http.Redirect(w, r, "/home", http.StatusFound)
 	return

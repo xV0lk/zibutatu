@@ -4,12 +4,22 @@
         {
             "id": "Ocurrió un error",
             "message": "Ocurrió un error",
-            "translation": ""
+            "translation": "An error occurred"
+        },
+        {
+            "id": "Usuario no encontrado",
+            "message": "Usuario no encontrado",
+            "translation": "User not found"
+        },
+        {
+            "id": "Contraseña incorrecta",
+            "message": "Contraseña incorrecta",
+            "translation": "Wrong password"
         },
         {
             "id": "Email ya se encuentra registrado",
             "message": "Email ya se encuentra registrado",
-            "translation": ""
+            "translation": "Email already registered"
         },
         {
             "id": "Tarea Agregada exitosamente.",
@@ -42,86 +52,6 @@
             "translation": "Welcome!"
         },
         {
-            "id": "Usuario no encontrado",
-            "message": "Usuario no encontrado",
-            "translation": ""
-        },
-        {
-            "id": "Contraseña incorrecta",
-            "message": "Contraseña incorrecta",
-            "translation": ""
-        },
-        {
-            "id": "First name must be at least {MinFNameLen} characters long",
-            "message": "First name must be at least {MinFNameLen} characters long",
-            "translation": "",
-            "placeholders": [
-                {
-                    "id": "MinFNameLen",
-                    "string": "%[1]d",
-                    "type": "int",
-                    "underlyingType": "int",
-                    "argNum": 1,
-                    "expr": "minFNameLen"
-                }
-            ]
-        },
-        {
-            "id": "Last name must be at least {MinLNameLen} characters long",
-            "message": "Last name must be at least {MinLNameLen} characters long",
-            "translation": "",
-            "placeholders": [
-                {
-                    "id": "MinLNameLen",
-                    "string": "%[1]d",
-                    "type": "int",
-                    "underlyingType": "int",
-                    "argNum": 1,
-                    "expr": "minLNameLen"
-                }
-            ]
-        },
-        {
-            "id": "Invalid email address",
-            "message": "Invalid email address",
-            "translation": ""
-        },
-        {
-            "id": "password must be at least {MinPassLen} characters long",
-            "message": "password must be at least {MinPassLen} characters long",
-            "translation": "",
-            "placeholders": [
-                {
-                    "id": "MinPassLen",
-                    "string": "%[1]d",
-                    "type": "int",
-                    "underlyingType": "int",
-                    "argNum": 1,
-                    "expr": "minPassLen"
-                }
-            ]
-        },
-        {
-            "id": "password must contain at least one lowercase letter",
-            "message": "password must contain at least one lowercase letter",
-            "translation": ""
-        },
-        {
-            "id": "password must contain at least one uppercase letter",
-            "message": "password must contain at least one uppercase letter",
-            "translation": ""
-        },
-        {
-            "id": "password must contain at least one number",
-            "message": "password must contain at least one number",
-            "translation": ""
-        },
-        {
-            "id": "password must contain at least one special character",
-            "message": "password must contain at least one special character",
-            "translation": ""
-        },
-        {
             "id": "Email",
             "message": "Email",
             "translation": "Email"
@@ -139,7 +69,27 @@
         {
             "id": "Ver",
             "message": "Ver",
-            "translation": ""
+            "translation": "View"
+        },
+        {
+            "id": "Cambiar idioma",
+            "message": "Cambiar idioma",
+            "translation": "Change language"
+        },
+        {
+            "id": "Español",
+            "message": "Español",
+            "translation": "Spanish"
+        },
+        {
+            "id": "Ingles",
+            "message": "Ingles",
+            "translation": "English"
+        },
+        {
+            "id": "Salir",
+            "message": "Salir",
+            "translation": "Exit"
         },
         {
             "id": "Agregar Tarea",

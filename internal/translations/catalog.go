@@ -39,70 +39,62 @@ func init() {
 }
 
 var messageKeyToIndex = map[string]int{
-	"Agregar Tarea":                    9,
-	"Contraseña":                       8,
-	"Contraseña incorrecta":            15,
-	"Email":                            6,
-	"Email ya se encuentra registrado": 13,
-	"First name must be at least %d characters long": 16,
-	"Id no valido":          2,
-	"Iniciar Sesión":        7,
-	"Invalid email address": 18,
-	"Last name must be at least %d characters long":        17,
-	"Nombre no puede estar vacío":                          1,
-	"Ocurrió un error":                                     12,
-	"Status no valido":                                     3,
-	"Tarea Agregada exitosamente.":                         0,
-	"Tarea actualizada exitosamente.":                      4,
-	"Tareas completadas: %d":                               11,
-	"Tareas totales: %d":                                   10,
-	"Usuario no encontrado":                                14,
-	"Ver":                                                  24,
-	"Welcome!\n":                                           5,
-	"password must be at least %d characters long":         19,
-	"password must contain at least one lowercase letter":  20,
-	"password must contain at least one number":            22,
-	"password must contain at least one special character": 23,
-	"password must contain at least one uppercase letter":  21,
+	"Agregar Tarea":                    18,
+	"Cambiar idioma":                   14,
+	"Contraseña":                       12,
+	"Contraseña incorrecta":            2,
+	"Email":                            10,
+	"Email ya se encuentra registrado": 3,
+	"Español":                          15,
+	"Id no valido":                     6,
+	"Ingles":                           16,
+	"Iniciar Sesión":                   11,
+	"Nombre no puede estar vacío":      5,
+	"Ocurrió un error":                 0,
+	"Salir":                            17,
+	"Status no valido":                 7,
+	"Tarea Agregada exitosamente.":     4,
+	"Tarea actualizada exitosamente.":  8,
+	"Tareas completadas: %d":           20,
+	"Tareas totales: %d":               19,
+	"Usuario no encontrado":            1,
+	"Ver":                              13,
+	"Welcome!\n":                       9,
 }
 
-var en_USIndex = []uint32{ // 26 elements
-	0x00000000, 0x00000019, 0x0000002e, 0x00000039,
-	0x00000048, 0x00000063, 0x00000071, 0x00000077,
-	0x0000007e, 0x00000087, 0x00000090, 0x000000a3,
-	0x000000ba, 0x000000ba, 0x000000ba, 0x000000ba,
-	0x000000ba, 0x000000ba, 0x000000ba, 0x000000ba,
-	0x000000ba, 0x000000ba, 0x000000ba, 0x000000ba,
-	0x000000ba, 0x000000ba,
-} // Size: 128 bytes
+var en_USIndex = []uint32{ // 22 elements
+	0x00000000, 0x00000012, 0x00000021, 0x00000030,
+	0x00000049, 0x00000062, 0x00000077, 0x00000082,
+	0x00000091, 0x000000ac, 0x000000ba, 0x000000c0,
+	0x000000c7, 0x000000d0, 0x000000d5, 0x000000e5,
+	0x000000ed, 0x000000f5, 0x000000fa, 0x00000103,
+	0x00000116, 0x0000012d,
+} // Size: 112 bytes
 
-const en_USData string = "" + // Size: 186 bytes
-	"\x02Task added successfully.\x02Name cannot be empty\x02Invalid Id\x02In" +
-	"valid Status\x02Task updated successfully.\x04\x00\x01\x0a\x09\x02Welcom" +
-	"e!\x02Email\x02Log in\x02Password\x02Add task\x02Total tasks: %[1]d\x02C" +
-	"ompleted tasks: %[1]d"
+const en_USData string = "" + // Size: 301 bytes
+	"\x02An error occurred\x02User not found\x02Wrong password\x02Email alrea" +
+	"dy registered\x02Task added successfully.\x02Name cannot be empty\x02Inv" +
+	"alid Id\x02Invalid Status\x02Task updated successfully.\x04\x00\x01\x0a" +
+	"\x09\x02Welcome!\x02Email\x02Log in\x02Password\x02View\x02Change langua" +
+	"ge\x02Spanish\x02English\x02Exit\x02Add task\x02Total tasks: %[1]d\x02Co" +
+	"mpleted tasks: %[1]d"
 
-var es_COIndex = []uint32{ // 26 elements
-	0x00000000, 0x0000001d, 0x0000003a, 0x00000047,
-	0x00000058, 0x00000078, 0x00000089, 0x0000008f,
-	0x0000009f, 0x000000ab, 0x000000b9, 0x000000cf,
-	0x000000e9, 0x000000fb, 0x0000011c, 0x00000132,
-	0x00000149, 0x0000017b, 0x000001ac, 0x000001c2,
-	0x000001f2, 0x00000226, 0x0000025a, 0x00000284,
-	0x000002b9, 0x000002bd,
-} // Size: 128 bytes
+var es_COIndex = []uint32{ // 22 elements
+	0x00000000, 0x00000012, 0x00000028, 0x0000003f,
+	0x00000060, 0x0000007d, 0x0000009a, 0x000000a7,
+	0x000000b8, 0x000000d8, 0x000000e9, 0x000000ef,
+	0x000000ff, 0x0000010b, 0x0000010f, 0x0000011e,
+	0x00000127, 0x0000012e, 0x00000134, 0x00000142,
+	0x00000158, 0x00000172,
+} // Size: 112 bytes
 
-const es_COData string = "" + // Size: 701 bytes
-	"\x02Tarea Agregada exitosamente.\x02Nombre no puede estar vacío\x02Id no" +
-	" valido\x02Status no valido\x02Tarea actualizada exitosamente.\x04\x00" +
-	"\x01\x0a\x0c\x02Bienvenido!\x02Email\x02Iniciar Sesión\x02Contraseña\x02" +
-	"Agregar Tarea\x02Tareas totales: %[1]d\x02Tareas completadas: %[1]d\x02O" +
-	"currió un error\x02Email ya se encuentra registrado\x02Usuario no encont" +
-	"rado\x02Contraseña incorrecta\x02First name must be at least %[1]d chara" +
-	"cters long\x02Last name must be at least %[1]d characters long\x02Invali" +
-	"d email address\x02password must be at least %[1]d characters long\x02pa" +
-	"ssword must contain at least one lowercase letter\x02password must conta" +
-	"in at least one uppercase letter\x02password must contain at least one n" +
-	"umber\x02password must contain at least one special character\x02Ver"
+const es_COData string = "" + // Size: 370 bytes
+	"\x02Ocurrió un error\x02Usuario no encontrado\x02Contraseña incorrecta" +
+	"\x02Email ya se encuentra registrado\x02Tarea Agregada exitosamente.\x02" +
+	"Nombre no puede estar vacío\x02Id no valido\x02Status no valido\x02Tarea" +
+	" actualizada exitosamente.\x04\x00\x01\x0a\x0c\x02Bienvenido!\x02Email" +
+	"\x02Iniciar Sesión\x02Contraseña\x02Ver\x02Cambiar idioma\x02Español\x02" +
+	"Ingles\x02Salir\x02Agregar Tarea\x02Tareas totales: %[1]d\x02Tareas comp" +
+	"letadas: %[1]d"
 
-	// Total table size 1143 bytes (1KiB); checksum: C1B83EAC
+	// Total table size 895 bytes (0KiB); checksum: 2A3B2F3A

@@ -9,6 +9,20 @@
             "fuzzy": true
         },
         {
+            "id": "Usuario no encontrado",
+            "message": "Usuario no encontrado",
+            "translation": "Usuario no encontrado",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Contraseña incorrecta",
+            "message": "Contraseña incorrecta",
+            "translation": "Contraseña incorrecta",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
             "id": "Email ya se encuentra registrado",
             "message": "Email ya se encuentra registrado",
             "translation": "Email ya se encuentra registrado",
@@ -56,106 +70,6 @@
             "translation": "Bienvenido!"
         },
         {
-            "id": "Usuario no encontrado",
-            "message": "Usuario no encontrado",
-            "translation": "Usuario no encontrado",
-            "translatorComment": "Copied from source.",
-            "fuzzy": true
-        },
-        {
-            "id": "Contraseña incorrecta",
-            "message": "Contraseña incorrecta",
-            "translation": "Contraseña incorrecta",
-            "translatorComment": "Copied from source.",
-            "fuzzy": true
-        },
-        {
-            "id": "First name must be at least {MinFNameLen} characters long",
-            "message": "First name must be at least {MinFNameLen} characters long",
-            "translation": "First name must be at least {MinFNameLen} characters long",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "MinFNameLen",
-                    "string": "%[1]d",
-                    "type": "int",
-                    "underlyingType": "int",
-                    "argNum": 1,
-                    "expr": "minFNameLen"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
-            "id": "Last name must be at least {MinLNameLen} characters long",
-            "message": "Last name must be at least {MinLNameLen} characters long",
-            "translation": "Last name must be at least {MinLNameLen} characters long",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "MinLNameLen",
-                    "string": "%[1]d",
-                    "type": "int",
-                    "underlyingType": "int",
-                    "argNum": 1,
-                    "expr": "minLNameLen"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
-            "id": "Invalid email address",
-            "message": "Invalid email address",
-            "translation": "Invalid email address",
-            "translatorComment": "Copied from source.",
-            "fuzzy": true
-        },
-        {
-            "id": "password must be at least {MinPassLen} characters long",
-            "message": "password must be at least {MinPassLen} characters long",
-            "translation": "password must be at least {MinPassLen} characters long",
-            "translatorComment": "Copied from source.",
-            "placeholders": [
-                {
-                    "id": "MinPassLen",
-                    "string": "%[1]d",
-                    "type": "int",
-                    "underlyingType": "int",
-                    "argNum": 1,
-                    "expr": "minPassLen"
-                }
-            ],
-            "fuzzy": true
-        },
-        {
-            "id": "password must contain at least one lowercase letter",
-            "message": "password must contain at least one lowercase letter",
-            "translation": "password must contain at least one lowercase letter",
-            "translatorComment": "Copied from source.",
-            "fuzzy": true
-        },
-        {
-            "id": "password must contain at least one uppercase letter",
-            "message": "password must contain at least one uppercase letter",
-            "translation": "password must contain at least one uppercase letter",
-            "translatorComment": "Copied from source.",
-            "fuzzy": true
-        },
-        {
-            "id": "password must contain at least one number",
-            "message": "password must contain at least one number",
-            "translation": "password must contain at least one number",
-            "translatorComment": "Copied from source.",
-            "fuzzy": true
-        },
-        {
-            "id": "password must contain at least one special character",
-            "message": "password must contain at least one special character",
-            "translation": "password must contain at least one special character",
-            "translatorComment": "Copied from source.",
-            "fuzzy": true
-        },
-        {
             "id": "Email",
             "message": "Email",
             "translation": "Email",
@@ -180,6 +94,34 @@
             "id": "Ver",
             "message": "Ver",
             "translation": "Ver",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Cambiar idioma",
+            "message": "Cambiar idioma",
+            "translation": "Cambiar idioma",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Español",
+            "message": "Español",
+            "translation": "Español",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Ingles",
+            "message": "Ingles",
+            "translation": "Ingles",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Salir",
+            "message": "Salir",
+            "translation": "Salir",
             "translatorComment": "Copied from source.",
             "fuzzy": true
         },
