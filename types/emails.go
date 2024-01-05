@@ -2,6 +2,7 @@ package types
 
 import (
 	"os"
+	"strconv"
 
 	"github.com/wneessen/go-mail"
 )
@@ -48,13 +49,18 @@ func NewEmailService(config SMTPConfig) (*EmailService, error) {
 	return es, nil
 }
 
-func NewDefaultEmailService() (*EmailService, error) {
-	return NewEmailService(SMTPConfig{
+func DefaultEmailConfig() (*SMTPConfig, error) {
+	portS := os.Getenv("MAIL_TPORT")
+	port, err := strconv.Atoi(portS)
+	if err != nil {
+		return nil, err
+	}
+	return &SMTPConfig{
 		Host:     os.Getenv("MAIL_THOST"),
-		Port:     2525,
+		Port:     port,
 		Username: os.Getenv("MAIL_TUSER"),
 		Password: os.Getenv("MAIL_TPASS"),
-	})
+	}, nil
 }
 
 func (es *EmailService) SendEmail(email Email) error {

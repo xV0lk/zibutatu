@@ -34,11 +34,13 @@ func main() {
 	}
 	defer psqlStore.Close()
 	fmt.Println("Connected to postgres")
+
 	if err := db.Migrate(psqlStore, embedMigrations); err != nil {
 		log.Fatal(err)
 	}
 
-	_, err = types.NewDefaultEmailService()
+	cgf, _ := types.DefaultEmailConfig()
+	_, err = types.NewEmailService(*cgf)
 	if err != nil {
 		fmt.Printf("-------------------------\nerr creating mail service: %s\n", err)
 		log.Fatal(err)
