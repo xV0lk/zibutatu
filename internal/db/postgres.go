@@ -8,13 +8,20 @@ import (
 
 	"github.com/jackc/pgx/v5/pgxpool"
 	"github.com/jackc/pgx/v5/stdlib"
-	"github.com/joho/godotenv"
 	"github.com/pressly/goose/v3"
 )
 
-func NewPsql() (*pgxpool.Pool, error) {
-	godotenv.Load(".env")
-	dbpool, err := pgxpool.New(context.Background(), os.Getenv("DATABASE_URL"))
+type PostgresConfig struct {
+	Host     string
+	Port     string
+	User     string
+	Password string
+	DBName   string
+}
+
+func NewPsql(cfg *PostgresConfig) (*pgxpool.Pool, error) {
+	connStr := fmt.Sprintf("postgres://%s:%s@%s:%s/%s?sslmode=disable", cfg.User, cfg.Password, cfg.Host, cfg.Port, cfg.DBName)
+	dbpool, err := pgxpool.New(context.Background(), connStr)
 	if err != nil {
 		fmt.Fprintf(os.Stderr, "Unable to create connection pool: %v\n", err)
 		return nil, err

@@ -30,6 +30,13 @@
             "fuzzy": true
         },
         {
+            "id": "Se han enviado las instrucciones para cambiar la contraseña a tu correo",
+            "message": "Se han enviado las instrucciones para cambiar la contraseña a tu correo",
+            "translation": "Se han enviado las instrucciones para cambiar la contraseña a tu correo",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
             "id": "Tarea Agregada exitosamente.",
             "message": "Tarea Agregada exitosamente.",
             "translation": "Tarea Agregada exitosamente.",
@@ -91,9 +98,30 @@
             "fuzzy": true
         },
         {
+            "id": "Olvidaste tu contraseña?",
+            "message": "Olvidaste tu contraseña?",
+            "translation": "Olvidaste tu contraseña?",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
             "id": "Ver",
             "message": "Ver",
             "translation": "Ver",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Recuperar Contraseña",
+            "message": "Recuperar Contraseña",
+            "translation": "Recuperar Contraseña",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Recuperar",
+            "message": "Recuperar",
+            "translation": "Recuperar",
             "translatorComment": "Copied from source.",
             "fuzzy": true
         },

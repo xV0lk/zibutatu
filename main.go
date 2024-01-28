@@ -22,7 +22,13 @@ import (
 var embedMigrations embed.FS
 
 func main() {
-	psqlStore, err := db.NewPsql()
+	cfg, err := loadEnvConfig()
+	if err != nil {
+		fmt.Printf("-------------------------\nerr loading config: %s\n", err)
+		log.Fatal(err)
+		return
+	}
+	psqlStore, err := db.NewPsql(&cfg.Postgres)
 	if err != nil {
 		log.Fatal(err)
 		return
@@ -63,7 +69,7 @@ func main() {
 
 	// main group of routes that use csrf and sessions
 	r.Group(func(r chi.Router) {
-		r.Use(middleware.Csrf)
+		r.Use(middleware.Csrf(&cfg.CSRF))
 		r.Get("/", authHandler.HandleRoot)
 		r.Route("/login", func(r chi.Router) {
 			r.Get("/", authHandler.HandleLogin)

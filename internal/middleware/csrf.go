@@ -2,22 +2,24 @@ package middleware
 
 import (
 	"net/http"
-	"os"
 
 	"github.com/gorilla/csrf"
+	"github.com/xV0lk/htmx-go/types"
 )
 
 // Csrf is a middleware function that adds CSRF protection to the HTTP handler.
 // It generates a CSRF token and validates it on subsequent requests.
 //
 // If the CSRF token is invalid or missing, it returns a HTTP 403 Forbidden error.
-func Csrf(next http.Handler) http.Handler {
-	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		cs := os.Getenv("CSRF_SECRET")
-		secure := csrf.Secure(false)
-		mw := csrf.Protect([]byte(cs), secure)
-		mw(next).ServeHTTP(w, r)
-	})
+func Csrf(cfg *types.CsrfConfig) func(next http.Handler) http.Handler {
+	return func(next http.Handler) http.Handler {
+		fn := func(w http.ResponseWriter, r *http.Request) {
+			secure := csrf.Secure(cfg.Secure)
+			mw := csrf.Protect([]byte(cfg.Key), secure)
+			mw(next).ServeHTTP(w, r)
+		}
+		return http.HandlerFunc(fn)
+	}
 }
 
 // func GetCsrf(ctx context.Context) string {

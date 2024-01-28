@@ -22,6 +22,11 @@
             "translation": "Email already registered"
         },
         {
+            "id": "Se han enviado las instrucciones para cambiar la contraseña a tu correo",
+            "message": "Se han enviado las instrucciones para cambiar la contraseña a tu correo",
+            "translation": ""
+        },
+        {
             "id": "Tarea Agregada exitosamente.",
             "message": "Tarea Agregada exitosamente.",
             "translation": "Task added successfully."
@@ -67,9 +72,24 @@
             "translation": "Password"
         },
         {
+            "id": "Olvidaste tu contraseña?",
+            "message": "Olvidaste tu contraseña?",
+            "translation": ""
+        },
+        {
             "id": "Ver",
             "message": "Ver",
             "translation": "View"
+        },
+        {
+            "id": "Recuperar Contraseña",
+            "message": "Recuperar Contraseña",
+            "translation": ""
+        },
+        {
+            "id": "Recuperar",
+            "message": "Recuperar",
+            "translation": ""
         },
         {
             "id": "Cambiar idioma",

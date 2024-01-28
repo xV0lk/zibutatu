@@ -20,6 +20,11 @@ type Session struct {
 	Token string
 }
 
+type CsrfConfig struct {
+	Key    string
+	Secure bool
+}
+
 func Bytes(n int) ([]byte, error) {
 	b := make([]byte, n)
 	nRead, err := rand.Read(b)
