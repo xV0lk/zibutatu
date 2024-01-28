@@ -38,17 +38,17 @@ func ToastEl(data ToastBody, oob bool) templ.Component {
 			return templ_7745c5c3_Err
 		}
 		switch data.Type {
-		case "success":
+		case ToastSuccess:
 			templ_7745c5c3_Err = tSuccess(data.Msg).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		case "error":
+		case ToastError:
 			templ_7745c5c3_Err = tError(data.Msg).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-		case "warning":
+		case ToastWarning:
 			templ_7745c5c3_Err = tWarning(data.Msg).Render(ctx, templ_7745c5c3_Buffer)
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

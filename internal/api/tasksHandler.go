@@ -69,7 +69,7 @@ func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 	// Initialize the toast options
 	tBody := views.ToastBody{
 		Msg:  mw.Translate(c, "Tarea Agregada exitosamente."),
-		Type: "success",
+		Type: views.ToastSuccess,
 	}
 
 	// Bind the request body
@@ -79,7 +79,7 @@ func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 	// Validate the request
 	if taskBody.Title == "" {
 		tBody.Msg = mw.Translate(c, "Nombre no puede estar vacío")
-		tBody.Type = "warning"
+		tBody.Type = views.ToastWarning
 		views.Toast(tBody, true, c, w, http.StatusBadRequest)
 		tViews.Form().Render(c, w)
 		return
@@ -89,7 +89,7 @@ func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 	_, err := h.TaskStore.InsertTask(taskBody)
 	if err != nil {
 		tBody.Msg = err.Error()
-		tBody.Type = "error"
+		tBody.Type = views.ToastError
 		views.Toast(tBody, true, c, w, http.StatusInternalServerError)
 		tViews.Form().Render(c, w)
 		return
@@ -231,7 +231,7 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 	var taskBody types.TaskBody
 	tBody := views.ToastBody{
 		Msg:  mw.Translate(c, "Tarea actualizada exitosamente."),
-		Type: "success",
+		Type: views.ToastSuccess,
 	}
 
 	tId := chi.URLParam(r, "id")
@@ -239,7 +239,7 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		tBody.Msg = mw.Translate(c, "Id no valido")
-		tBody.Type = "error"
+		tBody.Type = views.ToastError
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		return
 	}
@@ -249,7 +249,7 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 
 	if taskBody.Title == "" {
 		tBody.Msg = mw.Translate(c, "Nombre no puede estar vacío")
-		tBody.Type = "warning"
+		tBody.Type = views.ToastWarning
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		return
 	}
@@ -257,7 +257,7 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 	item, err := h.TaskStore.UpdateTaskTitle(id, taskBody.Title)
 	if err != nil {
 		tBody.Msg = err.Error()
-		tBody.Type = "error"
+		tBody.Type = views.ToastError
 		views.Toast(tBody, false, c, w, http.StatusInternalServerError)
 		return
 	}

@@ -14,8 +14,13 @@ templ HomeLogin(){
 }
 
 templ HomeUser(data []*types.Appointment) {
-	
 	@views.Index(){
 		@UserPage(data)
+	}
+}
+
+templ HomePasswordReset(email string) {
+	@views.Index(){
+		@l.PwReset(email)
 	}
 }

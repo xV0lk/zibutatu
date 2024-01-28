@@ -1,0 +1,78 @@
+package views
+
+import (
+	mw "github.com/xV0lk/htmx-go/internal/middleware"
+	"github.com/xV0lk/htmx-go/views"
+)
+
+templ PwReset(email string) {
+<div
+	id="home"
+	hx-swap-oob="true"
+	class="flex flex-col justify-center px-6 py-12 lg:px-8 mt-20"
+>
+	<div class="sm:mx-auto sm:w-full sm:max-w-sm">
+		<h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">{mw.Translate(ctx, "Recuperar Contraseña")}
+		</h2>
+	</div>
+
+	<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+		<form
+			class="space-y-6"
+			hx-post="/forgot-password"
+			hx-swap="outerHTML transition:true"
+			hx-target-error="#toast-notification"
+		>
+			@views.Csrf()
+			<div>
+				<label for="email" class="block text-sm font-medium leading-6 text-white">{mw.Translate(ctx, "Email")}</label>
+				<div class="mt-2">
+					<input 
+						id="email"
+						name="email"
+						type="email"
+						value={email}
+						autocomplete="email"
+						required
+						autofocus
+						class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" />
+				</div>
+			</div>
+			<div>
+				<button type="submit"
+					class="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">{mw.Translate(ctx, "Recuperar")}</button>
+			</div>
+		</form>
+	</div>
+</div>
+}
+
+templ CheckEmail() {
+// <div
+// 	id="home"
+// 	hx-swap-oob="true"
+// 	class="flex flex-col justify-center px-6 py-12 lg:px-8 mt-20"
+// >
+// 	<div class="sm:mx-auto sm:w-full sm:max-w-sm">
+// 		<h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">{mw.Translate(ctx, "Recuperar Contraseña")}
+// 		</h2>
+// 	</div>
+
+	<div class="mt-10 sm:mx-auto sm:w-full sm:max-w-sm">
+		<div class="space-y-6">
+			<div class="flex justify-center">
+				<svg class="w-16 h-16 text-green-500" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+					<path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+						d="M5 13l4 4L19 7" />
+				</svg>
+			</div>
+			<div class="flex justify-center">
+				<h2 class="text-center text-xl font-bold leading-9 tracking-tight text-white">{mw.Translate(ctx, "Revisa tu correo")}</h2>
+			</div>
+			<div class="flex justify-center">
+				<p class="text-center text-sm leading-5 text-gray-300">{mw.Translate(ctx, "Te hemos enviado un correo con las instrucciones para recuperar tu contraseña.")}</p>
+			</div>
+		</div>
+	</div>
+// </div>
+}

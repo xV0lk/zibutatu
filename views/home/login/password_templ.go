@@ -36,12 +36,21 @@ func PassInput() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</label></div><div x-data=\"{ show: false }\" class=\"relative mt-2 rounded-md shadow-sm\"><input id=\"password\" name=\"password\" autocomplete=\"current-password\" required x-bind:type=\" show ? &#39;text&#39; : &#39;password&#39;\" class=\"block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6\"><div class=\"absolute inset-y-0 right-2 flex items-center\"><a class=\"text-indigo-300 font-bold text-xs cursor-pointer\" @click=\"show = !show\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</label><div class=\"text-sm\"><a href=\"/forgot-password\" hx-push-url=\"true\" class=\"font-semibold text-indigo-400 hover:text-indigo-300\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 string = mw.Translate(ctx, "Ver")
+		var templ_7745c5c3_Var3 string = mw.Translate(ctx, "Olvidaste tu contraseña?")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</a></div></div><div x-data=\"{ show: false }\" class=\"relative mt-2 rounded-md shadow-sm\"><input id=\"password\" name=\"password\" autocomplete=\"current-password\" required x-bind:type=\" show ? &#39;text&#39; : &#39;password&#39;\" class=\"block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6\"><div class=\"absolute inset-y-0 right-2 flex items-center\"><a class=\"text-indigo-300 font-bold text-xs cursor-pointer\" @click=\"show = !show\">")
+		if templ_7745c5c3_Err != nil {
+			return templ_7745c5c3_Err
+		}
+		var templ_7745c5c3_Var4 string = mw.Translate(ctx, "Ver")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

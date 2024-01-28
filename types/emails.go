@@ -63,6 +63,14 @@ func DefaultEmailConfig() (*SMTPConfig, error) {
 	}, nil
 }
 
+func NewDefaultEmailService() (*EmailService, error) {
+	config, err := DefaultEmailConfig()
+	if err != nil {
+		return nil, err
+	}
+	return NewEmailService(*config)
+}
+
 func (es *EmailService) SendEmail(email Email) error {
 	m := mail.NewMsg()
 	if err := es.setFrom(m, email); err != nil {

@@ -4,6 +4,7 @@ import (
 	"encoding/json"
 	"fmt"
 	"net/http"
+	"net/url"
 	"strings"
 
 	"github.com/go-chi/render"
@@ -15,17 +16,20 @@ import (
 	"github.com/xV0lk/htmx-go/types"
 	"github.com/xV0lk/htmx-go/views"
 	home "github.com/xV0lk/htmx-go/views/home"
+	login "github.com/xV0lk/htmx-go/views/home/login"
 )
 
 type AuthHandler struct {
-	UserStore *db.UserStore
-	decoder   *schema.Decoder
+	UserStore    *db.UserStore
+	decoder      *schema.Decoder
+	emailService *types.EmailService
 }
 
-func NewAuthHandler(store *db.UserStore, decoder *schema.Decoder) *AuthHandler {
+func NewAuthHandler(store *db.UserStore, decoder *schema.Decoder, emailService *types.EmailService) *AuthHandler {
 	return &AuthHandler{
-		UserStore: store,
-		decoder:   decoder,
+		UserStore:    store,
+		decoder:      decoder,
+		emailService: emailService,
 	}
 }
 
@@ -53,7 +57,7 @@ func (h *AuthHandler) HandleAuthenticate(w http.ResponseWriter, r *http.Request)
 
 	tBody := views.ToastBody{
 		Msg:  mw.Translate(c, "Ocurrió un error"),
-		Type: "error",
+		Type: views.ToastError,
 	}
 
 	loginF.Email = r.FormValue("email")
@@ -154,4 +158,48 @@ func (h *AuthHandler) HandleGetUser(w http.ResponseWriter, r *http.Request) {
 	}
 	render.JSON(w, r, user)
 	return
+}
+
+func (h *AuthHandler) HandleForgotPassword(w http.ResponseWriter, r *http.Request) {
+	var data struct {
+		Email string
+	}
+	data.Email = r.FormValue("email")
+	fmt.Printf("-------------------------\ndata.Email : %s\n", data.Email)
+	home.HomePasswordReset(data.Email).Render(r.Context(), w)
+}
+
+func (h *AuthHandler) HandleResetPassword(w http.ResponseWriter, r *http.Request) {
+	c := r.Context()
+	tBody := views.ToastBody{
+		Msg:  mw.Translate(c, "Se han enviado las instrucciones para cambiar la contraseña a tu correo"),
+		Type: views.ToastSuccess,
+	}
+
+	var data struct {
+		Email string
+	}
+	data.Email = r.FormValue("email")
+
+	pwReset, err := h.UserStore.PwReset.Create(data.Email)
+	if err != nil {
+		tBody.Msg = mw.Translate(c, err.Error())
+		tBody.Type = views.ToastError
+		views.Toast(tBody, false, c, w, http.StatusBadRequest)
+		return
+	}
+
+	vals := url.Values{}
+	vals.Add("token", pwReset.Token)
+	resetUrl := "http://localhost:1323/reset-password?" + vals.Encode()
+
+	err = h.emailService.ForgotPassword(data.Email, resetUrl)
+	if err != nil {
+		tBody.Msg = mw.Translate(c, "Ocurrió un error al enviar el correo de recuperación")
+		tBody.Type = views.ToastError
+		views.Toast(tBody, false, c, w, http.StatusBadRequest)
+		return
+	}
+
+	login.CheckEmail().Render(c, w)
 }

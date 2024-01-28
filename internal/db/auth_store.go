@@ -13,12 +13,14 @@ import (
 type UserStore struct {
 	Auth    AuthStore
 	Session SessionStore
+	PwReset PasswordResetStore
 }
 
-func NewUserStore(auth AuthStore, session SessionStore) *UserStore {
+func NewUserStore(auth AuthStore, session SessionStore, pwReset PasswordResetStore) *UserStore {
 	return &UserStore{
 		auth,
 		session,
+		pwReset,
 	}
 }
 

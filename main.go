@@ -22,11 +22,6 @@ import (
 var embedMigrations embed.FS
 
 func main() {
-	// _, err := db.MongoConnect()
-	// if err != nil {
-	// 	log.Fatal(err)
-	// 	return
-	// }
 	psqlStore, err := db.NewPsql()
 	if err != nil {
 		log.Fatal(err)
@@ -39,8 +34,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	cgf, _ := types.DefaultEmailConfig()
-	_, err = types.NewEmailService(*cgf)
+	emailService, err := types.NewDefaultEmailService()
 	if err != nil {
 		fmt.Printf("-------------------------\nerr creating mail service: %s\n", err)
 		log.Fatal(err)
@@ -54,10 +48,11 @@ func main() {
 		authStore    = db.NewPsAuthStore(psqlStore)
 		taskStore    = db.NewPsTaskStore(psqlStore)
 		sessionStore = db.NewPsSessionStore(psqlStore)
-		userStore    = db.NewUserStore(authStore, sessionStore)
+		pwResetStore = db.NewPsPwResetStore(psqlStore)
+		userStore    = db.NewUserStore(authStore, sessionStore, pwResetStore)
 		// handlers
 		tasksHandler = api.NewTasksHandler(taskStore, decoder)
-		authHandler  = api.NewAuthHandler(userStore, decoder)
+		authHandler  = api.NewAuthHandler(userStore, decoder, emailService)
 		// Connection
 		port = flag.String("port", ":1323", "port to run the server on")
 		r    = chi.NewRouter()
@@ -76,6 +71,8 @@ func main() {
 			r.Delete("/", authHandler.HandleLogout)
 		})
 		r.Get("/home", authHandler.HandleHome)
+		r.Get("/forgot-password", authHandler.HandleForgotPassword)
+		r.Post("/forgot-password", authHandler.HandleResetPassword)
 		r.Route("/tasks", func(r chi.Router) {
 			r.Get("/", tasksHandler.HandleGetTasks)
 			r.Post("/", tasksHandler.HandlePostTask)
