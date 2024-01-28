@@ -16,10 +16,18 @@ type RenderError struct {
 	Msg string
 }
 
+type ToastType string
+
 type ToastBody struct {
 	Msg  string
-	Type string
+	Type ToastType
 }
+
+const (
+	ToastSuccess ToastType = "success"
+	ToastError   ToastType = "error"
+	ToastWarning ToastType = "warning"
+)
 
 func Toast(body ToastBody, oob bool, c context.Context, w http.ResponseWriter, status int) error {
 	if oob {

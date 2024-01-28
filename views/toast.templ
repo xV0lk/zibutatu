@@ -9,11 +9,11 @@ templ ToastEl(data ToastBody, oob bool ){
   }
   >
 	switch data.Type {
-    case "success":
+    case ToastSuccess:
       @tSuccess(data.Msg)
-    case "error":
+    case ToastError:
       @tError(data.Msg)
-    case "warning":
+    case ToastWarning:
       @tWarning(data.Msg)
     default:
     <div class="hidden"></div>
