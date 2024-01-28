@@ -2,11 +2,13 @@ package api
 
 import (
 	"context"
+	"fmt"
 	"net/http"
 	"strconv"
 
 	"github.com/go-chi/chi/v5"
 	"github.com/gorilla/schema"
+	"github.com/xV0lk/htmx-go/internal/ctx"
 	"github.com/xV0lk/htmx-go/internal/db"
 	mw "github.com/xV0lk/htmx-go/internal/middleware"
 	"github.com/xV0lk/htmx-go/types"
@@ -37,7 +39,13 @@ func NewTasksHandler(store db.TaskStore, decoder *schema.Decoder) *TasksHandler 
 //
 // Returns an error if there was a problem fetching the tasks or rendering the response.
 func (h *TasksHandler) HandleGetTasks(w http.ResponseWriter, r *http.Request) {
-	tData, err := h.getCount()
+	user := ctx.Value[types.User](r.Context())
+	if user == nil {
+		fmt.Println("No session error, redirecting to login: ")
+		http.Redirect(w, r, "/login", http.StatusFound)
+		return
+	}
+	tData, err := h.getCount(user.ID)
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		return
@@ -54,6 +62,7 @@ func (h *TasksHandler) HandleGetTasks(w http.ResponseWriter, r *http.Request) {
 // It returns an error if there was an issue handling the request.
 func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
+	user := ctx.Value[types.User](r.Context())
 
 	var taskBody types.TaskBody
 
@@ -65,6 +74,7 @@ func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 
 	// Bind the request body
 	taskBody.Title = r.FormValue("title")
+	taskBody.UserId = user.ID
 
 	// Validate the request
 	if taskBody.Title == "" {
@@ -76,7 +86,7 @@ func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Insert the task to the store
-	_, err := h.TaskStore.InsertTask(taskBody.Title)
+	_, err := h.TaskStore.InsertTask(taskBody)
 	if err != nil {
 		tBody.Msg = err.Error()
 		tBody.Type = "error"
@@ -260,16 +270,16 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 // getCount retrieves the count of tasks and completed tasks from the TaskStore.
 //
 // It takes a TasksHandler pointer as a parameter and returns a Tasks object and an error.
-func (h *TasksHandler) getCount() (data types.Tasks, err error) {
-	items, err := h.TaskStore.FetchTasks()
+func (h *TasksHandler) getCount(uId int) (data types.Tasks, err error) {
+	items, err := h.TaskStore.FetchTasks(uId)
 	if err != nil {
 		return
 	}
-	tTasks, err := h.TaskStore.FetchCount()
+	tTasks, err := h.TaskStore.FetchCount(uId)
 	if err != nil {
 		return
 	}
-	tCompletedTasks, err := h.TaskStore.FetchCompletedCount()
+	tCompletedTasks, err := h.TaskStore.FetchCompletedCount(uId)
 	if err != nil {
 		return
 	}
@@ -288,7 +298,8 @@ func (h *TasksHandler) getCount() (data types.Tasks, err error) {
 // It retrieves the count data using the getCount method of the TasksHandler.
 // Then, it updates the counter and tasks component data by rendering them using the Counter and TaskList views respectively.
 func updateTasksView(h *TasksHandler, c context.Context, w http.ResponseWriter) error {
-	data, err := h.getCount()
+	user := ctx.Value[types.User](c)
+	data, err := h.getCount(user.ID)
 	if err != nil {
 		return err
 	}

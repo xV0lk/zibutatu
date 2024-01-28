@@ -10,15 +10,15 @@ import (
 )
 
 type TaskStore interface {
-	FetchTasks() ([]*types.Item, error)
+	FetchTasks(uId int) ([]*types.Item, error)
 	FetchTask(ID int) (*types.Item, error)
-	InsertTask(title string) (*types.Item, error)
+	InsertTask(tBody types.TaskBody) (*types.Item, error)
 	UpdateTaskTitle(ID int, title string) (*types.Item, error)
 	UpdateTaskCompleted(ID int, completed bool) (*types.Item, error)
 	DeleteTask(ctx context.Context, ID int) error
 	OderTasks(ctx context.Context, values []int) error
-	FetchCount() (int, error)
-	FetchCompletedCount() (int, error)
+	FetchCount(uId int) (int, error)
+	FetchCompletedCount(uId int) (int, error)
 
 	Closer
 }
@@ -41,9 +41,12 @@ func (s *PsTaskStore) Close() {
 //
 // It does not take any parameters.
 // It returns a slice of types.Item and an error.
-func (s *PsTaskStore) FetchTasks() ([]*types.Item, error) {
-	query := "SELECT id, title, completed FROM tasks ORDER BY position;"
-	rows, err := s.db.Query(context.Background(), query)
+func (s *PsTaskStore) FetchTasks(uId int) ([]*types.Item, error) {
+	query := `SELECT id, title, completed 
+				FROM tasks 
+				WHERE user_id = $1
+				ORDER BY position;`
+	rows, err := s.db.Query(context.Background(), query, uId)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return nil, err
@@ -108,9 +111,10 @@ func (s *PsTaskStore) UpdateTaskCompleted(ID int, completed bool) (*types.Item, 
 //
 // It does not take any parameters.
 // It returns an integer and an error.
-func (s *PsTaskStore) FetchCount() (int, error) {
+func (s *PsTaskStore) FetchCount(uId int) (int, error) {
 	var count int
-	row := s.db.QueryRow(context.Background(), "SELECT COUNT(*) FROM tasks;")
+	query := "SELECT COUNT(*) FROM tasks WHERE user_id = $1;"
+	row := s.db.QueryRow(context.Background(), query, uId)
 	err := row.Scan(&count)
 	if err != nil {
 		fmt.Println("Error: ", err)
@@ -119,9 +123,10 @@ func (s *PsTaskStore) FetchCount() (int, error) {
 	return count, nil
 }
 
-func (s *PsTaskStore) FetchCompletedCount() (int, error) {
+func (s *PsTaskStore) FetchCompletedCount(uId int) (int, error) {
 	var count int
-	row := s.db.QueryRow(context.Background(), "SELECT COUNT(*) FROM tasks WHERE completed = true;")
+	query := "SELECT COUNT(*) FROM tasks WHERE completed = true AND user_id = $1;"
+	row := s.db.QueryRow(context.Background(), query, uId)
 	err := row.Scan(&count)
 	if err != nil {
 		fmt.Println("Error: ", err)
@@ -133,15 +138,15 @@ func (s *PsTaskStore) FetchCompletedCount() (int, error) {
 // InsertTask inserts a task into the SQLStore.
 //
 // It takes a title string as a parameter and returns a types.Item and an error.
-func (s *PsTaskStore) InsertTask(title string) (*types.Item, error) {
+func (s *PsTaskStore) InsertTask(tBody types.TaskBody) (*types.Item, error) {
 	item := types.Item{}
-	count, err := s.FetchCount()
+	count, err := s.FetchCount(tBody.UserId)
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return &item, err
 	}
-	query := "INSERT INTO tasks (title, position) VALUES ($1, $2) RETURNING id, title, completed;"
-	row := s.db.QueryRow(context.Background(), query, title, count)
+	query := "INSERT INTO tasks (title, user_id, position) VALUES ($1, $2, $3) RETURNING id, title, completed;"
+	row := s.db.QueryRow(context.Background(), query, tBody.Title, tBody.UserId, count)
 	err = row.Scan(&item.ID, &item.Title, &item.Completed)
 	if err != nil {
 		fmt.Println("Error: ", err)
