@@ -36,7 +36,7 @@ func PassInput() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</label><div class=\"text-sm\"><a href=\"/forgot-password\" hx-push-url=\"true\" class=\"font-semibold text-indigo-400 hover:text-indigo-300\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</label><div class=\"text-sm\"><a x-bind:href=\"`/forgot-password${email ? &#39;?email=&#39; + email : &#39;&#39;}`\" hx-push-url=\"true\" class=\"font-semibold text-indigo-400 hover:text-indigo-300\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

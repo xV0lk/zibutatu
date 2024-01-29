@@ -24,3 +24,9 @@ templ HomePasswordReset(email string) {
 		@l.PwReset(email)
 	}
 }
+
+templ HomePasswordResetDone(token string) {
+	@views.Index(){
+		@l.ResetPassword(token)
+	}
+}

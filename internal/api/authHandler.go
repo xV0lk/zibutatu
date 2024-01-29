@@ -203,3 +203,48 @@ func (h *AuthHandler) HandleResetPassword(w http.ResponseWriter, r *http.Request
 
 	login.CheckEmail().Render(c, w)
 }
+
+func (h *AuthHandler) HandleEmailToken(w http.ResponseWriter, r *http.Request) {
+	var data struct {
+		Token string
+	}
+
+	data.Token = r.FormValue("token")
+	fmt.Printf("-------------------------\ndata.Token : %s\n", data.Token)
+	home.HomePasswordResetDone(data.Token).Render(r.Context(), w)
+}
+
+func (h *AuthHandler) HandleChangePassword(w http.ResponseWriter, r *http.Request) {
+	c := r.Context()
+	tBody := views.ToastBody{
+		Msg:  mw.Translate(c, "Ocurrió un error"),
+		Type: views.ToastError,
+	}
+
+	var data struct {
+		token    string
+		password string
+	}
+
+	data.token = r.FormValue("token")
+	data.password = r.FormValue("password")
+
+	user, err := h.UserStore.PwReset.Consume(data.token)
+	if err != nil {
+		tBody.Msg = mw.Translate(c, "Token inválido")
+		views.Toast(tBody, false, c, w, http.StatusBadRequest)
+		return
+	}
+
+	// TODO: Change password
+
+	session, err := h.UserStore.Session.Create(user.ID)
+	if err != nil {
+		views.Toast(tBody, false, c, w, http.StatusBadRequest)
+		fmt.Println("Session Error: ", err)
+		return
+	}
+	setCookie(w, SessionCookie, session.Token)
+
+	http.Redirect(w, r, "/home", http.StatusFound)
+}

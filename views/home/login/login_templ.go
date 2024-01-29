@@ -37,7 +37,7 @@ func Login() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2></div><div class=\"mt-10 sm:mx-auto sm:w-full sm:max-w-sm\"><form class=\"space-y-6\" hx-post=\"/login\" hx-swap=\"outerHTML transition:true\" hx-target=\"#home\" hx-target-error=\"#toast-notification\">")
+		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("</h2></div><div x-data=\"{email: &#39;&#39;}\" class=\"mt-10 sm:mx-auto sm:w-full sm:max-w-sm\"><form class=\"space-y-6\" hx-post=\"/login\" hx-swap=\"outerHTML transition:true\" hx-target=\"#home\" hx-target-error=\"#toast-notification\">")
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}

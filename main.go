@@ -60,8 +60,7 @@ func main() {
 		tasksHandler = api.NewTasksHandler(taskStore, decoder)
 		authHandler  = api.NewAuthHandler(userStore, decoder, emailService)
 		// Connection
-		port = flag.String("port", ":1323", "port to run the server on")
-		r    = chi.NewRouter()
+		r = chi.NewRouter()
 	)
 	r.Use(chiMiddleware.Logger)
 	r.Use(middleware.I18n)
@@ -79,6 +78,8 @@ func main() {
 		r.Get("/home", authHandler.HandleHome)
 		r.Get("/forgot-password", authHandler.HandleForgotPassword)
 		r.Post("/forgot-password", authHandler.HandleResetPassword)
+		r.Get("/reset-password", authHandler.HandleEmailToken)
+		r.Post("/reset-password", authHandler.HandleChangePassword)
 		r.Route("/tasks", func(r chi.Router) {
 			r.Get("/", tasksHandler.HandleGetTasks)
 			r.Post("/", tasksHandler.HandlePostTask)
@@ -102,6 +103,10 @@ func main() {
 	filesDir := http.Dir(filepath.Join(workDir, "assets"))
 	api.FileServer(r, "/static/", filesDir)
 
+	port := flag.String("port", cfg.Server.Port, "port to listen on")
 	fmt.Printf("Server running on port %s\n", *port)
-	http.ListenAndServe(*port, r)
+	err = http.ListenAndServe(*port, r)
+	if err != nil {
+		log.Fatal(err)
+	}
 }
