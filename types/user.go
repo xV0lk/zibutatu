@@ -91,7 +91,7 @@ func ValidatePassword(ctx context.Context, password string) []string {
 }
 
 func NewUserFromParams(params *NewUser) (*User, error) {
-	cryptPass, err := bcrypt.GenerateFromPassword([]byte(params.Password), bcryptCost)
+	cryptPass, err := EncryptPassword(params.Password)
 	if err != nil {
 		return nil, err
 	}
@@ -113,4 +113,12 @@ func NewUserFromParams(params *NewUser) (*User, error) {
 // Returns true if the passwords match, otherwise returns false.
 func IsValidPassword(hashedPass, inputPass string) bool {
 	return bcrypt.CompareHashAndPassword([]byte(hashedPass), []byte(inputPass)) == nil
+}
+
+func EncryptPassword(password string) (string, error) {
+	cryptPass, err := bcrypt.GenerateFromPassword([]byte(password), bcryptCost)
+	if err != nil {
+		return "", err
+	}
+	return string(cryptPass), nil
 }

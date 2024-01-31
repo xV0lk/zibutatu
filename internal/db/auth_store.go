@@ -32,6 +32,7 @@ type AuthStore interface {
 	AddUser(*types.User, context.Context) error
 	FetchUser(int, context.Context) (*types.User, error)
 	AuthenticateUser(*types.AuthParams, context.Context) (*types.User, error)
+	UpdatePassword(id int, password string, ctx context.Context) error
 
 	Closer
 }
@@ -99,4 +100,15 @@ func (s *PsAuthStore) AuthenticateUser(auth *types.AuthParams, ctx context.Conte
 	}
 
 	return user, nil
+}
+
+func (s *PsAuthStore) UpdatePassword(id int, password string, ctx context.Context) error {
+	query := "UPDATE users SET password = $1 WHERE id = $2;"
+
+	_, err := s.db.Exec(ctx, query, password, id)
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
