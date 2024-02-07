@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"log/slog"
 	"regexp"
 	"strings"
 	"time"
@@ -29,6 +30,10 @@ type User struct {
 	UpdatedAt time.Time `db:"updated_at"`
 	Language  string    `db:"language,omitempty"`
 	Password  string    `db:"password,omitempty"`
+}
+
+func (u User) LogValue() slog.Value {
+	return slog.IntValue(u.ID)
 }
 
 type NewUser struct {

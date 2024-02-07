@@ -28,6 +28,9 @@ func main() {
 		log.Fatal(err)
 		return
 	}
+
+	logger := createLogger(&cfg)
+
 	psqlStore, err := db.NewPsql(&cfg.Postgres)
 	if err != nil {
 		log.Fatal(err)
@@ -65,6 +68,7 @@ func main() {
 	r.Use(chiMiddleware.Logger)
 	r.Use(middleware.I18n)
 	r.Use(middleware.User(userStore))
+	r.Use(middleware.ILog(logger))
 
 	// main group of routes that use csrf and sessions
 	r.Group(func(r chi.Router) {

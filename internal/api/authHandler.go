@@ -3,6 +3,7 @@ package api
 import (
 	"encoding/json"
 	"fmt"
+	"log/slog"
 	"net/http"
 	"net/url"
 	"strings"
@@ -35,6 +36,7 @@ func NewAuthHandler(store *db.UserStore, decoder *schema.Decoder, emailService *
 
 func (h *AuthHandler) HandleRoot(w http.ResponseWriter, r *http.Request) {
 	// Create root template
+	slog.Info("Root", slog.String("test", "test"))
 	user := ctx.Value[types.User](r.Context())
 	if user == nil {
 		fmt.Println("No session error, redirecting to login: ")
@@ -107,6 +109,7 @@ func (h *AuthHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
 
 func (h *AuthHandler) HandleHome(w http.ResponseWriter, r *http.Request) {
 	// home.HomeLogin().Render(r.Context(), w)
+	slog.Info("Home", slog.String("test", "test"))
 	views.Index().Render(r.Context(), w)
 	// home.HomeUser().Render(r.Context(), w)
 }

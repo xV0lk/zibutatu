@@ -1,8 +1,11 @@
 package main
 
 import (
+	"log"
+	"log/slog"
 	"os"
 	"strconv"
+	"strings"
 
 	"github.com/joho/godotenv"
 	"github.com/xV0lk/htmx-go/internal/db"
@@ -18,6 +21,7 @@ type config struct {
 	SMTP     types.SMTPConfig
 	CSRF     types.CsrfConfig
 	Server   serverConfig
+	Env      string
 }
 
 func loadEnvConfig() (config, error) {
@@ -25,6 +29,11 @@ func loadEnvConfig() (config, error) {
 	err := godotenv.Load()
 	if err != nil {
 		return cfg, err
+	}
+
+	cfg.Env = os.Getenv("APP_ENV")
+	if cfg.Env == "" {
+		cfg.Env = "development"
 	}
 
 	cfg.Server.Port = ":1323"
@@ -54,4 +63,37 @@ func loadEnvConfig() (config, error) {
 		Secure: false,
 	}
 	return cfg, nil
+}
+
+func createLogger(cfg *config) *slog.Logger {
+	wd, err := os.Getwd()
+	if err != nil {
+		log.Fatal("unable to determine working directory")
+	}
+
+	replacer := func(groups []string, a slog.Attr) slog.Attr {
+		if a.Key == slog.SourceKey {
+			source := a.Value.Any().(*slog.Source)
+			// remove current working directory and only leave the relative path to the program
+			if file, ok := strings.CutPrefix(source.File, wd); ok {
+				source.File = file
+			}
+		}
+		return a
+	}
+
+	opts := &slog.HandlerOptions{
+		Level:       slog.LevelDebug,
+		AddSource:   true,
+		ReplaceAttr: replacer,
+	}
+
+	var handler slog.Handler = slog.NewTextHandler(os.Stdout, opts)
+	if cfg.Env == "production" {
+		opts.Level = slog.LevelInfo
+		handler = slog.NewJSONHandler(os.Stdout, opts)
+	}
+	logger := slog.New(handler)
+	slog.SetDefault(logger)
+	return logger
 }
