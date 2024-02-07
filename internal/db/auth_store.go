@@ -2,12 +2,21 @@ package db
 
 import (
 	"context"
+	"errors"
 	"fmt"
 	"strings"
 
+	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	iErrors "github.com/xV0lk/htmx-go/internal/errors"
 	"github.com/xV0lk/htmx-go/types"
+)
+
+var (
+	ErrEmailTaken      = errors.New("auth_store: email is already taken")
+	ErrorNotFound      = errors.New("auth_store: user not found")
+	ErrInvalidPassword = errors.New("auth_store: invalid password")
 )
 
 type UserStore struct {
@@ -59,7 +68,10 @@ func (s *PsAuthStore) AddUser(user *types.User, ctx context.Context) error {
 	_, err := s.db.Exec(ctx, query, user.FirstName, user.LastName, user.Email, user.StudioID, user.IsAdmin, user.CreatedAt, user.UpdatedAt, user.Language, user.Password)
 
 	if err != nil {
-		return err
+		if ok := iErrors.ValidatePgxError(err, pgerrcode.UniqueViolation); ok {
+			return ErrEmailTaken
+		}
+		return fmt.Errorf("AddUser: %w", err)
 	}
 
 	return nil
