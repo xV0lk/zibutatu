@@ -91,7 +91,7 @@ func I18n(next http.Handler) http.Handler {
 	})
 }
 
-func Translate(c context.Context, key message.Reference, args ...interface{}) string {
+func T(c context.Context, key message.Reference, args ...interface{}) string {
 	l := ctx.Value[Localizer](c)
 	if l == nil {
 		return fmt.Sprint(key)

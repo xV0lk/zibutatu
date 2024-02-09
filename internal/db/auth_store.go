@@ -10,7 +10,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
 	iErrors "github.com/xV0lk/htmx-go/internal/errors"
-	"github.com/xV0lk/htmx-go/types"
+	"github.com/xV0lk/htmx-go/models"
 )
 
 var (
@@ -38,9 +38,9 @@ type Closer interface {
 }
 
 type AuthStore interface {
-	AddUser(*types.User, context.Context) error
-	FetchUser(int, context.Context) (*types.User, error)
-	AuthenticateUser(*types.AuthParams, context.Context) (*types.User, error)
+	AddUser(*models.User, context.Context) error
+	FetchUser(int, context.Context) (*models.User, error)
+	AuthenticateUser(*models.AuthParams, context.Context) (*models.User, error)
 	UpdatePassword(id int, password string, ctx context.Context) error
 
 	Closer
@@ -60,7 +60,7 @@ func (s *PsAuthStore) Close() {
 	s.db.Close()
 }
 
-func (s *PsAuthStore) AddUser(user *types.User, ctx context.Context) error {
+func (s *PsAuthStore) AddUser(user *models.User, ctx context.Context) error {
 	query := `INSERT INTO users 
 	(first_name, last_name, email, studio_id, is_admin, created_at, updated_at, language, password) 
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
@@ -77,35 +77,35 @@ func (s *PsAuthStore) AddUser(user *types.User, ctx context.Context) error {
 	return nil
 }
 
-func (s *PsAuthStore) FetchUser(id int, ctx context.Context) (*types.User, error) {
+func (s *PsAuthStore) FetchUser(id int, ctx context.Context) (*models.User, error) {
 	query := "SELECT id, first_name, last_name, email, studio_id, is_admin, created_at, updated_at, language FROM users WHERE id = $1;"
 
-	user := &types.User{}
+	user := &models.User{}
 
 	rows, err := s.db.Query(ctx, query, id)
 	if err != nil {
 		return user, err
 	}
-	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[types.User])
+	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[models.User])
 	if err != nil {
 		return user, err
 	}
 
 	return user, nil
 }
-func (s *PsAuthStore) AuthenticateUser(auth *types.AuthParams, ctx context.Context) (*types.User, error) {
+func (s *PsAuthStore) AuthenticateUser(auth *models.AuthParams, ctx context.Context) (*models.User, error) {
 	em := strings.ToLower(auth.Email)
 
 	query := "SELECT id, first_name, last_name, email, studio_id, is_admin, created_at, updated_at, language, password FROM users WHERE email = $1;"
 
-	user := &types.User{}
+	user := &models.User{}
 
 	rows, err := s.db.Query(ctx, query, em)
 	if err != nil {
 		return user, fmt.Errorf("Ocurrió un error")
 	}
 
-	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[types.User])
+	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[models.User])
 	if err != nil {
 		fmt.Printf("-------------------------\nerr 1: %s\n", err)
 		return user, err

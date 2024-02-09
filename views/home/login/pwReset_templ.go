@@ -32,7 +32,7 @@ func PwReset(email string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 string = mw.Translate(ctx, "Recuperar Contraseña")
+		var templ_7745c5c3_Var2 string = mw.T(ctx, "Recuperar Contraseña")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -49,7 +49,7 @@ func PwReset(email string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 string = mw.Translate(ctx, "Email")
+		var templ_7745c5c3_Var3 string = mw.T(ctx, "Email")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -66,7 +66,7 @@ func PwReset(email string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var4 string = mw.Translate(ctx, "Recuperar")
+		var templ_7745c5c3_Var4 string = mw.T(ctx, "Recuperar")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -99,7 +99,7 @@ func CheckEmail() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var6 string = mw.Translate(ctx, "Revisa tu correo")
+		var templ_7745c5c3_Var6 string = mw.T(ctx, "Revisa tu correo")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var6))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -108,7 +108,7 @@ func CheckEmail() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var7 string = mw.Translate(ctx, "Te hemos enviado un correo con las instrucciones para recuperar tu contraseña.")
+		var templ_7745c5c3_Var7 string = mw.T(ctx, "Te hemos enviado un correo con las instrucciones para recuperar tu contraseña.")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var7))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -141,7 +141,7 @@ func ResetPassword(token string) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var9 string = mw.Translate(ctx, "Recuperar Contraseña")
+		var templ_7745c5c3_Var9 string = mw.T(ctx, "Recuperar Contraseña")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var9))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -189,7 +189,7 @@ func InvalidToken() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var11 string = mw.Translate(ctx, "Token inválido")
+		var templ_7745c5c3_Var11 string = mw.T(ctx, "Token inválido")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var11))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -198,7 +198,7 @@ func InvalidToken() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var12 string = mw.Translate(ctx, "El token de recuperación de contraseña es inválido o ha expirado.")
+		var templ_7745c5c3_Var12 string = mw.T(ctx, "El token de recuperación de contraseña es inválido o ha expirado.")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var12))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

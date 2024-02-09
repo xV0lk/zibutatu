@@ -3,11 +3,11 @@ package views
 import (
   "fmt"
 
-  "github.com/xV0lk/htmx-go/types"
+  "github.com/xV0lk/htmx-go/models"
 	"github.com/xV0lk/htmx-go/views"
 )
 
-templ TaskList(tasks types.Tasks, oob bool ) {
+templ TaskList(tasks models.Tasks, oob bool ) {
   <div 
   class="py-8"
   id="tasks-list" 
@@ -21,7 +21,7 @@ templ TaskList(tasks types.Tasks, oob bool ) {
   </div>
 }
 
-templ Task(item *types.Item, editing bool) {
+templ Task(item *models.Item, editing bool) {
 <div
   id={fmt.Sprintf("task-%d", item.ID)}
   class={"flex items-center justify-between rounded-lg px-4 my-3 py-2.5 transition", 

@@ -1,4 +1,4 @@
-package types
+package models
 
 import (
 	"context"
@@ -17,6 +17,11 @@ const (
 	minFNameLen = 2
 	minLNameLen = 2
 	minPassLen  = 7
+)
+
+var (
+	ErrEncryptPassword = errors.New("User: error encrypting password")
+	ErrInvalidEmail    = errors.New("User: invalid email")
 )
 
 type User struct {
@@ -70,7 +75,7 @@ func (params NewUser) Validate(ctx context.Context) map[string]string {
 
 func ValidateEmail(ctx context.Context, email string) error {
 	if !regexp.MustCompile(`^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$`).MatchString(email) {
-		return errors.New("Invalid email address")
+		return ErrInvalidEmail
 	}
 	return nil
 }
@@ -123,7 +128,7 @@ func IsValidPassword(hashedPass, inputPass string) bool {
 func EncryptPassword(password string) (string, error) {
 	cryptPass, err := bcrypt.GenerateFromPassword([]byte(password), bcryptCost)
 	if err != nil {
-		return "", err
+		return "", ErrEncryptPassword
 	}
 	return string(cryptPass), nil
 }

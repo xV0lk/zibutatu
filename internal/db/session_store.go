@@ -7,12 +7,12 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/xV0lk/htmx-go/types"
+	"github.com/xV0lk/htmx-go/models"
 )
 
 type SessionStore interface {
-	Create(userID int) (*types.Session, error)
-	User(token string) (*types.User, error)
+	Create(userID int) (*models.Session, error)
+	User(token string) (*models.User, error)
 	Delete(token string) error
 	Closer
 }
@@ -31,12 +31,12 @@ func (s *PsSessionStore) Close() {
 	s.db.Close()
 }
 
-func (s *PsSessionStore) Create(userID int) (*types.Session, error) {
-	token, err := types.SessionToken()
+func (s *PsSessionStore) Create(userID int) (*models.Session, error) {
+	token, err := models.SessionToken()
 	if err != nil {
 		return nil, err
 	}
-	session := &types.Session{
+	session := &models.Session{
 		UserID:    userID,
 		Token:     token,
 		TokenHash: s.hash(token),
@@ -48,9 +48,9 @@ func (s *PsSessionStore) Create(userID int) (*types.Session, error) {
 	return session, nil
 }
 
-func (s *PsSessionStore) User(token string) (*types.User, error) {
+func (s *PsSessionStore) User(token string) (*models.User, error) {
 	th := s.hash(token)
-	var user types.User
+	var user models.User
 
 	query := `SELECT
 				users.id,
@@ -72,7 +72,7 @@ func (s *PsSessionStore) User(token string) (*types.User, error) {
 		return nil, err
 	}
 
-	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[types.User])
+	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[models.User])
 	if err != nil {
 		return nil, err
 	}
@@ -90,7 +90,7 @@ func (s *PsSessionStore) Delete(token string) error {
 	return nil
 }
 
-func (s *PsSessionStore) insert(session *types.Session) error {
+func (s *PsSessionStore) insert(session *models.Session) error {
 	query := ` INSERT INTO
 				sessions (user_id, token_hash)
 				VALUES ($1, $2) ON CONFLICT (user_id) DO

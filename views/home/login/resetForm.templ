@@ -45,7 +45,7 @@ templ ResetForm(token string) {
 			@views.Csrf()
 			<input type="hidden" name="token" value={token} />
 			<div>
-				<label for="password" class="block text-sm font-medium leading-6 text-white">{mw.Translate(ctx, "Contraseña")}</label>
+				<label for="password" class="block text-sm font-medium leading-6 text-white">{mw.T(ctx, "Contraseña")}</label>
 				<div class="mt-2">
 					<input 
 						id="password"
@@ -58,7 +58,7 @@ templ ResetForm(token string) {
 				</div>
 			</div>
 			<div>
-				<label for="password_confirmation" class="block text-sm font-medium leading-6 text-white">{mw.Translate(ctx, "Confirmar Contraseña")}</label>
+				<label for="password_confirmation" class="block text-sm font-medium leading-6 text-white">{mw.T(ctx, "Confirmar Contraseña")}</label>
 				<div class="mt-2">
 					<input 
 						id="password_confirmation"
@@ -69,14 +69,14 @@ templ ResetForm(token string) {
 						class="block w-full rounded-md border-0 bg-white/5 py-1.5 text-white shadow-sm ring-1 ring-inset ring-white/10 focus:ring-2 focus:ring-inset focus:ring-indigo-500 sm:text-sm sm:leading-6" />
 				</div>
 				<div id="errorMsg" class="hidden" >
-					<p class="text-xs text-red-500">{mw.Translate(ctx, "Las contraseñas no coinciden")}</p>
+					<p class="text-xs text-red-500">{mw.T(ctx, "Las contraseñas no coinciden")}</p>
 				</div>
 			</div>
 			<div>
 				<button
 					type="submit"
 					id="submit"
-					class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 bg-gray-400 cursor-not-allowed text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">{mw.Translate(ctx, "Actualizar Contraseña")}</button>
+					class="flex w-full justify-center rounded-md px-3 py-1.5 text-sm font-semibold leading-6 bg-gray-400 cursor-not-allowed text-white shadow-sm focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">{mw.T(ctx, "Actualizar Contraseña")}</button>
 			</div>
 		</form>
 		@validatePass()

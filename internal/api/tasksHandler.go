@@ -11,7 +11,7 @@ import (
 	"github.com/xV0lk/htmx-go/internal/ctx"
 	"github.com/xV0lk/htmx-go/internal/db"
 	mw "github.com/xV0lk/htmx-go/internal/middleware"
-	"github.com/xV0lk/htmx-go/types"
+	"github.com/xV0lk/htmx-go/models"
 	"github.com/xV0lk/htmx-go/views"
 	tViews "github.com/xV0lk/htmx-go/views/tasks"
 )
@@ -39,7 +39,7 @@ func NewTasksHandler(store db.TaskStore, decoder *schema.Decoder) *TasksHandler 
 //
 // Returns an error if there was a problem fetching the tasks or rendering the response.
 func (h *TasksHandler) HandleGetTasks(w http.ResponseWriter, r *http.Request) {
-	user := ctx.Value[types.User](r.Context())
+	user := ctx.Value[models.User](r.Context())
 	if user == nil {
 		fmt.Println("No session error, redirecting to login: ")
 		http.Redirect(w, r, "/login", http.StatusFound)
@@ -62,13 +62,13 @@ func (h *TasksHandler) HandleGetTasks(w http.ResponseWriter, r *http.Request) {
 // It returns an error if there was an issue handling the request.
 func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
-	user := ctx.Value[types.User](r.Context())
+	user := ctx.Value[models.User](r.Context())
 
-	var taskBody types.TaskBody
+	var taskBody models.TaskBody
 
 	// Initialize the toast options
 	tBody := views.ToastBody{
-		Msg:  mw.Translate(c, "Tarea Agregada exitosamente."),
+		Msg:  mw.T(c, "Tarea Agregada exitosamente."),
 		Type: views.ToastSuccess,
 	}
 
@@ -78,7 +78,7 @@ func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 
 	// Validate the request
 	if taskBody.Title == "" {
-		tBody.Msg = mw.Translate(c, "Nombre no puede estar vacío")
+		tBody.Msg = mw.T(c, "Nombre no puede estar vacío")
 		tBody.Type = views.ToastWarning
 		views.Toast(tBody, true, c, w, http.StatusBadRequest)
 		tViews.Form().Render(c, w)
@@ -120,7 +120,7 @@ func (h *TasksHandler) HandleDeleteTask(w http.ResponseWriter, r *http.Request) 
 	id, err := strconv.Atoi(tId)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(mw.Translate(c, "Id no valido")))
+		w.Write([]byte(mw.T(c, "Id no valido")))
 		return
 	}
 
@@ -151,7 +151,7 @@ func (h *TasksHandler) HandleToogleTask(w http.ResponseWriter, r *http.Request) 
 	c := r.Context()
 
 	var (
-		taskStatus types.TaskStatus
+		taskStatus models.TaskStatus
 		completed  bool
 	)
 
@@ -160,7 +160,7 @@ func (h *TasksHandler) HandleToogleTask(w http.ResponseWriter, r *http.Request) 
 	id, err := strconv.Atoi(tId)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(mw.Translate(c, "Id no valido")))
+		w.Write([]byte(mw.T(c, "Id no valido")))
 		return
 	}
 
@@ -174,7 +174,7 @@ func (h *TasksHandler) HandleToogleTask(w http.ResponseWriter, r *http.Request) 
 		completed = true
 	default:
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(mw.Translate(c, "Status no valido")))
+		w.Write([]byte(mw.T(c, "Status no valido")))
 		return
 	}
 
@@ -204,7 +204,7 @@ func (h *TasksHandler) HandleEditTask(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(mw.Translate(r.Context(), "Id no valido")))
+		w.Write([]byte(mw.T(r.Context(), "Id no valido")))
 		return
 	}
 
@@ -228,9 +228,9 @@ func (h *TasksHandler) HandleEditTask(w http.ResponseWriter, r *http.Request) {
 func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
 
-	var taskBody types.TaskBody
+	var taskBody models.TaskBody
 	tBody := views.ToastBody{
-		Msg:  mw.Translate(c, "Tarea actualizada exitosamente."),
+		Msg:  mw.T(c, "Tarea actualizada exitosamente."),
 		Type: views.ToastSuccess,
 	}
 
@@ -238,7 +238,7 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(tId)
 
 	if err != nil {
-		tBody.Msg = mw.Translate(c, "Id no valido")
+		tBody.Msg = mw.T(c, "Id no valido")
 		tBody.Type = views.ToastError
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		return
@@ -248,7 +248,7 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 	taskBody.Title = r.FormValue("title")
 
 	if taskBody.Title == "" {
-		tBody.Msg = mw.Translate(c, "Nombre no puede estar vacío")
+		tBody.Msg = mw.T(c, "Nombre no puede estar vacío")
 		tBody.Type = views.ToastWarning
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		return
@@ -270,7 +270,7 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 // getCount retrieves the count of tasks and completed tasks from the TaskStore.
 //
 // It takes a TasksHandler pointer as a parameter and returns a Tasks object and an error.
-func (h *TasksHandler) getCount(uId int) (data types.Tasks, err error) {
+func (h *TasksHandler) getCount(uId int) (data models.Tasks, err error) {
 	items, err := h.TaskStore.FetchTasks(uId)
 	if err != nil {
 		return
@@ -284,7 +284,7 @@ func (h *TasksHandler) getCount(uId int) (data types.Tasks, err error) {
 		return
 	}
 
-	data = types.Tasks{
+	data = models.Tasks{
 		Items:          items,
 		Count:          tTasks,
 		CompletedCount: tCompletedTasks,
@@ -298,7 +298,7 @@ func (h *TasksHandler) getCount(uId int) (data types.Tasks, err error) {
 // It retrieves the count data using the getCount method of the TasksHandler.
 // Then, it updates the counter and tasks component data by rendering them using the Counter and TaskList views respectively.
 func updateTasksView(h *TasksHandler, c context.Context, w http.ResponseWriter) error {
-	user := ctx.Value[types.User](c)
+	user := ctx.Value[models.User](c)
 	data, err := h.getCount(user.ID)
 	if err != nil {
 		return err

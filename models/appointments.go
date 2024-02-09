@@ -1,4 +1,4 @@
-package types
+package models
 
 type Appointment struct {
 	ID     int
@@ -10,8 +10,8 @@ type Appointment struct {
 	Month  string
 }
 
-// var appList []*types.Appointment
-// appPaola := &types.Appointment{
+// var appList []*models.Appointment
+// appPaola := &models.Appointment{
 // 	ID:     1,
 // 	Client: "Paola Taborda",
 // 	Phone:  "312 425 4321",
@@ -21,7 +21,7 @@ type Appointment struct {
 // 	Month:  "Diciembre",
 // }
 
-// appJorge := &types.Appointment{
+// appJorge := &models.Appointment{
 // 	ID:     2,
 // 	Client: "Jorge Rojas",
 // 	Phone:  "317 376 8552",
@@ -31,7 +31,7 @@ type Appointment struct {
 // 	Month:  "Enero",
 // }
 
-// appDiego := &types.Appointment{
+// appDiego := &models.Appointment{
 // 	ID:     3,
 // 	Client: "Diego Taborda",
 // 	Phone:  "321 234 5298",
@@ -40,7 +40,7 @@ type Appointment struct {
 // 	Day:    10,
 // 	Month:  "Febrero",
 // }
-// appMaria := &types.Appointment{
+// appMaria := &models.Appointment{
 // 	ID:     4,
 // 	Client: "María López",
 // 	Phone:  "318 765 4321",
@@ -50,7 +50,7 @@ type Appointment struct {
 // 	Month:  "Marzo",
 // }
 
-// appPedro := &types.Appointment{
+// appPedro := &models.Appointment{
 // 	ID:     5,
 // 	Client: "Pedro Ramírez",
 // 	Phone:  "315 987 6543",
@@ -60,7 +60,7 @@ type Appointment struct {
 // 	Month:  "Abril",
 // }
 
-// appLuisa := &types.Appointment{
+// appLuisa := &models.Appointment{
 // 	ID:     6,
 // 	Client: "Luisa Fernández",
 // 	Phone:  "314 876 5432",

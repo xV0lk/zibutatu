@@ -5,14 +5,14 @@ import (
 	"net/http"
 
 	"github.com/xV0lk/htmx-go/internal/ctx"
-	"github.com/xV0lk/htmx-go/types"
+	"github.com/xV0lk/htmx-go/models"
 )
 
 func ILog(log *slog.Logger) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
-			var user types.User
-			u := ctx.Value[types.User](r.Context())
+			var user models.User
+			u := ctx.Value[models.User](r.Context())
 			if u != nil {
 				user = *u
 			}

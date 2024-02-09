@@ -1,9 +1,9 @@
 package views
 
-import "github.com/xV0lk/htmx-go/types"
+import "github.com/xV0lk/htmx-go/models"
 import "github.com/xV0lk/htmx-go/views/home/appointments"
 
-templ UserPage(data []*types.Appointment) {
+templ UserPage(data []*models.Appointment) {
 	<div class="flex justify-center items-center w-full">
 		<div class="flex justify-between gap-x-4 md:gap-x-6 lg:gap-x-10 xl:gap-x-12 2xl:gap-x-16">
 			@views.AppointmentsList(data)

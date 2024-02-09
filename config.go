@@ -9,7 +9,7 @@ import (
 
 	"github.com/joho/godotenv"
 	"github.com/xV0lk/htmx-go/internal/db"
-	"github.com/xV0lk/htmx-go/types"
+	"github.com/xV0lk/htmx-go/models"
 )
 
 type serverConfig struct {
@@ -18,8 +18,8 @@ type serverConfig struct {
 
 type config struct {
 	Postgres db.PostgresConfig
-	SMTP     types.SMTPConfig
-	CSRF     types.CsrfConfig
+	SMTP     models.SMTPConfig
+	CSRF     models.CsrfConfig
 	Server   serverConfig
 	Env      string
 }
@@ -51,14 +51,14 @@ func loadEnvConfig() (config, error) {
 	if err != nil {
 		return cfg, err
 	}
-	cfg.SMTP = types.SMTPConfig{
+	cfg.SMTP = models.SMTPConfig{
 		Host:     os.Getenv("MAIL_THOST"),
 		Port:     port,
 		Username: os.Getenv("MAIL_TUSER"),
 		Password: os.Getenv("MAIL_TPASS"),
 	}
 
-	cfg.CSRF = types.CsrfConfig{
+	cfg.CSRF = models.CsrfConfig{
 		Key:    os.Getenv("CSRF_SECRET"),
 		Secure: false,
 	}

@@ -31,7 +31,7 @@ func PassInput() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 string = mw.Translate(ctx, "Contraseña")
+		var templ_7745c5c3_Var2 string = mw.T(ctx, "Contraseña")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -40,7 +40,7 @@ func PassInput() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 string = mw.Translate(ctx, "Olvidaste tu contraseña?")
+		var templ_7745c5c3_Var3 string = mw.T(ctx, "Olvidaste tu contraseña?")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -49,7 +49,7 @@ func PassInput() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var4 string = mw.Translate(ctx, "Ver")
+		var templ_7745c5c3_Var4 string = mw.T(ctx, "Ver")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

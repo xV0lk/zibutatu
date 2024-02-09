@@ -6,15 +6,15 @@ import (
 
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/xV0lk/htmx-go/types"
+	"github.com/xV0lk/htmx-go/models"
 )
 
 type TaskStore interface {
-	FetchTasks(uId int) ([]*types.Item, error)
-	FetchTask(ID int) (*types.Item, error)
-	InsertTask(tBody types.TaskBody) (*types.Item, error)
-	UpdateTaskTitle(ID int, title string) (*types.Item, error)
-	UpdateTaskCompleted(ID int, completed bool) (*types.Item, error)
+	FetchTasks(uId int) ([]*models.Item, error)
+	FetchTask(ID int) (*models.Item, error)
+	InsertTask(tBody models.TaskBody) (*models.Item, error)
+	UpdateTaskTitle(ID int, title string) (*models.Item, error)
+	UpdateTaskCompleted(ID int, completed bool) (*models.Item, error)
 	DeleteTask(ctx context.Context, ID int) error
 	OderTasks(ctx context.Context, values []int) error
 	FetchCount(uId int) (int, error)
@@ -40,8 +40,8 @@ func (s *PsTaskStore) Close() {
 // FetchTasks fetches tasks from the SQLStore.
 //
 // It does not take any parameters.
-// It returns a slice of types.Item and an error.
-func (s *PsTaskStore) FetchTasks(uId int) ([]*types.Item, error) {
+// It returns a slice of models.Item and an error.
+func (s *PsTaskStore) FetchTasks(uId int) ([]*models.Item, error) {
 	query := `SELECT id, title, completed 
 				FROM tasks 
 				WHERE user_id = $1
@@ -52,7 +52,7 @@ func (s *PsTaskStore) FetchTasks(uId int) ([]*types.Item, error) {
 		return nil, err
 	}
 	defer rows.Close()
-	items, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByNameLax[types.Item])
+	items, err := pgx.CollectRows(rows, pgx.RowToAddrOfStructByNameLax[models.Item])
 	if err != nil {
 		fmt.Println("Error: ", err)
 		return nil, err
@@ -63,9 +63,9 @@ func (s *PsTaskStore) FetchTasks(uId int) ([]*types.Item, error) {
 // FetchTask fetches a task from the SQLStore based on the given ID.
 //
 // ID: the ID of the task to fetch.
-// returns: the fetched task as a types.Item and any error encountered.
-func (s *PsTaskStore) FetchTask(ID int) (*types.Item, error) {
-	item := types.Item{}
+// returns: the fetched task as a models.Item and any error encountered.
+func (s *PsTaskStore) FetchTask(ID int) (*models.Item, error) {
+	item := models.Item{}
 	query := "SELECT id, title, completed FROM tasks WHERE id = $1;"
 	row := s.db.QueryRow(context.Background(), query, ID)
 	err := row.Scan(&item.ID, &item.Title, &item.Completed)
@@ -79,8 +79,8 @@ func (s *PsTaskStore) FetchTask(ID int) (*types.Item, error) {
 // UpdateTaskTitle updates the title of a task in the SQLStore.
 //
 // It takes an ID (int) and a title (string) as parameters and returns an Item and an error.
-func (s *PsTaskStore) UpdateTaskTitle(ID int, title string) (*types.Item, error) {
-	item := types.Item{}
+func (s *PsTaskStore) UpdateTaskTitle(ID int, title string) (*models.Item, error) {
+	item := models.Item{}
 	query := "UPDATE tasks SET title = $1 WHERE id = $2 RETURNING id, title, completed;"
 	row := s.db.QueryRow(context.Background(), query, title, ID)
 	err := row.Scan(&item.ID, &item.Title, &item.Completed)
@@ -94,9 +94,9 @@ func (s *PsTaskStore) UpdateTaskTitle(ID int, title string) (*types.Item, error)
 // UpdateTaskCompleted updates the completion status of a task in the SQLStore.
 //
 // It takes an ID of the task to be updated and a boolean indicating the new completion status.
-// It returns a types.Item struct representing the updated task and an error if any occurred.
-func (s *PsTaskStore) UpdateTaskCompleted(ID int, completed bool) (*types.Item, error) {
-	item := types.Item{}
+// It returns a models.Item struct representing the updated task and an error if any occurred.
+func (s *PsTaskStore) UpdateTaskCompleted(ID int, completed bool) (*models.Item, error) {
+	item := models.Item{}
 	query := "UPDATE tasks SET completed = $1 WHERE id = $2 RETURNING id, title, completed;"
 	row := s.db.QueryRow(context.Background(), query, completed, ID)
 	err := row.Scan(&item.ID, &item.Title, &item.Completed)
@@ -137,9 +137,9 @@ func (s *PsTaskStore) FetchCompletedCount(uId int) (int, error) {
 
 // InsertTask inserts a task into the SQLStore.
 //
-// It takes a title string as a parameter and returns a types.Item and an error.
-func (s *PsTaskStore) InsertTask(tBody types.TaskBody) (*types.Item, error) {
-	item := types.Item{}
+// It takes a title string as a parameter and returns a models.Item and an error.
+func (s *PsTaskStore) InsertTask(tBody models.TaskBody) (*models.Item, error) {
+	item := models.Item{}
 	count, err := s.FetchCount(tBody.UserId)
 	if err != nil {
 		fmt.Println("Error: ", err)

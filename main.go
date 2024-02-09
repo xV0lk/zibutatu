@@ -15,7 +15,7 @@ import (
 	"github.com/xV0lk/htmx-go/internal/api"
 	"github.com/xV0lk/htmx-go/internal/db"
 	"github.com/xV0lk/htmx-go/internal/middleware"
-	"github.com/xV0lk/htmx-go/types"
+	"github.com/xV0lk/htmx-go/models"
 )
 
 //go:embed migrations/*.sql
@@ -43,7 +43,7 @@ func main() {
 		log.Fatal(err)
 	}
 
-	emailService, err := types.NewDefaultEmailService()
+	emailService, err := models.NewDefaultEmailService()
 	if err != nil {
 		fmt.Printf("-------------------------\nerr creating mail service: %s\n", err)
 		log.Fatal(err)

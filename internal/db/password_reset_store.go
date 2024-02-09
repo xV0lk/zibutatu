@@ -9,12 +9,12 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/xV0lk/htmx-go/types"
+	"github.com/xV0lk/htmx-go/models"
 )
 
 type PasswordResetStore interface {
-	Create(email string, ctx context.Context) (*types.PasswordReset, error)
-	Consume(token string, ctx context.Context) (*types.User, error)
+	Create(email string, ctx context.Context) (*models.PasswordReset, error)
+	Consume(token string, ctx context.Context) (*models.User, error)
 }
 
 type PsPwResetStore struct {
@@ -31,7 +31,7 @@ func (s *PsPwResetStore) Close() {
 	s.db.Close()
 }
 
-func (s *PsPwResetStore) Create(email string, ctx context.Context) (*types.PasswordReset, error) {
+func (s *PsPwResetStore) Create(email string, ctx context.Context) (*models.PasswordReset, error) {
 	email = strings.ToLower(email)
 	var userId int
 	row := s.db.QueryRow(ctx, "SELECT id FROM users WHERE email = $1", email)
@@ -40,22 +40,22 @@ func (s *PsPwResetStore) Create(email string, ctx context.Context) (*types.Passw
 		return nil, err
 	}
 
-	token, err := types.PassResetToken()
+	token, err := models.PassResetToken()
 	if err != nil {
 		return nil, err
 	}
 
-	pwt := types.NewPasswordToken(userId, token)
+	pwt := models.NewPasswordToken(userId, token)
 	if err := s.insert(pwt); err != nil {
 		return nil, err
 	}
 	return pwt, nil
 }
 
-func (s *PsPwResetStore) Consume(token string, ctx context.Context) (*types.User, error) {
+func (s *PsPwResetStore) Consume(token string, ctx context.Context) (*models.User, error) {
 	tkh := s.hash(token)
-	var user types.User
-	var pwReset types.PasswordReset
+	var user models.User
+	var pwReset models.PasswordReset
 	query := `SELECT password_reset.id,
 				password_reset.expires_at,
 				users.id,
@@ -78,7 +78,7 @@ func (s *PsPwResetStore) Consume(token string, ctx context.Context) (*types.User
 	return &user, nil
 }
 
-func (s *PsPwResetStore) insert(token *types.PasswordReset) error {
+func (s *PsPwResetStore) insert(token *models.PasswordReset) error {
 	query := ` INSERT INTO
 				password_reset (user_id, token_hash, expires_at)
 				VALUES ($1, $2, $3) ON CONFLICT (user_id) DO

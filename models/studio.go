@@ -1,4 +1,4 @@
-package types
+package models
 
 type Studio struct {
 	ID      int    `db:"id,omitempty"`

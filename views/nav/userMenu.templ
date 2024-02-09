@@ -1,6 +1,6 @@
 package views
 
-import "github.com/xV0lk/htmx-go/types"
+import "github.com/xV0lk/htmx-go/models"
 
 import (
   "fmt"
@@ -18,25 +18,25 @@ templ UserMenu() {
 >
   <div class="py-1" role="none">
     <p class="block px-4 py-2 text-sm text-gray-500" role="none" tabindex="-1" id="lang">
-        {mw.Translate(ctx, "Cambiar idioma")}
+        {mw.T(ctx, "Cambiar idioma")}
     </p>
     <a href="#" hx-post="/lang/es" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
       hx-headers={fmt.Sprintf("{\"X-CSRF-Token\": \"%s\"}", ctx.Value("gorilla.csrf.Token").(string))}
       id="logout">
-        {mw.Translate(ctx, "Español")}
+        {mw.T(ctx, "Español")}
     </a>
     <a href="#" hx-post="/lang/en" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
       hx-headers={fmt.Sprintf("{\"X-CSRF-Token\": \"%s\"}", ctx.Value("gorilla.csrf.Token").(string))}
       id="logout">
-        {mw.Translate(ctx, "Ingles")}
+        {mw.T(ctx, "Ingles")}
     </a>
   </div>
-  if iCtx.Value[types.User](ctx) != nil {
+  if iCtx.Value[models.User](ctx) != nil {
     <div class="py-1" role="none">
       <a href="#" hx-delete="/login" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
         hx-headers={fmt.Sprintf("{\"X-CSRF-Token\": \"%s\"}", ctx.Value("gorilla.csrf.Token").(string))}
         id="logout">
-          {mw.Translate(ctx, "Salir")}
+          {mw.T(ctx, "Salir")}
       </a>
     </div>
   }

@@ -10,7 +10,7 @@ import "context"
 import "io"
 import "bytes"
 
-import "github.com/xV0lk/htmx-go/types"
+import "github.com/xV0lk/htmx-go/models"
 
 import (
 	"fmt"
@@ -35,7 +35,7 @@ func UserMenu() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 string = mw.Translate(ctx, "Cambiar idioma")
+		var templ_7745c5c3_Var2 string = mw.T(ctx, "Cambiar idioma")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -52,7 +52,7 @@ func UserMenu() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 string = mw.Translate(ctx, "Español")
+		var templ_7745c5c3_Var3 string = mw.T(ctx, "Español")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -69,7 +69,7 @@ func UserMenu() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var4 string = mw.Translate(ctx, "Ingles")
+		var templ_7745c5c3_Var4 string = mw.T(ctx, "Ingles")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -78,7 +78,7 @@ func UserMenu() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		if iCtx.Value[types.User](ctx) != nil {
+		if iCtx.Value[models.User](ctx) != nil {
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"py-1\" role=\"none\"><a href=\"#\" hx-delete=\"/login\" class=\"block px-4 py-2 text-sm text-gray-700\" role=\"menuitem\" tabindex=\"-1\" hx-headers=\"")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
@@ -91,7 +91,7 @@ func UserMenu() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var5 string = mw.Translate(ctx, "Salir")
+			var templ_7745c5c3_Var5 string = mw.T(ctx, "Salir")
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

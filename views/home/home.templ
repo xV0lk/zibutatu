@@ -1,6 +1,6 @@
 package views
 
-import "github.com/xV0lk/htmx-go/types"
+import "github.com/xV0lk/htmx-go/models"
 
 import (
 	l "github.com/xV0lk/htmx-go/views/home/login"
@@ -13,7 +13,7 @@ templ HomeLogin(){
 	}
 }
 
-templ HomeUser(data []*types.Appointment) {
+templ HomeUser(data []*models.Appointment) {
 	@views.Index(){
 		@UserPage(data)
 	}

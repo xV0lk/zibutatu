@@ -5,7 +5,7 @@ import (
 
 	"github.com/xV0lk/htmx-go/internal/ctx"
 	"github.com/xV0lk/htmx-go/internal/db"
-	"github.com/xV0lk/htmx-go/types"
+	"github.com/xV0lk/htmx-go/models"
 )
 
 func User(us *db.UserStore) func(next http.Handler) http.Handler {
@@ -22,7 +22,7 @@ func User(us *db.UserStore) func(next http.Handler) http.Handler {
 				next.ServeHTTP(w, r)
 				return
 			}
-			nCtx := ctx.With[types.User](r.Context(), user)
+			nCtx := ctx.With[models.User](r.Context(), user)
 			r = r.WithContext(nCtx)
 			next.ServeHTTP(w, r)
 		}

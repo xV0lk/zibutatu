@@ -1,12 +1,12 @@
 package views
 
 import (
-  "github.com/xV0lk/htmx-go/types"
+  "github.com/xV0lk/htmx-go/models"
   "github.com/xV0lk/htmx-go/views"
   mw "github.com/xV0lk/htmx-go/internal/middleware"
 )
 
-templ Tasks(tasks types.Tasks, oob bool) {
+templ Tasks(tasks models.Tasks, oob bool) {
   @views.Index(){
     <div class="flex justify-center items-center">
     	// TODO: add responsive media queries for the with of the container
@@ -19,7 +19,7 @@ templ Tasks(tasks types.Tasks, oob bool) {
   }
 }
 
-templ Counter(tasks types.Tasks, oob bool) {
+templ Counter(tasks models.Tasks, oob bool) {
 <div 
   id="counter" 
   class="flex flex-col justify-center items-center pt-10 text-center"
@@ -31,8 +31,8 @@ templ Counter(tasks types.Tasks, oob bool) {
     <p 
       class="text-white py-5" 
       id="total" 
-    >{mw.Translate(ctx, "Tareas totales: %d", tasks.Count)}</p>
-    <p class="text-white py-5" id="completed">{mw.Translate(ctx, "Tareas completadas: %d", tasks.CompletedCount)}</p>
+    >{mw.T(ctx, "Tareas totales: %d", tasks.Count)}</p>
+    <p class="text-white py-5" id="completed">{mw.T(ctx, "Tareas completadas: %d", tasks.CompletedCount)}</p>
   </div>
 </div>
 }
