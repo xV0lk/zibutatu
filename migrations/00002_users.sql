@@ -11,7 +11,7 @@ CREATE TABLE
         updated_at TIMESTAMP DEFAULT NOW(),
         language CHAR(5) DEFAULT 'es-CO' NOT NULL,
         password TEXT NOT NULL,
-        studio_id INT NULL REFERENCES studios(id) ON DELETE
+        studio_id INT NULL REFERENCES studios(id) ON DELETE 
         SET NULL
     );
 

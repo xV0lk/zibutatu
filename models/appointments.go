@@ -1,13 +1,17 @@
 package models
 
+import "time"
+
 type Appointment struct {
-	ID     int
-	Client string
-	Phone  string
-	Email  string
-	Artist string
-	Day    int
-	Month  string
+	ID       int       `db:"id,omitempty"`
+	Client   string    `db:"client"`
+	Phone    string    `db:"phone"`
+	Email    string    `db:"email"`
+	ArtistID int       `db:"artist_id"`
+	Type     string    `db:"type"`
+	Date     time.Time `db:"date"`
+	// Day    int
+	// Month  string
 }
 
 // var appList []*models.Appointment
