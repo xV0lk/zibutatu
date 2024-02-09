@@ -15,7 +15,7 @@ import "github.com/xV0lk/htmx-go/models"
 import (
 	"fmt"
 	iCtx "github.com/xV0lk/htmx-go/internal/ctx"
-	mw "github.com/xV0lk/htmx-go/internal/middleware"
+	loc "github.com/xV0lk/htmx-go/internal/localizer"
 )
 
 func UserMenu() templ.Component {
@@ -35,7 +35,7 @@ func UserMenu() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 string = mw.T(ctx, "Cambiar idioma")
+		var templ_7745c5c3_Var2 string = loc.T(ctx, "Cambiar idioma")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -52,7 +52,7 @@ func UserMenu() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 string = mw.T(ctx, "Español")
+		var templ_7745c5c3_Var3 string = loc.T(ctx, "Español")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -69,7 +69,7 @@ func UserMenu() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var4 string = mw.T(ctx, "Ingles")
+		var templ_7745c5c3_Var4 string = loc.T(ctx, "Ingles")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -91,7 +91,7 @@ func UserMenu() templ.Component {
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}
-			var templ_7745c5c3_Var5 string = mw.T(ctx, "Salir")
+			var templ_7745c5c3_Var5 string = loc.T(ctx, "Salir")
 			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err

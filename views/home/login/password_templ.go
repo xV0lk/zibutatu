@@ -11,7 +11,7 @@ import "io"
 import "bytes"
 
 import (
-	mw "github.com/xV0lk/htmx-go/internal/middleware"
+	loc "github.com/xV0lk/htmx-go/internal/localizer"
 )
 
 func PassInput() templ.Component {
@@ -31,7 +31,7 @@ func PassInput() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 string = mw.T(ctx, "Contraseña")
+		var templ_7745c5c3_Var2 string = loc.T(ctx, "Contraseña")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -40,7 +40,7 @@ func PassInput() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 string = mw.T(ctx, "Olvidaste tu contraseña?")
+		var templ_7745c5c3_Var3 string = loc.T(ctx, "Olvidaste tu contraseña?")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -49,7 +49,7 @@ func PassInput() templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var4 string = mw.T(ctx, "Ver")
+		var templ_7745c5c3_Var4 string = loc.T(ctx, "Ver")
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

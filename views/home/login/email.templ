@@ -1,12 +1,12 @@
 package views
 
 import (
-	mw "github.com/xV0lk/htmx-go/internal/middleware"
+	loc "github.com/xV0lk/htmx-go/internal/localizer"
 )
 
 templ EmailInput() {
 	<div>
-		<label for="email" class="block text-sm font-medium leading-6 text-white">{mw.T(ctx, "Email")}</label>
+		<label for="email" class="block text-sm font-medium leading-6 text-white">{loc.T(ctx, "Email")}</label>
 		<div class="mt-2">
 			<input
 				id="email"

@@ -4,7 +4,7 @@ import "github.com/xV0lk/htmx-go/models"
 
 import (
   "fmt"
-  mw "github.com/xV0lk/htmx-go/internal/middleware"
+  loc "github.com/xV0lk/htmx-go/internal/localizer"
   iCtx "github.com/xV0lk/htmx-go/internal/ctx"
   )
 
@@ -18,17 +18,17 @@ templ UserMenu() {
 >
   <div class="py-1" role="none">
     <p class="block px-4 py-2 text-sm text-gray-500" role="none" tabindex="-1" id="lang">
-        {mw.T(ctx, "Cambiar idioma")}
+        {loc.T(ctx, "Cambiar idioma")}
     </p>
     <a href="#" hx-post="/lang/es" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
       hx-headers={fmt.Sprintf("{\"X-CSRF-Token\": \"%s\"}", ctx.Value("gorilla.csrf.Token").(string))}
       id="logout">
-        {mw.T(ctx, "Español")}
+        {loc.T(ctx, "Español")}
     </a>
     <a href="#" hx-post="/lang/en" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
       hx-headers={fmt.Sprintf("{\"X-CSRF-Token\": \"%s\"}", ctx.Value("gorilla.csrf.Token").(string))}
       id="logout">
-        {mw.T(ctx, "Ingles")}
+        {loc.T(ctx, "Ingles")}
     </a>
   </div>
   if iCtx.Value[models.User](ctx) != nil {
@@ -36,7 +36,7 @@ templ UserMenu() {
       <a href="#" hx-delete="/login" class="block px-4 py-2 text-sm text-gray-700" role="menuitem" tabindex="-1"
         hx-headers={fmt.Sprintf("{\"X-CSRF-Token\": \"%s\"}", ctx.Value("gorilla.csrf.Token").(string))}
         id="logout">
-          {mw.T(ctx, "Salir")}
+          {loc.T(ctx, "Salir")}
       </a>
     </div>
   }

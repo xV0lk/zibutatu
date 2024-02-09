@@ -2,6 +2,13 @@
     "language": "es-CO",
     "messages": [
         {
+            "id": "admin",
+            "message": "admin",
+            "translation": "admin",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
             "id": "Ocurrió un error",
             "message": "Ocurrió un error",
             "translation": "Ocurrió un error",
@@ -23,6 +30,20 @@
             "fuzzy": true
         },
         {
+            "id": "Error al crear usuario",
+            "message": "Error al crear usuario",
+            "translation": "Error al crear usuario",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "La data ingresada no es válida",
+            "message": "La data ingresada no es válida",
+            "translation": "La data ingresada no es válida",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
             "id": "Email ya se encuentra registrado",
             "message": "Email ya se encuentra registrado",
             "translation": "Email ya se encuentra registrado",
@@ -33,6 +54,34 @@
             "id": "Se han enviado las instrucciones para cambiar la contraseña a tu correo",
             "message": "Se han enviado las instrucciones para cambiar la contraseña a tu correo",
             "translation": "Se han enviado las instrucciones para cambiar la contraseña a tu correo",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "No existe un usuario registrado con este correo",
+            "message": "No existe un usuario registrado con este correo",
+            "translation": "No existe un usuario registrado con este correo",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Ocurrió un error al enviar el correo de recuperación",
+            "message": "Ocurrió un error al enviar el correo de recuperación",
+            "translation": "Ocurrió un error al enviar el correo de recuperación",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Token inválido",
+            "message": "Token inválido",
+            "translation": "Token inválido",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Ocurrió un error al cambiar la contraseña",
+            "message": "Ocurrió un error al cambiar la contraseña",
+            "translation": "Ocurrió un error al cambiar la contraseña",
             "translatorComment": "Copied from source.",
             "fuzzy": true
         },
@@ -122,6 +171,48 @@
             "id": "Recuperar",
             "message": "Recuperar",
             "translation": "Recuperar",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Revisa tu correo",
+            "message": "Revisa tu correo",
+            "translation": "Revisa tu correo",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Te hemos enviado un correo con las instrucciones para recuperar tu contraseña.",
+            "message": "Te hemos enviado un correo con las instrucciones para recuperar tu contraseña.",
+            "translation": "Te hemos enviado un correo con las instrucciones para recuperar tu contraseña.",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "El token de recuperación de contraseña es inválido o ha expirado.",
+            "message": "El token de recuperación de contraseña es inválido o ha expirado.",
+            "translation": "El token de recuperación de contraseña es inválido o ha expirado.",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Confirmar Contraseña",
+            "message": "Confirmar Contraseña",
+            "translation": "Confirmar Contraseña",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Las contraseñas no coinciden",
+            "message": "Las contraseñas no coinciden",
+            "translation": "Las contraseñas no coinciden",
+            "translatorComment": "Copied from source.",
+            "fuzzy": true
+        },
+        {
+            "id": "Actualizar Contraseña",
+            "message": "Actualizar Contraseña",
+            "translation": "Actualizar Contraseña",
             "translatorComment": "Copied from source.",
             "fuzzy": true
         },

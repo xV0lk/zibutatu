@@ -1,7 +1,7 @@
 package views
 
 import (
-	mw "github.com/xV0lk/htmx-go/internal/middleware"
+	loc "github.com/xV0lk/htmx-go/internal/localizer"
 	"github.com/xV0lk/htmx-go/views"
 )
 
@@ -12,7 +12,7 @@ templ PwReset(email string) {
 	class="flex flex-col justify-center px-6 py-12 lg:px-8 mt-20"
 >
 	<div class="sm:mx-auto sm:w-full sm:max-w-sm">
-		<h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">{mw.T(ctx, "Recuperar Contraseña")}
+		<h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">{loc.T(ctx, "Recuperar Contraseña")}
 		</h2>
 	</div>
 
@@ -25,7 +25,7 @@ templ PwReset(email string) {
 		>
 			@views.Csrf()
 			<div>
-				<label for="email" class="block text-sm font-medium leading-6 text-white">{mw.T(ctx, "Email")}</label>
+				<label for="email" class="block text-sm font-medium leading-6 text-white">{loc.T(ctx, "Email")}</label>
 				<div class="mt-2">
 					<input 
 						id="email"
@@ -40,7 +40,7 @@ templ PwReset(email string) {
 			</div>
 			<div>
 				<button type="submit"
-					class="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">{mw.T(ctx, "Recuperar")}</button>
+					class="flex w-full justify-center rounded-md bg-indigo-500 px-3 py-1.5 text-sm font-semibold leading-6 text-white shadow-sm hover:bg-indigo-400 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-500">{loc.T(ctx, "Recuperar")}</button>
 			</div>
 		</form>
 	</div>
@@ -54,7 +54,7 @@ templ CheckEmail() {
 // 	class="flex flex-col justify-center px-6 py-12 lg:px-8 mt-20"
 // >
 // 	<div class="sm:mx-auto sm:w-full sm:max-w-sm">
-// 		<h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">{mw.T(ctx, "Recuperar Contraseña")}
+// 		<h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">{loc.T(ctx, "Recuperar Contraseña")}
 // 		</h2>
 // 	</div>
 
@@ -67,10 +67,10 @@ templ CheckEmail() {
 				</svg>
 			</div>
 			<div class="flex justify-center">
-				<h2 class="text-center text-xl font-bold leading-9 tracking-tight text-white">{mw.T(ctx, "Revisa tu correo")}</h2>
+				<h2 class="text-center text-xl font-bold leading-9 tracking-tight text-white">{loc.T(ctx, "Revisa tu correo")}</h2>
 			</div>
 			<div class="flex justify-center">
-				<p class="text-center text-sm leading-5 text-gray-300">{mw.T(ctx, "Te hemos enviado un correo con las instrucciones para recuperar tu contraseña.")}</p>
+				<p class="text-center text-sm leading-5 text-gray-300">{loc.T(ctx, "Te hemos enviado un correo con las instrucciones para recuperar tu contraseña.")}</p>
 			</div>
 		</div>
 	</div>
@@ -84,7 +84,7 @@ templ ResetPassword(token string) {
 		class="flex flex-col justify-center px-6 py-12 lg:px-8 mt-20"
 	>
 		<div class="sm:mx-auto sm:w-full sm:max-w-sm">
-			<h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">{mw.T(ctx, "Recuperar Contraseña")}
+			<h2 class="mt-10 text-center text-2xl font-bold leading-9 tracking-tight text-white">{loc.T(ctx, "Recuperar Contraseña")}
 			</h2>
 		</div>
 
@@ -108,10 +108,10 @@ templ InvalidToken() {
 				</svg>
 			</div>
 			<div class="flex justify-center">
-				<h2 class="text-center text-xl font-bold leading-9 tracking-tight text-white">{mw.T(ctx, "Token inválido")}</h2>
+				<h2 class="text-center text-xl font-bold leading-9 tracking-tight text-white">{loc.T(ctx, "Token inválido")}</h2>
 			</div>
 			<div class="flex justify-center">
-				<p class="text-center text-sm leading-5 text-gray-300">{mw.T(ctx, "El token de recuperación de contraseña es inválido o ha expirado.")}</p>
+				<p class="text-center text-sm leading-5 text-gray-300">{loc.T(ctx, "El token de recuperación de contraseña es inválido o ha expirado.")}</p>
 			</div>
 		</div>
 	</div>

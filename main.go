@@ -14,6 +14,7 @@ import (
 	"github.com/gorilla/schema"
 	"github.com/xV0lk/htmx-go/internal/api"
 	"github.com/xV0lk/htmx-go/internal/db"
+	"github.com/xV0lk/htmx-go/internal/localizer"
 	"github.com/xV0lk/htmx-go/internal/middleware"
 	"github.com/xV0lk/htmx-go/models"
 )
@@ -66,7 +67,7 @@ func main() {
 		r = chi.NewRouter()
 	)
 	r.Use(chiMiddleware.Logger)
-	r.Use(middleware.I18n)
+	r.Use(localizer.I18n)
 	r.Use(middleware.User(userStore))
 	r.Use(middleware.ILog(logger))
 

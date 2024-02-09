@@ -1,15 +1,20 @@
 package views
 
-import "strconv"
-import "fmt"
 
-import ("github.com/xV0lk/htmx-go/models")
+
+
+import (
+	"strconv"
+	"fmt"
+	"github.com/xV0lk/htmx-go/models"
+	loc "github.com/xV0lk/htmx-go/internal/localizer"
+	)
 
 templ AppointmenItem(app *models.Appointment) {
 	<li class="grid grid-cols-3 py-5 hover:bg-gray-50 sm:px-6">
 		<div class="flex flex-col justify-end pe-6 text-center">
-			<h3 class="text-4xl font-bold text-indigo-600">{strconv.Itoa(app.Day)}</h3>
-			<p class="font-light text-sm pt-2 text-indigo-400">{app.Month}</p>
+			<h3 class="text-4xl font-bold text-indigo-600">{strconv.Itoa(app.Date.Day())}</h3>
+			<p class="font-light text-sm pt-2 text-indigo-400">{loc.T(ctx, app.Date.Month())}</p>
 		</div>
 	<div class="col-span-2 text-end">
 		<p class="text-sm font-semibold leading-6 text-gray-700">

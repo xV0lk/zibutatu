@@ -13,8 +13,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/xV0lk/htmx-go/internal/ctx"
 	"github.com/xV0lk/htmx-go/internal/db"
-	iErrors "github.com/xV0lk/htmx-go/internal/errors"
-	mw "github.com/xV0lk/htmx-go/internal/middleware"
+	loc "github.com/xV0lk/htmx-go/internal/localizer"
 	"github.com/xV0lk/htmx-go/models"
 	"github.com/xV0lk/htmx-go/views"
 	home "github.com/xV0lk/htmx-go/views/home"
@@ -58,7 +57,7 @@ func (h *AuthHandler) HandleAuthenticate(w http.ResponseWriter, r *http.Request)
 	var loginF models.AuthParams
 
 	tBody := views.ToastBody{
-		Msg:  mw.T(c, "Ocurrió un error"),
+		Msg:  loc.T(c, "Ocurrió un error"),
 		Type: views.ToastError,
 	}
 
@@ -67,13 +66,13 @@ func (h *AuthHandler) HandleAuthenticate(w http.ResponseWriter, r *http.Request)
 
 	user, err := h.UserStore.Auth.AuthenticateUser(&loginF, c)
 	if err != nil {
-		tBody.Msg = mw.T(c, "Usuario no encontrado")
+		tBody.Msg = loc.T(c, "Usuario no encontrado")
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		fmt.Println("Login Error 1: ", err)
 		return
 	}
 	if !models.IsValidPassword(user.Password, loginF.Password) {
-		tBody.Msg = mw.T(c, "Contraseña incorrecta")
+		tBody.Msg = loc.T(c, "Contraseña incorrecta")
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		fmt.Println("Login Error 2: ", err)
 	}
@@ -116,14 +115,15 @@ func (h *AuthHandler) HandleHome(w http.ResponseWriter, r *http.Request) {
 func (h *AuthHandler) HandleNewUser(w http.ResponseWriter, r *http.Request) {
 	ctx := r.Context()
 	var newUser models.NewUser
+	pe := loc.T(ctx, "Error al crear usuario")
 
 	err := json.NewDecoder(r.Body).Decode(&newUser)
 	if err != nil {
-		pe := iErrors.Public(err, mw.T(ctx, "La data ingresada no es válida"))
+		pe = loc.T(ctx, "La data ingresada no es válida")
 		slog.Error("New User",
 			slog.Int("status", http.StatusInternalServerError),
-			slog.String("errorMsg", pe.Public()),
-			slog.String("error", pe.Error()),
+			slog.String("errorMsg", pe),
+			slog.String("error", err.Error()),
 			slog.Any("body", newUser),
 		)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
@@ -138,21 +138,29 @@ func (h *AuthHandler) HandleNewUser(w http.ResponseWriter, r *http.Request) {
 
 	user, err := models.NewUserFromParams(&newUser)
 	if err != nil {
+		slog.Error("New User",
+			slog.Int("status", http.StatusInternalServerError),
+			slog.String("errorMsg", pe),
+			slog.String("error", err.Error()),
+			slog.Any("body", newUser),
+		)
 		render.Status(r, http.StatusBadRequest)
-		render.JSON(w, r, err)
+		render.JSON(w, r, pe)
 		return
 	}
 
 	err = h.UserStore.Auth.AddUser(user, r.Context())
 	if err != nil {
 		if errors.Is(err, db.ErrEmailTaken) {
-			err := iErrors.Public(err, "Email ya se encuentra registrado")
-			http.Error(w, mw.T(r.Context(), err), http.StatusBadRequest)
+			pe = loc.T(ctx, "Email ya se encuentra registrado")
+			http.Error(w, loc.T(r.Context(), pe), http.StatusBadRequest)
 			return
 		}
-		slog.Error("Create user",
+		slog.Error("New User",
+			slog.Int("status", http.StatusInternalServerError),
+			slog.String("errorMsg", pe),
 			slog.String("error", err.Error()),
-			slog.String("email", newUser.Email),
+			slog.Any("body", newUser),
 		)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -186,7 +194,7 @@ func (h *AuthHandler) HandleForgotPassword(w http.ResponseWriter, r *http.Reques
 func (h *AuthHandler) HandleResetPassword(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
 	tBody := views.ToastBody{
-		Msg:  mw.T(c, "Se han enviado las instrucciones para cambiar la contraseña a tu correo"),
+		Msg:  loc.T(c, "Se han enviado las instrucciones para cambiar la contraseña a tu correo"),
 		Type: views.ToastSuccess,
 	}
 
@@ -198,9 +206,9 @@ func (h *AuthHandler) HandleResetPassword(w http.ResponseWriter, r *http.Request
 	pwReset, err := h.UserStore.PwReset.Create(data.Email, c)
 	if err != nil {
 		if err == pgx.ErrNoRows {
-			tBody.Msg = mw.T(c, "No existe un usuario registrado con este correo")
+			tBody.Msg = loc.T(c, "No existe un usuario registrado con este correo")
 		}
-		tBody.Msg = mw.T(c, err.Error())
+		tBody.Msg = loc.T(c, err.Error())
 		tBody.Type = views.ToastError
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		return
@@ -212,12 +220,11 @@ func (h *AuthHandler) HandleResetPassword(w http.ResponseWriter, r *http.Request
 
 	err = h.emailService.ForgotPassword(data.Email, resetUrl)
 	if err != nil {
-		tBody.Msg = mw.T(c, "Ocurrió un error al enviar el correo de recuperación")
+		tBody.Msg = loc.T(c, "Ocurrió un error al enviar el correo de recuperación")
 		tBody.Type = views.ToastError
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		return
 	}
-
 	login.CheckEmail().Render(c, w)
 }
 
@@ -233,7 +240,7 @@ func (h *AuthHandler) HandleEmailToken(w http.ResponseWriter, r *http.Request) {
 func (h *AuthHandler) HandleChangePassword(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
 	tBody := views.ToastBody{
-		Msg:  mw.T(c, "Ocurrió un error"),
+		Msg:  loc.T(c, "Ocurrió un error"),
 		Type: views.ToastError,
 	}
 
@@ -247,7 +254,7 @@ func (h *AuthHandler) HandleChangePassword(w http.ResponseWriter, r *http.Reques
 
 	user, err := h.UserStore.PwReset.Consume(data.token, c)
 	if err != nil {
-		tBody.Msg = mw.T(c, "Token inválido")
+		tBody.Msg = loc.T(c, "Token inválido")
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		return
 	}
@@ -264,7 +271,7 @@ func (h *AuthHandler) HandleChangePassword(w http.ResponseWriter, r *http.Reques
 		return
 	}
 	if err := h.UserStore.Auth.UpdatePassword(user.ID, encPass, c); err != nil {
-		tBody.Msg = mw.T(c, "Ocurrió un error al cambiar la contraseña")
+		tBody.Msg = loc.T(c, "Ocurrió un error al cambiar la contraseña")
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		return
 	}

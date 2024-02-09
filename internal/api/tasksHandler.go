@@ -10,7 +10,7 @@ import (
 	"github.com/gorilla/schema"
 	"github.com/xV0lk/htmx-go/internal/ctx"
 	"github.com/xV0lk/htmx-go/internal/db"
-	mw "github.com/xV0lk/htmx-go/internal/middleware"
+	loc "github.com/xV0lk/htmx-go/internal/localizer"
 	"github.com/xV0lk/htmx-go/models"
 	"github.com/xV0lk/htmx-go/views"
 	tViews "github.com/xV0lk/htmx-go/views/tasks"
@@ -68,7 +68,7 @@ func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 
 	// Initialize the toast options
 	tBody := views.ToastBody{
-		Msg:  mw.T(c, "Tarea Agregada exitosamente."),
+		Msg:  loc.T(c, "Tarea Agregada exitosamente."),
 		Type: views.ToastSuccess,
 	}
 
@@ -78,7 +78,7 @@ func (h *TasksHandler) HandlePostTask(w http.ResponseWriter, r *http.Request) {
 
 	// Validate the request
 	if taskBody.Title == "" {
-		tBody.Msg = mw.T(c, "Nombre no puede estar vacío")
+		tBody.Msg = loc.T(c, "Nombre no puede estar vacío")
 		tBody.Type = views.ToastWarning
 		views.Toast(tBody, true, c, w, http.StatusBadRequest)
 		tViews.Form().Render(c, w)
@@ -120,7 +120,7 @@ func (h *TasksHandler) HandleDeleteTask(w http.ResponseWriter, r *http.Request) 
 	id, err := strconv.Atoi(tId)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(mw.T(c, "Id no valido")))
+		w.Write([]byte(loc.T(c, "Id no valido")))
 		return
 	}
 
@@ -160,7 +160,7 @@ func (h *TasksHandler) HandleToogleTask(w http.ResponseWriter, r *http.Request) 
 	id, err := strconv.Atoi(tId)
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(mw.T(c, "Id no valido")))
+		w.Write([]byte(loc.T(c, "Id no valido")))
 		return
 	}
 
@@ -174,7 +174,7 @@ func (h *TasksHandler) HandleToogleTask(w http.ResponseWriter, r *http.Request) 
 		completed = true
 	default:
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(mw.T(c, "Status no valido")))
+		w.Write([]byte(loc.T(c, "Status no valido")))
 		return
 	}
 
@@ -204,7 +204,7 @@ func (h *TasksHandler) HandleEditTask(w http.ResponseWriter, r *http.Request) {
 
 	if err != nil {
 		w.WriteHeader(http.StatusBadRequest)
-		w.Write([]byte(mw.T(r.Context(), "Id no valido")))
+		w.Write([]byte(loc.T(r.Context(), "Id no valido")))
 		return
 	}
 
@@ -230,7 +230,7 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 
 	var taskBody models.TaskBody
 	tBody := views.ToastBody{
-		Msg:  mw.T(c, "Tarea actualizada exitosamente."),
+		Msg:  loc.T(c, "Tarea actualizada exitosamente."),
 		Type: views.ToastSuccess,
 	}
 
@@ -238,7 +238,7 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 	id, err := strconv.Atoi(tId)
 
 	if err != nil {
-		tBody.Msg = mw.T(c, "Id no valido")
+		tBody.Msg = loc.T(c, "Id no valido")
 		tBody.Type = views.ToastError
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		return
@@ -248,7 +248,7 @@ func (h *TasksHandler) HandlePutTask(w http.ResponseWriter, r *http.Request) {
 	taskBody.Title = r.FormValue("title")
 
 	if taskBody.Title == "" {
-		tBody.Msg = mw.T(c, "Nombre no puede estar vacío")
+		tBody.Msg = loc.T(c, "Nombre no puede estar vacío")
 		tBody.Type = views.ToastWarning
 		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		return

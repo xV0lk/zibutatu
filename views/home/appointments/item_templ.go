@@ -10,11 +10,11 @@ import "context"
 import "io"
 import "bytes"
 
-import "strconv"
-import "fmt"
-
 import (
+	"fmt"
+	loc "github.com/xV0lk/htmx-go/internal/localizer"
 	"github.com/xV0lk/htmx-go/models"
+	"strconv"
 )
 
 func AppointmenItem(app *models.Appointment) templ.Component {
@@ -34,7 +34,7 @@ func AppointmenItem(app *models.Appointment) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var2 string = strconv.Itoa(app.Day)
+		var templ_7745c5c3_Var2 string = strconv.Itoa(app.Date.Day())
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var2))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -43,7 +43,7 @@ func AppointmenItem(app *models.Appointment) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var3 string = app.Month
+		var templ_7745c5c3_Var3 string = loc.T(ctx, app.Date.Month())
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var3))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

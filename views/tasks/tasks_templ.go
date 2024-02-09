@@ -11,7 +11,7 @@ import "io"
 import "bytes"
 
 import (
-	mw "github.com/xV0lk/htmx-go/internal/middleware"
+	loc "github.com/xV0lk/htmx-go/internal/localizer"
 	"github.com/xV0lk/htmx-go/models"
 	"github.com/xV0lk/htmx-go/views"
 )
@@ -98,7 +98,7 @@ func Counter(tasks models.Tasks, oob bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var4 string = mw.T(ctx, "Tareas totales: %d", tasks.Count)
+		var templ_7745c5c3_Var4 string = loc.T(ctx, "Tareas totales: %d", tasks.Count)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
@@ -107,7 +107,7 @@ func Counter(tasks models.Tasks, oob bool) templ.Component {
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err
 		}
-		var templ_7745c5c3_Var5 string = mw.T(ctx, "Tareas completadas: %d", tasks.CompletedCount)
+		var templ_7745c5c3_Var5 string = loc.T(ctx, "Tareas completadas: %d", tasks.CompletedCount)
 		_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var5))
 		if templ_7745c5c3_Err != nil {
 			return templ_7745c5c3_Err

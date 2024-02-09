@@ -1,4 +1,4 @@
-package middleware
+package localizer
 
 import (
 	// Import the internal/translations so that it's init() function

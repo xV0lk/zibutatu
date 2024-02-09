@@ -3,7 +3,7 @@ package views
 import (
   "github.com/xV0lk/htmx-go/models"
   "github.com/xV0lk/htmx-go/views"
-  mw "github.com/xV0lk/htmx-go/internal/middleware"
+  loc "github.com/xV0lk/htmx-go/internal/localizer"
 )
 
 templ Tasks(tasks models.Tasks, oob bool) {
@@ -31,8 +31,8 @@ templ Counter(tasks models.Tasks, oob bool) {
     <p 
       class="text-white py-5" 
       id="total" 
-    >{mw.T(ctx, "Tareas totales: %d", tasks.Count)}</p>
-    <p class="text-white py-5" id="completed">{mw.T(ctx, "Tareas completadas: %d", tasks.CompletedCount)}</p>
+    >{loc.T(ctx, "Tareas totales: %d", tasks.Count)}</p>
+    <p class="text-white py-5" id="completed">{loc.T(ctx, "Tareas completadas: %d", tasks.CompletedCount)}</p>
   </div>
 </div>
 }

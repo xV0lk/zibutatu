@@ -2,6 +2,11 @@
     "language": "en-US",
     "messages": [
         {
+            "id": "admin",
+            "message": "admin",
+            "translation": ""
+        },
+        {
             "id": "Ocurrió un error",
             "message": "Ocurrió un error",
             "translation": "An error occurred"
@@ -17,6 +22,16 @@
             "translation": "Wrong password"
         },
         {
+            "id": "Error al crear usuario",
+            "message": "Error al crear usuario",
+            "translation": ""
+        },
+        {
+            "id": "La data ingresada no es válida",
+            "message": "La data ingresada no es válida",
+            "translation": ""
+        },
+        {
             "id": "Email ya se encuentra registrado",
             "message": "Email ya se encuentra registrado",
             "translation": "Email already registered"
@@ -24,6 +39,26 @@
         {
             "id": "Se han enviado las instrucciones para cambiar la contraseña a tu correo",
             "message": "Se han enviado las instrucciones para cambiar la contraseña a tu correo",
+            "translation": ""
+        },
+        {
+            "id": "No existe un usuario registrado con este correo",
+            "message": "No existe un usuario registrado con este correo",
+            "translation": ""
+        },
+        {
+            "id": "Ocurrió un error al enviar el correo de recuperación",
+            "message": "Ocurrió un error al enviar el correo de recuperación",
+            "translation": ""
+        },
+        {
+            "id": "Token inválido",
+            "message": "Token inválido",
+            "translation": ""
+        },
+        {
+            "id": "Ocurrió un error al cambiar la contraseña",
+            "message": "Ocurrió un error al cambiar la contraseña",
             "translation": ""
         },
         {
@@ -89,6 +124,36 @@
         {
             "id": "Recuperar",
             "message": "Recuperar",
+            "translation": ""
+        },
+        {
+            "id": "Revisa tu correo",
+            "message": "Revisa tu correo",
+            "translation": ""
+        },
+        {
+            "id": "Te hemos enviado un correo con las instrucciones para recuperar tu contraseña.",
+            "message": "Te hemos enviado un correo con las instrucciones para recuperar tu contraseña.",
+            "translation": ""
+        },
+        {
+            "id": "El token de recuperación de contraseña es inválido o ha expirado.",
+            "message": "El token de recuperación de contraseña es inválido o ha expirado.",
+            "translation": ""
+        },
+        {
+            "id": "Confirmar Contraseña",
+            "message": "Confirmar Contraseña",
+            "translation": ""
+        },
+        {
+            "id": "Las contraseñas no coinciden",
+            "message": "Las contraseñas no coinciden",
+            "translation": ""
+        },
+        {
+            "id": "Actualizar Contraseña",
+            "message": "Actualizar Contraseña",
             "translation": ""
         },
         {

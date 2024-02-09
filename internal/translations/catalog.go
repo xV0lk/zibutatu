@@ -39,42 +39,60 @@ func init() {
 }
 
 var messageKeyToIndex = map[string]int{
-	"Agregar Tarea":                    18,
-	"Cambiar idioma":                   14,
-	"Contraseña":                       12,
-	"Contraseña incorrecta":            2,
+	"Actualizar Contraseña": 37,
+	"Agregar Tarea":         18,
+	"Cambiar idioma":        14,
+	"Confirmar Contraseña":  35,
+	"Contraseña":            12,
+	"Contraseña incorrecta": 2,
+	"El token de recuperación de contraseña es inválido o ha expirado.": 34,
 	"Email":                            10,
 	"Email ya se encuentra registrado": 3,
+	"Error al crear usuario":           22,
 	"Español":                          15,
 	"Id no valido":                     6,
 	"Ingles":                           16,
 	"Iniciar Sesión":                   11,
-	"Nombre no puede estar vacío":      5,
-	"Ocurrió un error":                 0,
-	"Olvidaste tu contraseña?":         22,
-	"Recuperar":                        24,
-	"Recuperar Contraseña":             23,
-	"Salir":                            17,
-	"Se han enviado las instrucciones para cambiar la contraseña a tu correo": 21,
+	"La data ingresada no es válida":   23,
+	"Las contraseñas no coinciden":     36,
+	"No existe un usuario registrado con este correo":      25,
+	"Nombre no puede estar vacío":                          5,
+	"Ocurrió un error":                                     0,
+	"Ocurrió un error al cambiar la contraseña":            28,
+	"Ocurrió un error al enviar el correo de recuperación": 26,
+	"Olvidaste tu contraseña?":                             29,
+	"Recuperar":                                            31,
+	"Recuperar Contraseña":                                 30,
+	"Revisa tu correo":                                     32,
+	"Salir":                                                17,
+	"Se han enviado las instrucciones para cambiar la contraseña a tu correo": 24,
 	"Status no valido":                7,
 	"Tarea Agregada exitosamente.":    4,
 	"Tarea actualizada exitosamente.": 8,
 	"Tareas completadas: %d":          20,
 	"Tareas totales: %d":              19,
-	"Usuario no encontrado":           1,
-	"Ver":                             13,
-	"Welcome!\n":                      9,
+	"Te hemos enviado un correo con las instrucciones para recuperar tu contraseña.": 33,
+	"Token inválido":        27,
+	"Usuario no encontrado": 1,
+	"Ver":                   13,
+	"Welcome!\n":            9,
+	"admin":                 21,
 }
 
-var en_USIndex = []uint32{ // 26 elements
+var en_USIndex = []uint32{ // 39 elements
+	// Entry 0 - 1F
 	0x00000000, 0x00000012, 0x00000021, 0x00000030,
 	0x00000049, 0x00000062, 0x00000077, 0x00000082,
 	0x00000091, 0x000000ac, 0x000000ba, 0x000000c0,
 	0x000000c7, 0x000000d0, 0x000000d5, 0x000000e5,
 	0x000000ed, 0x000000f5, 0x000000fa, 0x00000103,
 	0x00000116, 0x0000012d, 0x0000012d, 0x0000012d,
-	0x0000012d, 0x0000012d,
-} // Size: 128 bytes
+	0x0000012d, 0x0000012d, 0x0000012d, 0x0000012d,
+	0x0000012d, 0x0000012d, 0x0000012d, 0x0000012d,
+	// Entry 20 - 3F
+	0x0000012d, 0x0000012d, 0x0000012d, 0x0000012d,
+	0x0000012d, 0x0000012d, 0x0000012d,
+} // Size: 180 bytes
 
 const en_USData string = "" + // Size: 301 bytes
 	"\x02An error occurred\x02User not found\x02Wrong password\x02Email alrea" +
@@ -84,25 +102,37 @@ const en_USData string = "" + // Size: 301 bytes
 	"ge\x02Spanish\x02English\x02Exit\x02Add task\x02Total tasks: %[1]d\x02Co" +
 	"mpleted tasks: %[1]d"
 
-var es_COIndex = []uint32{ // 26 elements
+var es_COIndex = []uint32{ // 39 elements
+	// Entry 0 - 1F
 	0x00000000, 0x00000012, 0x00000028, 0x0000003f,
 	0x00000060, 0x0000007d, 0x0000009a, 0x000000a7,
 	0x000000b8, 0x000000d8, 0x000000e9, 0x000000ef,
 	0x000000ff, 0x0000010b, 0x0000010f, 0x0000011e,
 	0x00000127, 0x0000012e, 0x00000134, 0x00000142,
-	0x00000158, 0x00000172, 0x000001bb, 0x000001d5,
-	0x000001eb, 0x000001f5,
-} // Size: 128 bytes
+	0x00000158, 0x00000172, 0x00000178, 0x0000018f,
+	0x000001af, 0x000001f8, 0x00000228, 0x0000025f,
+	0x0000026f, 0x0000029b, 0x000002b5, 0x000002cb,
+	// Entry 20 - 3F
+	0x000002d5, 0x000002e6, 0x00000336, 0x0000037b,
+	0x00000391, 0x000003af, 0x000003c6,
+} // Size: 180 bytes
 
-const es_COData string = "" + // Size: 501 bytes
+const es_COData string = "" + // Size: 966 bytes
 	"\x02Ocurrió un error\x02Usuario no encontrado\x02Contraseña incorrecta" +
 	"\x02Email ya se encuentra registrado\x02Tarea Agregada exitosamente.\x02" +
 	"Nombre no puede estar vacío\x02Id no valido\x02Status no valido\x02Tarea" +
 	" actualizada exitosamente.\x04\x00\x01\x0a\x0c\x02Bienvenido!\x02Email" +
 	"\x02Iniciar Sesión\x02Contraseña\x02Ver\x02Cambiar idioma\x02Español\x02" +
 	"Ingles\x02Salir\x02Agregar Tarea\x02Tareas totales: %[1]d\x02Tareas comp" +
-	"letadas: %[1]d\x02Se han enviado las instrucciones para cambiar la contr" +
-	"aseña a tu correo\x02Olvidaste tu contraseña?\x02Recuperar Contraseña" +
-	"\x02Recuperar"
+	"letadas: %[1]d\x02admin\x02Error al crear usuario\x02La data ingresada n" +
+	"o es válida\x02Se han enviado las instrucciones para cambiar la contrase" +
+	"ña a tu correo\x02No existe un usuario registrado con este correo\x02Oc" +
+	"urrió un error al enviar el correo de recuperación\x02Token inválido\x02" +
+	"Ocurrió un error al cambiar la contraseña\x02Olvidaste tu contraseña?" +
+	"\x02Recuperar Contraseña\x02Recuperar\x02Revisa tu correo\x02Te hemos en" +
+	"viado un correo con las instrucciones para recuperar tu contraseña.\x02E" +
+	"l token de recuperación de contraseña es inválido o ha expirado.\x02Conf" +
+	"irmar Contraseña\x02Las contraseñas no coinciden\x02Actualizar Contraseñ" +
+	"a"
 
-	// Total table size 1058 bytes (1KiB); checksum: 10048307
+	// Total table size 1627 bytes (1KiB); checksum: A3B4F85E
