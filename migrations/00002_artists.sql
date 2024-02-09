@@ -10,9 +10,12 @@ CREATE TABLE
         studio_id INT NOT NULL REFERENCES studios(id) ON DELETE CASCADE,
         created_at TIMESTAMPTZ NOT NULL DEFAULT NOW()
     );
+
+CREATE INDEX IF NOT EXISTS artists_studio_id_idx ON artists(studio_id);
 -- +goose StatementEnd
 
 -- +goose Down
 -- +goose StatementBegin
 DROP TABLE IF EXISTS artists;
+DROP INDEX IF EXISTS artists_studio_id_idx;
 -- +goose StatementEnd

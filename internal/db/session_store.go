@@ -57,12 +57,13 @@ func (s *PsSessionStore) User(token string) (*models.User, error) {
 				users.first_name,
 				users.last_name,
 				users.email,
-				users.studio_id,
+				users.artist_id,
 				users.is_admin,
 				users.created_at,
 				users.updated_at,
 				users.language,
-				users.password
+				users.password,
+				users.is_active
 			FROM sessions
 				JOIN users ON sessions.user_id = users.id
 			WHERE token_hash = $1;`

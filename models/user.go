@@ -29,13 +29,13 @@ type User struct {
 	FirstName string    `db:"first_name"`
 	LastName  string    `db:"last_name"`
 	Email     string    `db:"email,unique"`
-	StudioID  *int      `db:"studio_id"` // this is made a pointer so i can pass and receive nil values without issues. since this is a nullable field
 	IsAdmin   bool      `db:"is_admin"`
 	CreatedAt time.Time `db:"created_at"`
 	UpdatedAt time.Time `db:"updated_at"`
 	Language  string    `db:"language"`
 	Password  string    `db:"password"`
 	IsActive  bool      `db:"is_active"`
+	ArtistID  *int      `db:"artist_id"` // this is made a pointer so i can pass and receive nil values without issues. since this is a nullable field
 }
 
 func (u User) LogValue() slog.Value {
@@ -46,7 +46,7 @@ type NewUser struct {
 	FirstName string
 	LastName  string
 	Email     string
-	StudioID  *int
+	ArtistID  *int
 	IsAdmin   bool
 	Password  string
 }
@@ -110,12 +110,13 @@ func NewUserFromParams(params *NewUser) (*User, error) {
 		FirstName: params.FirstName,
 		LastName:  params.LastName,
 		Email:     strings.ToLower(params.Email),
-		StudioID:  params.StudioID,
+		ArtistID:  params.ArtistID,
 		IsAdmin:   params.IsAdmin,
 		Password:  string(cryptPass),
 		CreatedAt: time.Now(),
 		UpdatedAt: time.Now(),
 		Language:  "es-CO",
+		IsActive:  true,
 	}, nil
 }
 

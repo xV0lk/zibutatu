@@ -62,10 +62,10 @@ func (s *PsAuthStore) Close() {
 
 func (s *PsAuthStore) AddUser(user *models.User, ctx context.Context) error {
 	query := `INSERT INTO users 
-	(first_name, last_name, email, studio_id, is_admin, created_at, updated_at, language, password) 
+	(first_name, last_name, email, artist_id, is_admin, created_at, updated_at, language, password) 
 	VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9)`
 
-	_, err := s.db.Exec(ctx, query, user.FirstName, user.LastName, user.Email, user.StudioID, user.IsAdmin, user.CreatedAt, user.UpdatedAt, user.Language, user.Password)
+	_, err := s.db.Exec(ctx, query, user.FirstName, user.LastName, user.Email, user.ArtistID, user.IsAdmin, user.CreatedAt, user.UpdatedAt, user.Language, user.Password)
 
 	if err != nil {
 		if ok := iErrors.ValidatePgxError(err, pgerrcode.UniqueViolation); ok {
@@ -78,7 +78,7 @@ func (s *PsAuthStore) AddUser(user *models.User, ctx context.Context) error {
 }
 
 func (s *PsAuthStore) FetchUser(id int, ctx context.Context) (*models.User, error) {
-	query := "SELECT id, first_name, last_name, email, studio_id, is_admin, created_at, updated_at, language FROM users WHERE id = $1;"
+	query := "SELECT id, first_name, last_name, email, artist_id, is_admin, created_at, updated_at, language FROM users WHERE id = $1;"
 
 	user := &models.User{}
 
@@ -88,6 +88,9 @@ func (s *PsAuthStore) FetchUser(id int, ctx context.Context) (*models.User, erro
 	}
 	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[models.User])
 	if err != nil {
+		if ok := iErrors.ValidatePgxError(err, pgerrcode.NoDataFound); ok {
+			return user, ErrorNotFound
+		}
 		return user, err
 	}
 
@@ -96,19 +99,19 @@ func (s *PsAuthStore) FetchUser(id int, ctx context.Context) (*models.User, erro
 func (s *PsAuthStore) AuthenticateUser(auth *models.AuthParams, ctx context.Context) (*models.User, error) {
 	em := strings.ToLower(auth.Email)
 
-	query := "SELECT id, first_name, last_name, email, studio_id, is_admin, created_at, updated_at, language, password FROM users WHERE email = $1;"
+	query := "SELECT id, first_name, last_name, email, artist_id, is_admin, created_at, updated_at, language, password FROM users WHERE email = $1;"
 
 	user := &models.User{}
 
 	rows, err := s.db.Query(ctx, query, em)
 	if err != nil {
-		return user, fmt.Errorf("Ocurrió un error")
+		return user, fmt.Errorf("Auth: %w", err)
 	}
 
 	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[models.User])
 	if err != nil {
 		fmt.Printf("-------------------------\nerr 1: %s\n", err)
-		return user, err
+		return user, fmt.Errorf("Auth: %w", err)
 	}
 
 	return user, nil

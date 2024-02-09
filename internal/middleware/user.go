@@ -1,6 +1,7 @@
 package middleware
 
 import (
+	"log/slog"
 	"net/http"
 
 	"github.com/xV0lk/htmx-go/internal/ctx"
@@ -19,6 +20,9 @@ func User(us *db.UserStore) func(next http.Handler) http.Handler {
 			}
 			user, err := us.Session.User(cookie.Value)
 			if err != nil {
+				slog.Error("MW: Unable to get user from session: ",
+					slog.String("error", err.Error()),
+				)
 				next.ServeHTTP(w, r)
 				return
 			}

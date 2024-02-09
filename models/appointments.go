@@ -3,13 +3,14 @@ package models
 import "time"
 
 type Appointment struct {
-	ID       int       `db:"id,omitempty"`
-	Client   string    `db:"client"`
-	Phone    string    `db:"phone"`
-	Email    string    `db:"email"`
-	ArtistID int       `db:"artist_id"`
-	Type     string    `db:"type"`
-	Date     time.Time `db:"date"`
+	ID           int       `db:"id,omitempty"`
+	Client       string    `db:"client"`
+	Phone        string    `db:"phone"`
+	Email        string    `db:"email"`
+	ArtistID     int       `db:"artist_id"`
+	UserCreateID int       `db:"user_create_id"`
+	Type         string    `db:"type"`
+	Date         time.Time `db:"date"`
 	// Day    int
 	// Month  string
 }

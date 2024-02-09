@@ -66,9 +66,18 @@ func (h *AuthHandler) HandleAuthenticate(w http.ResponseWriter, r *http.Request)
 
 	user, err := h.UserStore.Auth.AuthenticateUser(&loginF, c)
 	if err != nil {
-		tBody.Msg = loc.T(c, "Usuario no encontrado")
-		views.Toast(tBody, false, c, w, http.StatusBadRequest)
-		fmt.Println("Login Error 1: ", err)
+		if errors.Is(err, db.ErrorNotFound) {
+			tBody.Msg = loc.T(c, "Usuario no encontrado")
+			views.Toast(tBody, false, c, w, http.StatusBadRequest)
+			return
+		}
+		slog.Error("Login",
+			slog.Int("status", http.StatusInternalServerError),
+			slog.String("errorMsg", tBody.Msg),
+			slog.String("error", err.Error()),
+			slog.Any("body", loginF),
+		)
+		views.Toast(tBody, false, c, w, http.StatusInternalServerError)
 		return
 	}
 	if !models.IsValidPassword(user.Password, loginF.Password) {
