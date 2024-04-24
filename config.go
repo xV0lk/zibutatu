@@ -65,6 +65,7 @@ func loadEnvConfig() (config, error) {
 	return cfg, nil
 }
 
+// createLogger creates and configures a logger based on the provided configuration.
 func createLogger(cfg *config) *slog.Logger {
 	wd, err := os.Getwd()
 	if err != nil {

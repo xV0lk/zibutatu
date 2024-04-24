@@ -9,6 +9,9 @@ import (
 	"github.com/xV0lk/htmx-go/models"
 )
 
+// User is a middleware function that retrieves the user from the session and adds it to the request context.
+//
+// It takes a UserStore as a parameter and returns a function that can be used as middleware in an HTTP handler chain.
 func User(us *db.UserStore) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {

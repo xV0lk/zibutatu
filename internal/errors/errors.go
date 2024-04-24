@@ -51,3 +51,44 @@ func FromError(err error) publicError {
 	}
 	return publicError{err, err.Error()}
 }
+
+type ApiError struct {
+	Title  string
+	Status int
+	Msg    string
+	Body   any
+	err    error
+}
+
+func (e *ApiError) Error() string {
+	return e.err.Error()
+}
+
+// func (e ApiError) Unwrap() error {
+// 	return e.err
+// }
+
+func NewApiErr(title string, status int, msg string, body any, err error) *ApiError {
+	return &ApiError{
+		Title:  title,
+		Status: status,
+		Msg:    msg,
+		Body:   body,
+		err:    err,
+	}
+}
+
+// func (e *ApiError) Title() string {
+// 	return e.title
+// }
+// func (e *ApiError) Msg() string {
+// 	return e.msg
+// }
+
+// func (e *ApiError) Status() int {
+// 	return e.status
+// }
+
+// func (e *ApiError) Body() any {
+// 	return e.body
+// }

@@ -63,6 +63,7 @@ func DefaultEmailConfig() (*SMTPConfig, error) {
 	}, nil
 }
 
+// NewDefaultEmailService creates a new instance of EmailService with default email configuration.
 func NewDefaultEmailService() (*EmailService, error) {
 	config, err := DefaultEmailConfig()
 	if err != nil {

@@ -67,8 +67,8 @@ func main() {
 		r = chi.NewRouter()
 	)
 	r.Use(chiMiddleware.Logger)
-	r.Use(middleware.ILog(logger))
 	r.Use(middleware.User(userStore))
+	r.Use(middleware.ILog(logger))
 	r.Use(localizer.I18n)
 
 	// main group of routes that use csrf and sessions
@@ -76,11 +76,11 @@ func main() {
 		r.Use(middleware.Csrf(&cfg.CSRF))
 		r.Get("/", authHandler.HandleRoot)
 		r.Route("/login", func(r chi.Router) {
-			r.Get("/", authHandler.HandleLogin)
-			r.Post("/", authHandler.HandleAuthenticate)
+			r.Get("/", api.MakeHandler(authHandler.HandleLogin))
+			r.Post("/", api.MakeHandler(authHandler.HandleAuthenticate))
 			r.Delete("/", authHandler.HandleLogout)
 		})
-		r.Get("/home", authHandler.HandleHome)
+		r.Get("/home", api.MakeHandler(authHandler.HandleHome))
 		r.Get("/forgot-password", authHandler.HandleForgotPassword)
 		r.Post("/forgot-password", authHandler.HandleResetPassword)
 		r.Get("/reset-password", authHandler.HandleEmailToken)
@@ -88,7 +88,7 @@ func main() {
 		r.Route("/tasks", func(r chi.Router) {
 			r.Get("/", tasksHandler.HandleGetTasks)
 			r.Post("/", tasksHandler.HandlePostTask)
-			r.Put("/{id}/toggle", tasksHandler.HandleToogleTask)
+			r.Put("/{id}/toggle", tasksHandler.HandleToggleTask)
 			r.Delete("/{id}", tasksHandler.HandleDeleteTask)
 			r.Get("/{id}/edit", tasksHandler.HandleEditTask)
 			r.Put("/{id}", tasksHandler.HandlePutTask)
@@ -100,7 +100,7 @@ func main() {
 	// TODO: Add in the front so it can be used by the browser to work with csrf
 	r.Route("/admin-internal", func(r chi.Router) {
 		r.Get("/", authHandler.HandleGetUser)
-		r.Post("/", authHandler.HandleNewUser)
+		r.Post("/", api.MakeHandler(authHandler.HandleNewUser))
 	})
 
 	// Serve static files

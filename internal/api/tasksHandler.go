@@ -140,14 +140,14 @@ func (h *TasksHandler) HandleDeleteTask(w http.ResponseWriter, r *http.Request) 
 	return
 }
 
-// HandleToogleTask toggles the status of a task based on the provided ID.
+// HandleToggleTask toggles the status of a task based on the provided ID.
 //
 // Parameters:
 // - ctx: the echo context.
 //
 // Returns:
 // - An error.
-func (h *TasksHandler) HandleToogleTask(w http.ResponseWriter, r *http.Request) {
+func (h *TasksHandler) HandleToggleTask(w http.ResponseWriter, r *http.Request) {
 	c := r.Context()
 
 	var (

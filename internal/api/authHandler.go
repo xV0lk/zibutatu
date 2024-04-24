@@ -13,6 +13,7 @@ import (
 	"github.com/jackc/pgx/v5"
 	"github.com/xV0lk/htmx-go/internal/ctx"
 	"github.com/xV0lk/htmx-go/internal/db"
+	iErrors "github.com/xV0lk/htmx-go/internal/errors"
 	loc "github.com/xV0lk/htmx-go/internal/localizer"
 	"github.com/xV0lk/htmx-go/models"
 	"github.com/xV0lk/htmx-go/views"
@@ -40,19 +41,15 @@ func (h *AuthHandler) HandleRoot(w http.ResponseWriter, r *http.Request) {
 	if user == nil {
 		fmt.Println("No session error, redirecting to login: ")
 		http.Redirect(w, r, "/login", http.StatusFound)
-		return
 	}
-
 	http.Redirect(w, r, "/home", http.StatusFound)
-	return
 }
 
-func (h *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) {
-	home.HomeLogin().Render(r.Context(), w)
-	return
+func (h *AuthHandler) HandleLogin(w http.ResponseWriter, r *http.Request) error {
+	return home.HomeLogin().Render(r.Context(), w)
 }
 
-func (h *AuthHandler) HandleAuthenticate(w http.ResponseWriter, r *http.Request) {
+func (h *AuthHandler) HandleAuthenticate(w http.ResponseWriter, r *http.Request) error {
 	c := r.Context()
 	var loginF models.AuthParams
 
@@ -65,36 +62,30 @@ func (h *AuthHandler) HandleAuthenticate(w http.ResponseWriter, r *http.Request)
 	loginF.Password = r.FormValue("password")
 
 	user, err := h.UserStore.Auth.AuthenticateUser(&loginF, c)
+	err = errors.New("unknown error")
 	if err != nil {
 		if errors.Is(err, db.ErrorNotFound) {
 			tBody.Msg = loc.T(c, "Usuario no encontrado")
-			views.Toast(tBody, false, c, w, http.StatusBadRequest)
-			return
+			return views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		}
-		slog.Error("Login",
-			slog.Int("status", http.StatusInternalServerError),
-			slog.String("errorMsg", tBody.Msg),
-			slog.String("error", err.Error()),
-			slog.Any("body", loginF),
-		)
 		views.Toast(tBody, false, c, w, http.StatusInternalServerError)
-		return
+		return iErrors.NewApiErr("Login", http.StatusInternalServerError, tBody.Msg, loginF, err)
 	}
 	if !models.IsValidPassword(user.Password, loginF.Password) {
 		tBody.Msg = loc.T(c, "Contraseña incorrecta")
-		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		fmt.Println("Login Error 2: ", err)
+		return views.Toast(tBody, false, c, w, http.StatusBadRequest)
 	}
 
 	session, err := h.UserStore.Session.Create(user.ID)
 	if err != nil {
-		views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		fmt.Println("Session Error: ", err)
-		return
+		return views.Toast(tBody, false, c, w, http.StatusBadRequest)
 	}
 
 	setCookie(w, SessionCookie, session.Token)
 	w.Header().Add("HX-Redirect", "/home")
+	return nil
 }
 
 func (h *AuthHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
@@ -112,16 +103,15 @@ func (h *AuthHandler) HandleLogout(w http.ResponseWriter, r *http.Request) {
 	}
 	deleteCookie(w, SessionCookie)
 	w.Header().Add("HX-Redirect", "/login")
-	return
 }
 
-func (h *AuthHandler) HandleHome(w http.ResponseWriter, r *http.Request) {
+func (h *AuthHandler) HandleHome(w http.ResponseWriter, r *http.Request) error {
 	// home.HomeLogin().Render(r.Context(), w)
-	views.Index().Render(r.Context(), w)
+	return views.Index().Render(r.Context(), w)
 	// home.HomeUser().Render(r.Context(), w)
 }
 
-func (h *AuthHandler) HandleNewUser(w http.ResponseWriter, r *http.Request) {
+func (h *AuthHandler) HandleNewUser(w http.ResponseWriter, r *http.Request) error {
 	ctx := r.Context()
 	var newUser models.NewUser
 	pe := loc.T(ctx, "Error al crear usuario")
@@ -136,26 +126,20 @@ func (h *AuthHandler) HandleNewUser(w http.ResponseWriter, r *http.Request) {
 			slog.Any("body", newUser),
 		)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return iErrors.NewApiErr("New User", http.StatusInternalServerError, pe, newUser, err)
 	}
 
 	if errors := newUser.Validate(r.Context()); len(errors) != 0 {
 		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, errors)
-		return
+		return nil
 	}
 
 	user, err := models.NewUserFromParams(&newUser)
 	if err != nil {
-		slog.Error("New User",
-			slog.Int("status", http.StatusInternalServerError),
-			slog.String("errorMsg", pe),
-			slog.String("error", err.Error()),
-			slog.Any("body", newUser),
-		)
 		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, pe)
-		return
+		return iErrors.NewApiErr("New User", http.StatusInternalServerError, pe, newUser, err)
 	}
 
 	err = h.UserStore.Auth.AddUser(user, r.Context())
@@ -163,20 +147,14 @@ func (h *AuthHandler) HandleNewUser(w http.ResponseWriter, r *http.Request) {
 		if errors.Is(err, db.ErrEmailTaken) {
 			pe = loc.T(ctx, "Email ya se encuentra registrado")
 			http.Error(w, loc.T(r.Context(), pe), http.StatusBadRequest)
-			return
+			return nil
 		}
-		slog.Error("New User",
-			slog.Int("status", http.StatusInternalServerError),
-			slog.String("errorMsg", pe),
-			slog.String("error", err.Error()),
-			slog.Any("body", newUser),
-		)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return
+		return iErrors.NewApiErr("New User", http.StatusInternalServerError, pe, newUser, err)
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("User created"))
-	return
+	return nil
 }
 
 func (h *AuthHandler) HandleGetUser(w http.ResponseWriter, r *http.Request) {
