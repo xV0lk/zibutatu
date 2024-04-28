@@ -74,7 +74,7 @@ var matcher = language.NewMatcher([]language.Tag{
 	language.MustParse("en-US"),
 })
 
-// GetLanguage is a middleware function that retrieves the language from the "Accept-Language" header of the incoming HTTP request.
+// I18N is a middleware function that retrieves the language from the "Accept-Language" header of the incoming HTTP request.
 //
 // It updates the request context with the localized language.
 func I18n(next http.Handler) http.Handler {

@@ -8,6 +8,9 @@ import (
 	"github.com/xV0lk/htmx-go/models"
 )
 
+// ILog is a middleware function that add to the logs, information about incoming requests.
+//
+// The returned middleware function wraps the provided `http.Handler` and logs request and response details.
 func ILog(log *slog.Logger) func(next http.Handler) http.Handler {
 	return func(next http.Handler) http.Handler {
 		fn := func(w http.ResponseWriter, r *http.Request) {
