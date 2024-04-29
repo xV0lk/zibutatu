@@ -62,7 +62,6 @@ func (h *AuthHandler) HandleAuthenticate(w http.ResponseWriter, r *http.Request)
 	loginF.Password = r.FormValue("password")
 
 	user, err := h.UserStore.Auth.AuthenticateUser(&loginF, c)
-	err = errors.New("unknown error")
 	if err != nil {
 		if errors.Is(err, db.ErrorNotFound) {
 			tBody.Msg = loc.T(c, "Usuario no encontrado")
@@ -167,7 +166,6 @@ func (h *AuthHandler) HandleGetUser(w http.ResponseWriter, r *http.Request) {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 	}
 	render.JSON(w, r, user)
-	return
 }
 
 func (h *AuthHandler) HandleForgotPassword(w http.ResponseWriter, r *http.Request) {

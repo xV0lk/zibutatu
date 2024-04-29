@@ -27,6 +27,7 @@ func MakeHandler(mh apiHandler) http.HandlerFunc {
 					slog.Int("status", ae.Status),
 					slog.String("errorMsg", ae.Msg),
 					slog.String("error", ae.Error()),
+					slog.String("location", ae.Trace),
 					slog.Any("body", ae.Body),
 				)
 			}

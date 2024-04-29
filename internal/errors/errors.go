@@ -2,6 +2,10 @@ package iErrors
 
 import (
 	"errors"
+	"fmt"
+	"os"
+	"runtime"
+	"strings"
 
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5/pgconn"
@@ -58,6 +62,7 @@ type ApiError struct {
 	Msg    string
 	Body   any
 	err    error
+	Trace  string
 }
 
 func (e *ApiError) Error() string {
@@ -75,7 +80,22 @@ func NewApiErr(title string, status int, msg string, body any, err error) *ApiEr
 		Msg:    msg,
 		Body:   body,
 		err:    err,
+		Trace:  getTrace(),
 	}
+}
+
+func getTrace() string {
+	wd, _ := os.Getwd()
+	pc, filename, line, _ := runtime.Caller(2)
+	function := runtime.FuncForPC(pc).Name()
+	if file, ok := strings.CutPrefix(filename, wd); ok {
+		filename = file
+	}
+	file := strings.Split(filename, "/")
+	filename = file[len(file)-1]
+	fn := strings.Split(function, ".")
+	function = fn[len(fn)-1]
+	return fmt.Sprintf("%s[%s:%d]", function, filename, line)
 }
 
 // func (e *ApiError) Title() string {

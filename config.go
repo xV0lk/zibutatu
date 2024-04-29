@@ -1,11 +1,9 @@
 package main
 
 import (
-	"log"
 	"log/slog"
 	"os"
 	"strconv"
-	"strings"
 
 	"github.com/joho/godotenv"
 	"github.com/xV0lk/htmx-go/internal/db"
@@ -67,26 +65,26 @@ func loadEnvConfig() (config, error) {
 
 // createLogger creates and configures a logger based on the provided configuration.
 func createLogger(cfg *config) *slog.Logger {
-	wd, err := os.Getwd()
-	if err != nil {
-		log.Fatal("unable to determine working directory")
-	}
+	// wd, err := os.Getwd()
+	// if err != nil {
+	// 	log.Fatal("unable to determine working directory")
+	// }
 
-	replacer := func(groups []string, a slog.Attr) slog.Attr {
-		if a.Key == slog.SourceKey {
-			source := a.Value.Any().(*slog.Source)
-			// remove current working directory and only leave the relative path to the program
-			if file, ok := strings.CutPrefix(source.File, wd); ok {
-				source.File = file
-			}
-		}
-		return a
-	}
+	// replacer := func(groups []string, a slog.Attr) slog.Attr {
+	// 	if a.Key == slog.SourceKey {
+	// 		source := a.Value.Any().(*slog.Source)
+	// 		// remove current working directory and only leave the relative path to the program
+	// 		if file, ok := strings.CutPrefix(source.File, wd); ok {
+	// 			source.File = file
+	// 		}
+	// 	}
+	// 	return a
+	// }
 
 	opts := &slog.HandlerOptions{
-		Level:       slog.LevelDebug,
-		AddSource:   true,
-		ReplaceAttr: replacer,
+		Level:     slog.LevelDebug,
+		AddSource: false,
+		// ReplaceAttr: replacer,
 	}
 
 	var handler slog.Handler = slog.NewTextHandler(os.Stdout, opts)
