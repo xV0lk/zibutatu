@@ -69,7 +69,7 @@ func (s *PsAuthStore) AddUser(user *models.User, ctx context.Context) error {
 
 	if err != nil {
 		if ok := iErrors.ValidatePgxError(err, pgerrcode.UniqueViolation); ok {
-			return ErrEmailTaken
+			return fmt.Errorf("AddUser: %w", ErrEmailTaken)
 		}
 		return fmt.Errorf("AddUser: %w", err)
 	}
@@ -89,9 +89,9 @@ func (s *PsAuthStore) FetchUser(id int, ctx context.Context) (*models.User, erro
 	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[models.User])
 	if err != nil {
 		if ok := iErrors.ValidatePgxError(err, pgerrcode.NoDataFound); ok {
-			return user, ErrorNotFound
+			return user, fmt.Errorf("FetchUser: %w", ErrorNotFound)
 		}
-		return user, err
+		return user, fmt.Errorf("FetchUser: %w", err)
 	}
 
 	return user, nil
@@ -105,13 +105,15 @@ func (s *PsAuthStore) AuthenticateUser(auth *models.AuthParams, ctx context.Cont
 
 	rows, err := s.db.Query(ctx, query, em)
 	if err != nil {
-		return user, fmt.Errorf("Auth: %w", err)
+		return user, fmt.Errorf("auth: %w", err)
 	}
 
 	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToAddrOfStructByNameLax[models.User])
 	if err != nil {
-		fmt.Printf("-------------------------\nerr 1: %s\n", err)
-		return user, fmt.Errorf("Auth: %w", err)
+		if ok := iErrors.ValidatePgxError(err, pgerrcode.NoDataFound); ok {
+			return user, fmt.Errorf("auth: %w", ErrorNotFound)
+		}
+		return user, fmt.Errorf("auth: %w", err)
 	}
 
 	return user, nil
@@ -122,7 +124,7 @@ func (s *PsAuthStore) UpdatePassword(id int, password string, ctx context.Contex
 
 	_, err := s.db.Exec(ctx, query, password, id)
 	if err != nil {
-		return err
+		return fmt.Errorf("UpdatePassword: %w", err)
 	}
 
 	return nil

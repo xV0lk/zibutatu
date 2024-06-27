@@ -4,9 +4,12 @@ import (
 	"context"
 	"crypto/sha256"
 	"encoding/base64"
+	"fmt"
 
+	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
+	iErrors "github.com/xV0lk/htmx-go/internal/errors"
 	"github.com/xV0lk/htmx-go/models"
 )
 
@@ -34,7 +37,7 @@ func (s *PsSessionStore) Close() {
 func (s *PsSessionStore) Create(userID int) (*models.Session, error) {
 	token, err := models.SessionToken()
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("Create session: %w", err)
 	}
 	session := &models.Session{
 		UserID:    userID,
@@ -43,7 +46,7 @@ func (s *PsSessionStore) Create(userID int) (*models.Session, error) {
 	}
 	err = s.insert(session)
 	if err != nil {
-		return session, err
+		return session, fmt.Errorf("Create session: %w", err)
 	}
 	return session, nil
 }
@@ -70,12 +73,15 @@ func (s *PsSessionStore) User(token string) (*models.User, error) {
 	rows, err := s.db.Query(context.Background(), query, th)
 
 	if err != nil {
-		return nil, err
+		return nil, fmt.Errorf("User from session: %w", err)
 	}
 
 	user, err = pgx.CollectExactlyOneRow(rows, pgx.RowToStructByName[models.User])
 	if err != nil {
-		return nil, err
+		if ok := iErrors.ValidatePgxError(err, pgerrcode.NoDataFound); ok {
+			return nil, fmt.Errorf("User from session: %w", ErrorNotFound)
+		}
+		return nil, fmt.Errorf("User from session: %w", err)
 	}
 	user.Password = ""
 	return &user, nil
@@ -86,7 +92,7 @@ func (s *PsSessionStore) Delete(token string) error {
 	query := "DELETE FROM sessions WHERE token_hash = $1;"
 	_, err := s.db.Exec(context.Background(), query, th)
 	if err != nil {
-		return err
+		return fmt.Errorf("Delete session: %w", err)
 	}
 	return nil
 }
@@ -101,7 +107,7 @@ func (s *PsSessionStore) insert(session *models.Session) error {
 	row := s.db.QueryRow(context.Background(), query, session.UserID, session.TokenHash)
 	err := row.Scan(&session.ID)
 	if err != nil {
-		return err
+		return fmt.Errorf("insert session: %w", err)
 	}
 	return nil
 }

@@ -7,7 +7,6 @@ import (
 	// *before* we initialize the message.Printer instances below.
 
 	"context"
-	"fmt"
 	"net/http"
 	"strings"
 
@@ -94,7 +93,8 @@ func I18n(next http.Handler) http.Handler {
 func T(c context.Context, key message.Reference, args ...interface{}) string {
 	l := ctx.Value[Localizer](c)
 	if l == nil {
-		return fmt.Sprint(key)
+		l, _ = Get(esCo)
+		return l.Translate(key, args...)
 	}
 	return l.Translate(key, args...)
 }
