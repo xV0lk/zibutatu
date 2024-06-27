@@ -118,6 +118,7 @@ func (h *AuthHandler) HandleNewUser(w http.ResponseWriter, r *http.Request) erro
 	err := json.NewDecoder(r.Body).Decode(&newUser)
 	if err != nil {
 		pe = loc.T(ctx, "La data ingresada no es válida")
+		// check if i can delete this part. The handler already have error logging
 		slog.Error("New User",
 			slog.Int("status", http.StatusInternalServerError),
 			slog.String("errorMsg", pe),
