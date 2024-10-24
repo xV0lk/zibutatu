@@ -3,11 +3,17 @@ package iErrors
 import (
 	"errors"
 	"fmt"
+	"net/http"
 	"os"
 	"runtime"
 	"strings"
 
 	"github.com/jackc/pgx/v5/pgconn"
+)
+
+const (
+	HttpUnhandledError = iota
+	HttpHandledError
 )
 
 func ValidatePgxError(err error, code string) (ok bool) {
@@ -21,33 +27,95 @@ func ValidatePgxError(err error, code string) (ok bool) {
 }
 
 type ApiError struct {
-	Title  string
-	Status int
-	Msg    string
-	Body   any
-	err    error
-	Trace  string
+	Title   string
+	Status  int
+	Msg     string
+	Body    any
+	err     error
+	Trace   string
+	Handled int
 }
 
+// Error returns the error message
 func (e *ApiError) Error() string {
 	return e.err.Error()
 }
 
-// func (e ApiError) Unwrap() error {
-// 	return e.err
-// }
+// SetHandled sets the ApiError as handled
+//
+// This means that the error has been handled and a generic error page wont be shown
+// The error will still be logged, but the default handler will not render the error page
+// When using this method, the error is expected to be handled on the handler function
+func (e *ApiError) SetHandled() *ApiError {
+	e.Handled = HttpHandledError
+	return e
+}
 
-func NewApiErr(title string, status int, msg string, body any, err error) *ApiError {
+// WithBody sets the body of the ApiError
+//
+// This body will be logged
+// Body: any object that can be used to provide more information about the error
+func (e *ApiError) WithBody(body any) *ApiError {
+	e.Body = body
+	return e
+}
+
+// WithMsg sets an error message to the ApiError
+//
+// This msg will be used to display an error message to the user
+// msg: the message to be displayed
+func (e *ApiError) WithMsg(msg string) *ApiError {
+	e.Msg = msg
+	return e
+}
+
+// NewApiErr creates a new unhandled ApiError with the given status
+//
+// title: Any title or broad description of the error
+// status: the http status code
+// err: the error object
+func NewApiErr(title string, status int, err error) *ApiError {
 	return &ApiError{
-		Title:  title,
-		Status: status,
-		Msg:    msg,
-		Body:   body,
-		err:    err,
-		Trace:  getTrace(),
+		Title:   title,
+		Status:  status,
+		Msg:     err.Error(),
+		err:     err,
+		Trace:   getTrace(),
+		Handled: HttpUnhandledError,
 	}
 }
 
+// NewServerError creates a new unhandled ApiError with status 500
+//
+// title: Any title or broad description of the error
+// err: the error object
+func NewServerError(title string, err error) *ApiError {
+	return &ApiError{
+		Title:   title,
+		Status:  http.StatusInternalServerError,
+		Msg:     err.Error(),
+		err:     err,
+		Trace:   getTrace(),
+		Handled: HttpUnhandledError,
+	}
+}
+
+// NewBrError creates a new unhandled ApiError with status 400
+//
+// title: Any title or broad description of the error
+// err: the error object
+func NewBrError(title string, err error) *ApiError {
+	return &ApiError{
+		Title:   title,
+		Status:  http.StatusBadRequest,
+		Msg:     err.Error(),
+		err:     err,
+		Trace:   getTrace(),
+		Handled: HttpUnhandledError, // este no sería necesario ya que el valor por defect de int es 0
+	}
+}
+
+// getTrace returns the function name, file name and line number of the caller
 func getTrace() string {
 	wd, _ := os.Getwd()
 	pc, filename, line, _ := runtime.Caller(2)
@@ -61,18 +129,3 @@ func getTrace() string {
 	function = fn[len(fn)-1]
 	return fmt.Sprintf("%s[%s:%d]", function, filename, line)
 }
-
-// func (e *ApiError) Title() string {
-// 	return e.title
-// }
-// func (e *ApiError) Msg() string {
-// 	return e.msg
-// }
-
-// func (e *ApiError) Status() int {
-// 	return e.status
-// }
-
-// func (e *ApiError) Body() any {
-// 	return e.body
-// }

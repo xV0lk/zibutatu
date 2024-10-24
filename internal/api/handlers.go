@@ -5,7 +5,8 @@ import (
 	"log/slog"
 	"net/http"
 
-	iErrors "github.com/xV0lk/htmx-go/internal/errors"
+	iErrors "github.com/xV0lk/zibutatu/internal/errors"
+	eView "github.com/xV0lk/zibutatu/views/error"
 )
 
 // apiHandler is a function type that handles API requests.
@@ -16,6 +17,7 @@ type apiHandler func(w http.ResponseWriter, r *http.Request) error
 // and being able to return errors from out handler functions.
 //
 // It handles any errors returned by the apiHandler and logs them using slog.
+// If the error is an unhandled ApiError, it will log the error and render an error page
 func MakeHandler(mh apiHandler) http.HandlerFunc {
 	return func(w http.ResponseWriter, r *http.Request) {
 		var ae *iErrors.ApiError
@@ -30,6 +32,9 @@ func MakeHandler(mh apiHandler) http.HandlerFunc {
 					slog.String("location", ae.Trace),
 					slog.Any("body", ae.Body),
 				)
+				if ae.Handled == iErrors.HttpUnhandledError {
+					eView.ErrorPage(ae).Render(r.Context(), w)
+				}
 			}
 		}
 	}

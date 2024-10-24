@@ -10,8 +10,8 @@ import (
 	"net/http"
 	"strings"
 
-	"github.com/xV0lk/htmx-go/internal/ctx"
-	_ "github.com/xV0lk/htmx-go/internal/translations"
+	"github.com/xV0lk/zibutatu/internal/ctx"
+	_ "github.com/xV0lk/zibutatu/internal/translations"
 
 	"golang.org/x/text/language"
 	"golang.org/x/text/message"
@@ -90,6 +90,7 @@ func I18n(next http.Handler) http.Handler {
 	})
 }
 
+// T is a helper function that retrieves the Localizer from the context and translates a message.
 func T(c context.Context, key message.Reference, args ...interface{}) string {
 	l := ctx.Value[Localizer](c)
 	if l == nil {

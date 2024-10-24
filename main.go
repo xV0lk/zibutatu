@@ -12,11 +12,11 @@ import (
 	"github.com/go-chi/chi/v5"
 	chiMiddleware "github.com/go-chi/chi/v5/middleware"
 	"github.com/gorilla/schema"
-	"github.com/xV0lk/htmx-go/internal/api"
-	"github.com/xV0lk/htmx-go/internal/db"
-	"github.com/xV0lk/htmx-go/internal/localizer"
-	"github.com/xV0lk/htmx-go/internal/middleware"
-	"github.com/xV0lk/htmx-go/models"
+	"github.com/xV0lk/zibutatu/internal/api"
+	"github.com/xV0lk/zibutatu/internal/db"
+	"github.com/xV0lk/zibutatu/internal/localizer"
+	"github.com/xV0lk/zibutatu/internal/middleware"
+	"github.com/xV0lk/zibutatu/models"
 )
 
 //go:embed migrations/*.sql

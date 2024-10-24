@@ -4,8 +4,8 @@ import (
 	"log/slog"
 	"net/http"
 
-	"github.com/xV0lk/htmx-go/internal/ctx"
-	"github.com/xV0lk/htmx-go/models"
+	"github.com/xV0lk/zibutatu/internal/ctx"
+	"github.com/xV0lk/zibutatu/models"
 )
 
 // ILog is a middleware function that add to the logs, information about incoming requests.

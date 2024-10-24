@@ -9,7 +9,7 @@ import (
 	"time"
 
 	"github.com/jackc/pgx/v5/pgxpool"
-	"github.com/xV0lk/htmx-go/models"
+	"github.com/xV0lk/zibutatu/models"
 )
 
 type PasswordResetStore interface {

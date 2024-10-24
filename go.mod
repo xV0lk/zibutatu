@@ -1,13 +1,13 @@
-module github.com/xV0lk/htmx-go
+module github.com/xV0lk/zibutatu
 
 go 1.21.5
 
 require (
-	github.com/a-h/templ v0.2.663
-	github.com/go-chi/chi/v5 v5.0.11
+	github.com/a-h/templ v0.2.778
+	github.com/go-chi/chi/v5 v5.1.0
 	github.com/go-chi/render v1.0.3
 	github.com/gorilla/csrf v1.7.2
-	github.com/gorilla/schema v1.2.1
+	github.com/gorilla/schema v1.4.1
 	github.com/jackc/pgerrcode v0.0.0-20220416144525-469b46aa5efa
 	github.com/jackc/pgx/v5 v5.5.1
 	github.com/joho/godotenv v1.5.1
@@ -34,5 +34,5 @@ require (
 	github.com/xdg-go/stringprep v1.0.4 // indirect
 	github.com/youmark/pkcs8 v0.0.0-20181117223130-1be2e3e5546d // indirect
 	go.uber.org/multierr v1.11.0 // indirect
-	golang.org/x/sync v0.5.0 // indirect
+	golang.org/x/sync v0.8.0 // indirect
 )

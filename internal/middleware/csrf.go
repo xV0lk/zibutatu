@@ -4,7 +4,7 @@ import (
 	"net/http"
 
 	"github.com/gorilla/csrf"
-	"github.com/xV0lk/htmx-go/models"
+	"github.com/xV0lk/zibutatu/models"
 )
 
 // Csrf is a middleware function that adds CSRF protection to the HTTP handler.

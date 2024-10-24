@@ -3,3 +3,5 @@ tmp
 tmp/
 .env
 .DS_Store
+.idea
+.idea/*

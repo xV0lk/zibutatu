@@ -3,24 +3,25 @@ package views
 import (
   "fmt"
 
-  "github.com/xV0lk/htmx-go/views"
+  "github.com/xV0lk/zibutatu/views"
+  iErrors "github.com/xV0lk/zibutatu/internal/errors"
 )
 
-templ ErrorPage(e views.HttpError){
+templ ErrorPage(e *iErrors.ApiError) {
   @views.Index(){
     @serverError(e)
   }
 }
 
-templ serverError(e views.HttpError) {
+templ serverError(e *iErrors.ApiError) {
     <div class="flex items-center justify-center py-48">
       <div class="flex flex-col">
         <div class="flex flex-col items-center">
           <div class="text-indigo-400 font-bold text-7xl py-10">
-            {fmt.Sprintf("%d!", e.Code)}
+            {fmt.Sprintf("%d!", e.Status)}
           </div>
           <div class="text-white font-bold text-3xl xl:text-7xl lg:text-6xl md:text-5xl mt-10">
-            {e.Description}
+            {e.Title}
           </div>
           <div class="text-gray-300 font-medium text-sm md:text-xl lg:text-2xl mt-8">
             {e.Msg}

@@ -11,14 +11,14 @@ import (
 	"github.com/go-chi/render"
 	"github.com/gorilla/schema"
 	"github.com/jackc/pgx/v5"
-	"github.com/xV0lk/htmx-go/internal/ctx"
-	"github.com/xV0lk/htmx-go/internal/db"
-	iErrors "github.com/xV0lk/htmx-go/internal/errors"
-	loc "github.com/xV0lk/htmx-go/internal/localizer"
-	"github.com/xV0lk/htmx-go/models"
-	"github.com/xV0lk/htmx-go/views"
-	home "github.com/xV0lk/htmx-go/views/home"
-	login "github.com/xV0lk/htmx-go/views/home/login"
+	"github.com/xV0lk/zibutatu/internal/ctx"
+	"github.com/xV0lk/zibutatu/internal/db"
+	iErrors "github.com/xV0lk/zibutatu/internal/errors"
+	loc "github.com/xV0lk/zibutatu/internal/localizer"
+	"github.com/xV0lk/zibutatu/models"
+	"github.com/xV0lk/zibutatu/views"
+	home "github.com/xV0lk/zibutatu/views/home"
+	login "github.com/xV0lk/zibutatu/views/home/login"
 )
 
 type AuthHandler struct {
@@ -68,7 +68,7 @@ func (h *AuthHandler) HandleAuthenticate(w http.ResponseWriter, r *http.Request)
 			return views.Toast(tBody, false, c, w, http.StatusBadRequest)
 		}
 		views.Toast(tBody, false, c, w, http.StatusInternalServerError)
-		return iErrors.NewApiErr("Login", http.StatusInternalServerError, tBody.Msg, loginF, err)
+		return iErrors.NewServerError("Login", err).WithMsg(tBody.Msg).WithBody(loginF).SetHandled()
 	}
 	if !models.IsValidPassword(user.Password, loginF.Password) {
 		tBody.Msg = loc.T(c, "Contraseña incorrecta")
@@ -126,7 +126,7 @@ func (h *AuthHandler) HandleNewUser(w http.ResponseWriter, r *http.Request) erro
 			slog.Any("body", newUser),
 		)
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return iErrors.NewApiErr("New User", http.StatusInternalServerError, pe, newUser, err)
+		return iErrors.NewServerError("New User", err).WithMsg(pe).WithBody(newUser).SetHandled()
 	}
 
 	if errors := newUser.Validate(r.Context()); len(errors) != 0 {
@@ -139,7 +139,7 @@ func (h *AuthHandler) HandleNewUser(w http.ResponseWriter, r *http.Request) erro
 	if err != nil {
 		render.Status(r, http.StatusBadRequest)
 		render.JSON(w, r, pe)
-		return iErrors.NewApiErr("New User", http.StatusInternalServerError, pe, newUser, err)
+		return iErrors.NewServerError("New User", err).WithMsg(pe).WithBody(newUser).SetHandled()
 	}
 
 	err = h.UserStore.Auth.AddUser(user, r.Context())
@@ -150,7 +150,7 @@ func (h *AuthHandler) HandleNewUser(w http.ResponseWriter, r *http.Request) erro
 			return nil
 		}
 		http.Error(w, err.Error(), http.StatusInternalServerError)
-		return iErrors.NewApiErr("New User", http.StatusInternalServerError, pe, newUser, err)
+		return iErrors.NewServerError("New User", err).WithMsg(pe).WithBody(newUser).SetHandled()
 	}
 	w.WriteHeader(http.StatusOK)
 	w.Write([]byte("User created"))

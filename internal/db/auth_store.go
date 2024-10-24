@@ -9,8 +9,8 @@ import (
 	"github.com/jackc/pgerrcode"
 	"github.com/jackc/pgx/v5"
 	"github.com/jackc/pgx/v5/pgxpool"
-	iErrors "github.com/xV0lk/htmx-go/internal/errors"
-	"github.com/xV0lk/htmx-go/models"
+	iErrors "github.com/xV0lk/zibutatu/internal/errors"
+	"github.com/xV0lk/zibutatu/models"
 )
 
 var (

@@ -8,7 +8,7 @@ import (
 	"strings"
 	"time"
 
-	loc "github.com/xV0lk/htmx-go/internal/localizer"
+	loc "github.com/xV0lk/zibutatu/internal/localizer"
 	"golang.org/x/crypto/bcrypt"
 )
 

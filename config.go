@@ -6,8 +6,8 @@ import (
 	"strconv"
 
 	"github.com/joho/godotenv"
-	"github.com/xV0lk/htmx-go/internal/db"
-	"github.com/xV0lk/htmx-go/models"
+	"github.com/xV0lk/zibutatu/internal/db"
+	"github.com/xV0lk/zibutatu/models"
 )
 
 type serverConfig struct {

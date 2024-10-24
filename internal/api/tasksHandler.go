@@ -8,12 +8,12 @@ import (
 
 	"github.com/go-chi/chi/v5"
 	"github.com/gorilla/schema"
-	"github.com/xV0lk/htmx-go/internal/ctx"
-	"github.com/xV0lk/htmx-go/internal/db"
-	loc "github.com/xV0lk/htmx-go/internal/localizer"
-	"github.com/xV0lk/htmx-go/models"
-	"github.com/xV0lk/htmx-go/views"
-	tViews "github.com/xV0lk/htmx-go/views/tasks"
+	"github.com/xV0lk/zibutatu/internal/ctx"
+	"github.com/xV0lk/zibutatu/internal/db"
+	loc "github.com/xV0lk/zibutatu/internal/localizer"
+	"github.com/xV0lk/zibutatu/models"
+	"github.com/xV0lk/zibutatu/views"
+	tViews "github.com/xV0lk/zibutatu/views/tasks"
 )
 
 type TasksHandler struct {
