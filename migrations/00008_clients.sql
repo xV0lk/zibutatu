@@ -6,7 +6,7 @@ CREATE TABLE
         name VARCHAR(50) NOT NULL,
         phone VARCHAR(15) NOT NULL,
         email TEXT NOT NULL,
-        notifications BOOLEAN NOT NULL DEFAULT TRUE,
+        notifications BOOLEAN NOT NULL DEFAULT TRUE
     );
 
 -- +goose StatementEnd
