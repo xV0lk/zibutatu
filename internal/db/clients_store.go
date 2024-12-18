@@ -9,6 +9,13 @@ import (
 	"github.com/xV0lk/htmx-go/models"
 )
 
+type Clientstore interface {
+	CreateClient(ctx context.Context, client *models.Client) (*models.Client, error)
+	fetchClient(id int, ctx context.Context) ([]*models.Client, error)
+	updateClient(id int) (*models.Client, error)
+	deleteClient(id int) error
+}
+
 type PsclientStore struct {
 	db *pgxpool.Pool
 }
@@ -37,10 +44,10 @@ func (s *PsclientStore) createClient(ctx context.Context, client *models.Client)
 		fmt.Printf("The client already exist in the studio %v", client.StudioID)
 	} else {
 
-		query := `INSERT INTO clients (id, name, phone, email, notifications, asociatedStudio, studioId)
+		query := `INSERT INTO clients (id, name, phone, email, notifications, studioId)
 	VALUES ($1, $2, $3, $4, $5, $6, $7)`
 
-		err := s.db.QueryRow(ctx, query, client.ID, client.Name, client.Notifications, client.Phone, client.StudioID)
+		err := s.db.QueryRow(ctx, query, client.ID, client.Name, client.Phone, client.Email, client.Notifications, client.StudioID)
 
 		if err != nil {
 			fmt.Println("Inserting Error")
@@ -75,9 +82,9 @@ func (s *PsclientStore) updateClient(id int) (*models.Client, error) {
 
 	client := &models.Client{}
 
-	query := `UPDATE clients SET (name = $2, phone = $3, email = $4, notifications = $5, asociatedStudio = $6, studioId = $7) WHERE id = 1$`
+	query := `UPDATE clients SET (name = $2, phone = $3, email = $4, notifications = $5, studioId = $6) WHERE id = 1$`
 
-	err := s.db.QueryRow(context.Background(), query, id, client.Name, client.Notifications, client.Phone, client.StudioID)
+	err := s.db.QueryRow(context.Background(), query, id, client.Name, client.Phone, client.Email, client.Notifications, client.StudioID)
 
 	if err != nil {
 		fmt.Println("Error: ", err)
